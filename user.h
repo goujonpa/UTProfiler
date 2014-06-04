@@ -2,6 +2,9 @@
 #define USER_H
 
 #include <QObject>
+#include "simulation.h"
+#include "profil.h"
+#include "preference.h"
 
 class User : public QObject
 {

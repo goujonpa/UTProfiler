@@ -3,7 +3,6 @@
 
 #include <QObject>
 
-
 enum Saison {Automne, Printemps};
 
 class Semestre : public QObject

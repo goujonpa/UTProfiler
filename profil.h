@@ -2,6 +2,9 @@
 #define PROFIL_H
 
 #include <QObject>
+#include "inscription.h"
+#include "cursus.h"
+#include "etranger.h"
 
 class Profil : public QObject // sera singleton
 {

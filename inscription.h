@@ -2,6 +2,11 @@
 #define INSCRIPTION_H
 
 #include <QObject>
+#include "uv.h"
+#include "semestre.h"
+#include "note.h"
+#include "cursus.h"
+#include "categorie.h"
 
 class Inscription : public QObject
 {

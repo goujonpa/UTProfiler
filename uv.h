@@ -2,6 +2,8 @@
 #define UV_H
 
 #include <QObject>
+#include "categorie.h"
+#include "cursus.h"
 
 class UV : public QObject
 {

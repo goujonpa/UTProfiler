@@ -1,19 +1,19 @@
-#ifndef ETRANGER_H
-#define ETRANGER_H
+#ifndef DESIRUV_H
+#define DESIRUV_H
 
 #include <QObject>
 #include "semestre.h"
+#include "uv.h"
 
-class Etranger : public QObject
+class DesirUV : public QObject
 {
         Q_OBJECT
     public:
-        explicit Etranger(QObject *parent = 0);
+        explicit DesirUV(QObject *parent = 0);
     protected:
         int m_id;
-        QString m_titre;
+        UV* m_UV;
         Semestre* m_semestre;
-
 
     signals:
 
@@ -21,4 +21,4 @@ class Etranger : public QObject
 
 };
 
-#endif // ETRANGER_H
+#endif // DESIRUV_H

@@ -2,6 +2,8 @@
 #define CURSUS_H
 
 #include <QObject>
+#include "branche.h"
+#include "filiere.h"
 
 class Cursus : public QObject
 {
