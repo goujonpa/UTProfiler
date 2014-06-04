@@ -1,13 +1,13 @@
-#ifndef CATEGORIE_H
-#define CATEGORIE_H
+#ifndef BRANCHE_H
+#define BRANCHE_H
 
 #include <QObject>
 
-class Categorie : public QObject
+class Branche : public QObject
 {
         Q_OBJECT
     public:
-        explicit Categorie(QObject *parent = 0);
+        explicit Branche(QObject *parent = 0);
     protected:
         int m_id;
         QString m_code;
@@ -19,4 +19,4 @@ class Categorie : public QObject
 
 };
 
-#endif // CATEGORIE_H
+#endif // BRANCHE_H

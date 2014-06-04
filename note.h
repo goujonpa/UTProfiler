@@ -10,7 +10,7 @@ class Note : public QObject
         explicit Note(QObject *parent = 0);
     protected:
         int m_id;
-        std::string m_code;
+        QString m_code;
 
 
     signals:
