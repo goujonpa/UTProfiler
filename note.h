@@ -11,7 +11,7 @@ class Note : public QObject
 
         explicit Note(QObject *parent = 0);
         Note(unsigned int id, QString code): m_id(id), m_code(code) {}
-        unsigned int getID() const {return m_id;}
+        unsigned int getId() const {return m_id;}
         QString getCode() const {return m_code;}
         bool setCode(QString code);
 
