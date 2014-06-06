@@ -7,7 +7,7 @@
 #include "cursus.h"
 #include "etranger.h"
 
-class Profil : public QObject // sera singleton
+class Profil : public QObject
 {
         Q_OBJECT
 

@@ -18,22 +18,26 @@ bool Profil::addInscription(Inscription* insc)
     return true;
 }
 
-bool setActuel(Cursus* actuel)
+bool Profil::setActuel(Cursus* actuel)
 {
-
+    m_actuel = actuel;
+    return true;
 }
 
-bool setVise(Cursus* vise)
+bool Profil::setVise(Cursus* vise)
 {
-
+    m_vise = vise;
+    return true;
 }
 
-bool setEtranger(QVector<Etranger*> etr);
+bool Profil::setEtranger(QVector<Etranger*> etr)
 {
-
+    m_etranger = etr;
+    return true;
 }
 
-bool addEtranger(Etranger* etr)
+bool Profil::addEtranger(Etranger* etr)
 {
-
+    m_etranger.push_back(etr);
+    return true;
 }

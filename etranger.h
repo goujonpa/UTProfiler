@@ -4,13 +4,23 @@
 #include <QObject>
 #include "semestre.h"
 
-class Etranger : public QObject
+class Etranger : public QObject // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Ajouter les crédits prévus, par catégorie !!!!!!!!!!!!!!!!!
 {
         Q_OBJECT
+
     public:
+
         explicit Etranger(QObject *parent = 0);
+        Etranger(unsigned int id, QString m_titre, Semestre* m_semestre): m_id(id), m_titre(titre), m_semestre(semestre) {}
+        unsigned int getId() const {return m_id;}
+        QString getTitre() const {return m_titre;}
+        Semestre* getSemestre() const {return m_semestre;}
+        bool setTitre(QString titre);
+        bool setSemestre(Semestre* semestre);
+
     protected:
-        int m_id;
+
+        unsigned int m_id;
         QString m_titre;
         Semestre* m_semestre;
 

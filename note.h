@@ -6,10 +6,18 @@
 class Note : public QObject
 {
         Q_OBJECT
+
     public:
+
         explicit Note(QObject *parent = 0);
+        Note(unsigned int id, QString code): m_id(id), m_code(code) {}
+        unsigned int getID() const {return m_id;}
+        QString getCode() const {return m_code;}
+        bool setCode(QString code);
+
     protected:
-        int m_id;
+
+        unsigned int m_id;
         QString m_code;
 
 
