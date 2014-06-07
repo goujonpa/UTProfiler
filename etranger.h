@@ -11,7 +11,7 @@ class Etranger : public QObject // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Ajouter le
     public:
 
         explicit Etranger(QObject *parent = 0);
-        Etranger(unsigned int id, QString m_titre, Semestre* m_semestre): m_id(id), m_titre(titre), m_semestre(semestre) {}
+        Etranger(unsigned int id, QString titre, Semestre* semestre): m_id(id), m_titre(titre), m_semestre(semestre) {}
         unsigned int getId() const {return m_id;}
         QString getTitre() const {return m_titre;}
         Semestre* getSemestre() const {return m_semestre;}
