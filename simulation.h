@@ -22,6 +22,7 @@ class Simulation : public QObject
         bool setPreference(Preference* pref);
         bool setInscriptions(QMap<unsigned int, Inscription*> inscr);
         bool setCursus(Cursus* cursus);
+        bool addInscription(Inscription* inscription);
 
 
     protected:

@@ -23,7 +23,7 @@ bool UV::setCategorie(Categorie* cat)
     return true;
 }
 
-bool UV::setCursus(QVector<Cursus*> cursus)
+bool UV::setCursus(QMap<unsigned int, Cursus*> cursus)
 {
     m_cursus = cursus;
     return true;
@@ -31,6 +31,6 @@ bool UV::setCursus(QVector<Cursus*> cursus)
 
 bool UV::addCursus(Cursus* cursus)
 {
-    m_cursus.push_back(cursus);
+    m_cursus.insert(cursus->getId(), cursus);
     return true;
 }

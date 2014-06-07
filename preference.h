@@ -5,7 +5,7 @@
 #include "etranger.h"
 #include "desiruv.h"
 #include "bonusuv.h"
-#include <QList>
+#include <QMap>
 
 class Preference : public QObject
 {
@@ -14,14 +14,14 @@ class Preference : public QObject
     public:
 
         explicit Preference(QObject *parent = 0);
-        Preference(unsigned int id, QList<Etranger*> etranger, QList<DesirUV*> desirs, QList<BonusUV*> bonus): m_id(id), m_etrangers(etranger), m_desirs(desirs), m_bonus(bonus) {}
+        Preference(unsigned int id, QMap<unsigned int, Etranger*> etranger, QMap<unsigned int, DesirUV*> desirs, QMap<unsigned int, BonusUV*> bonus): m_id(id), m_etrangers(etranger), m_desirs(desirs), m_bonus(bonus) {}
         unsigned int getId() const {return m_id;}
-        QList<Etranger*> getEtranger() const {return m_etrangers;}
-        QList<DesirUV*> getDesirs() const {return m_desirs;}
-        QList<BonusUV*> getBonus() const {return m_bonus;}
-        bool setEtrangers(QList<Etranger*> etranger);
-        bool setDesirs(QList<DesirUV*> desirs);
-        bool setBonus(QList<BonusUV*> bonus);
+        QMap<unsigned int, Etranger*> getEtranger() const {return m_etrangers;}
+        QMap<unsigned int, DesirUV*> getDesirs() const {return m_desirs;}
+        QMap<unsigned int, BonusUV*> getBonus() const {return m_bonus;}
+        bool setEtrangers(QMap<unsigned int, Etranger*> etranger);
+        bool setDesirs(QMap<unsigned int, DesirUV*> desirs);
+        bool setBonus(QMap<unsigned int, BonusUV*> bonus);
         bool addEtranger(Etranger* etranger);
         bool addDesir(DesirUV* desir);
         bool addBonus(BonusUV* bonus);
@@ -32,9 +32,9 @@ class Preference : public QObject
     protected:
 
         unsigned int m_id;
-        QList<Etranger*> m_etrangers;
-        QList<DesirUV*> m_desirs;
-        QList<BonusUV*> m_bonus;
+        QMap<unsigned int, Etranger*> m_etrangers;
+        QMap<unsigned int, DesirUV*> m_desirs;
+        QMap<unsigned int, BonusUV*> m_bonus;
 
     signals:
 

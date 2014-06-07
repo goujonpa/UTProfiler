@@ -6,7 +6,7 @@ Profil::Profil(QObject *parent) :
 }
 
 
-bool Profil::setInscriptions(QVector<Inscription*> insc)
+bool Profil::setInscriptions(QMap<unsigned int, Inscription*> insc)
 {
     m_inscriptions = insc;
     return true;
@@ -14,7 +14,7 @@ bool Profil::setInscriptions(QVector<Inscription*> insc)
 
 bool Profil::addInscription(Inscription* insc)
 {
-    m_inscriptions.push_back(insc);
+    m_inscriptions.insert(insc->getId(), insc);
     return true;
 }
 
@@ -30,7 +30,7 @@ bool Profil::setVise(Cursus* vise)
     return true;
 }
 
-bool Profil::setEtranger(QVector<Etranger*> etr)
+bool Profil::setEtranger(QMap<unsigned int, Etranger*> etr)
 {
     m_etranger = etr;
     return true;
@@ -38,6 +38,6 @@ bool Profil::setEtranger(QVector<Etranger*> etr)
 
 bool Profil::addEtranger(Etranger* etr)
 {
-    m_etranger.push_back(etr);
+    m_etranger.insert(etr->getId(), etr);
     return true;
 }

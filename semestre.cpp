@@ -5,13 +5,13 @@ Semestre::Semestre(QObject *parent) :
 {
 }
 
-bool setSaison(Saison saison)
+bool Semestre::setSaison(Saison saison)
 {
     m_saison = saison;
     return true;
 }
 
-bool setAnnee(unsigned int annee)
+bool Semestre::setAnnee(unsigned int annee)
 {
     m_annee = annee;
     return true;
