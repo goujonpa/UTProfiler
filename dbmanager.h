@@ -10,6 +10,7 @@
 #include <QSqlQuery>
 #include <QVariant>
 #include <QString>
+#include <QMessageBox>
 
 class PersonData // classe exemple
 {
@@ -31,10 +32,11 @@ class DbManager : public QObject
     public:
         bool openDB();
         bool deleteDB();
-        bool createProfilTable(); // il va falloir créer un template pour ce db manager.
-        int insertPerson(QString firstname, QString lastname, int age);
-        bool getPerson(int id, PersonData*& person);
-        bool deletePerson(int id);
+        bool createUVTable();
+
+        int insertItem(QString firstname, QString lastname, int age);
+        bool getItem(int id, PersonData*& person);
+        bool deleteItem(int id);
         QSqlError lastError();
 
     private:
@@ -43,6 +45,9 @@ class DbManager : public QObject
     signals:
 
     public slots:
+        bool opendb();
+        bool deletedb();
+        bool createTables();
 
 };
 

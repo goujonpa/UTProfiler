@@ -67,25 +67,20 @@ bool DbManager::deleteDB()
 
 
 
-bool DbManager::createProfilTable()
+bool DbManager::createUVTable()
 {
-    // Create table "person"
-
     bool ret = false;
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec("CREATE TABLE PROFIL "
-                  "(id INTEGER PRIMARY KEY, "
-                  "firstname varchar(20), "
-                  "lastname varchar(30), "
-                  "age integer)");
-
+        ret = query.exec("CREATE TABLE UV (id INTEGER PRIMARY KEY, code VARCHAR(10), credits INTEGER, categorie INTEGER)");
+        if (ret == true)
+            ret = query.exec("CREATE TABLE UV (id INTEGER PRIMARY KEY, idUV INTEGER, idCursus INTEGER)");
     }
     return ret;
 }
 
-int DbManager::insertPerson(QString firstname, QString lastname, int age)
+int DbManager::insertItem(QString firstname, QString lastname, int age)
 {
     int newId = -1;
     bool ret = false;
@@ -113,7 +108,7 @@ int DbManager::insertPerson(QString firstname, QString lastname, int age)
 }
 
 
-bool DbManager::getPerson(int id, PersonData*& person)
+bool DbManager::getItem(int id, PersonData*& person)
 {
     bool ret = false;
 
@@ -132,7 +127,7 @@ bool DbManager::getPerson(int id, PersonData*& person)
 }
 
 
-bool DbManager::deletePerson(int id)
+bool DbManager::deleteItem(int id)
 {
     bool ret = false;
     if (db.isOpen())
@@ -141,4 +136,20 @@ bool DbManager::deletePerson(int id)
         ret = query.exec(QString("delete from person where id=%1").arg(id));
     }
     return ret;
+}
+
+bool DbManager::opendb()
+{
+    return this->openDB();
+}
+
+bool DbManager::deletedb()
+{
+    return this->deleteDB();
+}
+
+bool DbManager::createTables()
+{
+    createUVTable();
+    return true;
 }
