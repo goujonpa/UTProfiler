@@ -67,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent) :
     Butt1 = new QPushButton;
     Butt2 = new QPushButton;
     Butt3 = new QPushButton;
+    Butt4 = new QPushButton;
+    Butt5 = new QPushButton;
 
 
     // ===== Init LineEdits =====
@@ -183,6 +185,15 @@ void MainWindow::showConfigEdit()
     Butt3->show();
     QObject::connect(Butt3, SIGNAL(clicked()), Db, SLOT(createTables()));
 
+    mainLayout->addWidget(Butt4, 5,0,1,2);
+    Butt4->setText("Insert UV");
+    Butt4->show();
+    QObject::connect(Butt4, SIGNAL(clicked()), Db, SLOT(insertuv()));
+
+    mainLayout->addWidget(Butt5, 6,0,1,2);
+    Butt5->setText("TEST");
+    Butt5->show();
+    QObject::connect(Butt5, SIGNAL(clicked()), this, SLOT(test()));
 
 }
 
@@ -198,6 +209,13 @@ void MainWindow::hideConfigEdit()
 
     Butt3->hide();
     mainLayout->removeWidget(Butt3);
+
+    Butt4->hide();
+    mainLayout->removeWidget(Butt4);
+
+    Butt5->hide();
+    mainLayout->removeWidget(Butt5);
+
 }
 
 void MainWindow::showMessage(QString message)
@@ -205,6 +223,16 @@ void MainWindow::showMessage(QString message)
     QMessageBox::information(this, "Message", message);
 }
 
+void MainWindow::affiche(QString message)
+{
+    QMessageBox::information(this, "Message", message);
+}
+
+void MainWindow::test()
+{
+    QString code = Db->getUV(1);
+    affiche(code);
+}
 
 MainWindow::~MainWindow()
 {

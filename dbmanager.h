@@ -11,16 +11,7 @@
 #include <QVariant>
 #include <QString>
 #include <QMessageBox>
-
-class PersonData // classe exemple
-{
-    public:
-        int id;
-        QString firstname;
-        QString lastname;
-        int age;
-};
-
+#include "user.h"
 
 
 class DbManager : public QObject
@@ -32,10 +23,26 @@ class DbManager : public QObject
     public:
         bool openDB();
         bool deleteDB();
-        bool createUVTable();
 
-        int insertItem(QString firstname, QString lastname, int age);
-        bool getItem(int id, PersonData*& person);
+        bool createUVTable();
+        bool createUserTable();
+        bool createProfilTable();
+        bool createInscriptionTable();
+        bool createEtrangerTable();
+        bool createSemestreTable();
+        bool createBonusTable();
+        bool createBrancheTable();
+        bool createDesirTable();
+        bool createSimulationTable();
+        bool createCategorieTable();
+        bool createCursusTable();
+        bool createFiliereTable();
+        bool createNoteTable();
+        bool createPreferenceTable();
+
+        int insertUV(QString code, unsigned int credits, unsigned int categorie);
+        QString getUV(int id);
+
         bool deleteItem(int id);
         QSqlError lastError();
 
@@ -48,7 +55,6 @@ class DbManager : public QObject
         bool opendb();
         bool deletedb();
         bool createTables();
-
 };
 
 

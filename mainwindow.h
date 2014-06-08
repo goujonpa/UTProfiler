@@ -26,6 +26,8 @@ class MainWindow : public QMainWindow
     public:
         explicit MainWindow(QWidget *parent = 0);
         ~MainWindow();
+        void affiche(QString message);
+
 
     private:
         Ui::MainWindow *ui;
@@ -36,6 +38,7 @@ class MainWindow : public QMainWindow
         QPushButton* Butt2;
         QPushButton* Butt3;
         QPushButton* Butt4;
+        QPushButton* Butt5;
         QPushButton* mainProfilButt;
         QPushButton* mainSimuButt;
         QPushButton* mainConfigButt;
@@ -55,6 +58,8 @@ class MainWindow : public QMainWindow
         void showConfigEdit();
         void hideConfigEdit();
         void showMessage(QString message);
+        void test();
+
 };
 
 #endif // MAINWINDOW_H
