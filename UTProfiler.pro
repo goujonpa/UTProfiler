@@ -28,10 +28,8 @@ SOURCES += main.cpp\
     etranger.cpp \
     user.cpp \
     simulation.cpp \
-    preference.cpp \
     desiruv.cpp \
     bonusuv.cpp \
-    manager.cpp \
     dbmanager.cpp
 
 HEADERS  += mainwindow.h \
@@ -47,10 +45,8 @@ HEADERS  += mainwindow.h \
     etranger.h \
     user.h \
     simulation.h \
-    preference.h \
     desiruv.h \
     bonusuv.h \
-    manager.h \
     dbmanager.h
 
 FORMS    += mainwindow.ui

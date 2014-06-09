@@ -11,7 +11,10 @@
 #include <QVariant>
 #include <QString>
 #include <QMessageBox>
+#include <QSqlQueryModel>
+#include <QMap>
 #include "user.h"
+#include "uv.h"
 
 
 class DbManager : public QObject
@@ -23,6 +26,7 @@ class DbManager : public QObject
     public:
         bool openDB();
         bool deleteDB();
+        bool createTables();
 
         bool createUVTable();
         bool createUserTable();
@@ -40,10 +44,30 @@ class DbManager : public QObject
         bool createNoteTable();
         bool createPreferenceTable();
 
-        int insertUV(QString code, unsigned int credits, unsigned int categorie);
-        QString getUV(int id);
+        int insertItem(User* user);
+        int insertItem(UV* uv);
+        int insertItem(Cursus* cursus);
+        int insertItem(Branche* branche);
+        int insertItem(Filiere* filiere);
+        int insertItem(BonusUV* bonus);
+        int insertItem(Categorie* categorie);
+        int insertItem(DesirUV* desir);
+        int insertItem(Etranger* etranger);
+        int insertItem(Inscription* inscription);
+        int insertItem(Note* note);
+        int insertItem(Profil* profil);
+        int insertItem(Semestre* semestre);
+        int insertItem(Simulation* simulation);
+
+
+        User* getItem(User*, int id);
+        Simulation* getItem(Simulation*, unsigned int id);
+        Profil* getItem(Profil*, unsigned int id);
+
+        QSqlQueryModel* getUserList();
 
         bool deleteItem(int id);
+
         QSqlError lastError();
 
     private:
@@ -52,9 +76,6 @@ class DbManager : public QObject
     signals:
 
     public slots:
-        bool opendb();
-        bool deletedb();
-        bool createTables();
 };
 
 

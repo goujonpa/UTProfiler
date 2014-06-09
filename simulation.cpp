@@ -5,9 +5,9 @@ Simulation::Simulation(QObject *parent) :
 {
 }
 
-bool Simulation::setPreference(Preference* pref)
+bool Simulation::setProfil(Profil* profil)
 {
-    m_preference = pref;
+    m_profil = profil;
     return true;
 }
 

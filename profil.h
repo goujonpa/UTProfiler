@@ -6,6 +6,9 @@
 #include "inscription.h"
 #include "cursus.h"
 #include "etranger.h"
+#include "desiruv.h"
+#include "bonusuv.h"
+
 
 class Profil : public QObject
 {
@@ -27,6 +30,19 @@ class Profil : public QObject
         bool setEtranger(QMap<unsigned int, Etranger*> etr);
         bool addEtranger(Etranger* etr);
 
+        QMap<unsigned int, Etranger*> getPrefEtranger() const {return m_prefEtrangers;}
+        QMap<unsigned int, DesirUV*> getDesirs() const {return m_desirs;}
+        QMap<unsigned int, BonusUV*> getBonus() const {return m_bonus;}
+        bool setPrefEtrangers(QMap<unsigned int, Etranger*> etranger);
+        bool setDesirs(QMap<unsigned int, DesirUV*> desirs);
+        bool setBonus(QMap<unsigned int, BonusUV*> bonus);
+        bool addPrefEtranger(Etranger* etranger);
+        bool addDesir(DesirUV* desir);
+        bool addBonus(BonusUV* bonus);
+        bool removePrefEtranger(Etranger* etranger);
+        bool removeDesir(DesirUV* desir);
+        bool removeBonus(BonusUV* bonus);
+
 
 
     protected:
@@ -35,6 +51,9 @@ class Profil : public QObject
         Cursus* m_actuel;
         Cursus* m_vise;
         QMap<unsigned int, Etranger*> m_etranger;
+        QMap<unsigned int, Etranger*> m_prefEtrangers;
+        QMap<unsigned int, DesirUV*> m_desirs;
+        QMap<unsigned int, BonusUV*> m_bonus;
 
     signals:
 

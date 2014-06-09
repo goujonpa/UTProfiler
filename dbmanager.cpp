@@ -5,7 +5,6 @@ DbManager::DbManager(QObject *parent) :
 {
 }
 
-
 bool DbManager::openDB()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -74,7 +73,7 @@ bool DbManager::createUserTable()
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec("CREATE TABLE User (id INTEGER PRIMARY KEY, nom VARCHAR(40), prenom VARCHAR(40), simulation INTEGER, profil INTEGER, preference INTEGER)");
+        ret = query.exec("CREATE TABLE User (id INTEGER PRIMARY KEY, nom VARCHAR(40), prenom VARCHAR(40), simulation INTEGER, profil INTEGER)");
     }
     return ret;
 }
@@ -90,9 +89,16 @@ bool DbManager::createProfilTable()
             ret = query.exec("CREATE TABLE ProfilInscr (id INTEGER PRIMARY KEY, idProfil INTEGER, idInscription INTEGER)");
         if (ret == true)
             ret = query.exec("CREATE TABLE ProfilEtr (id INTEGER PRIMARY KEY, idProfil INTEGER, idEtranger INTEGER)");
+        if (ret == true)
+            ret = query.exec("CREATE TABLE ProPrefEtr (id INTEGER PRIMARY KEY, idPreference INTEGER, idEtranger INTEGER)");
+        if (ret == true)
+            ret = query.exec("CREATE TABLE ProPrefDesirs (id INTEGER PRIMARY KEY, idPreference INTEGER, idDesir INTEGER)");
+        if (ret == true)
+            ret = query.exec("CREATE TABLE ProPrefBonus (id INTEGER PRIMARY KEY, idPreference INTEGER, idBonus INTEGER)");
     }
     return ret;
 }
+
 
 bool DbManager::createInscriptionTable()
 {
@@ -127,22 +133,6 @@ bool DbManager::createSemestreTable()
     return ret;
 }
 
-bool DbManager::createPreferenceTable()
-{
-    bool ret = false;
-    if (db.isOpen())
-    {
-        QSqlQuery query;
-        ret = query.exec("CREATE TABLE Preference (id INTEGER PRIMARY KEY, idProfil INTEGER)");
-        if (ret == true)
-            ret = query.exec("CREATE TABLE PreferenceEtr (id INTEGER PRIMARY KEY, idPreference INTEGER, idEtranger INTEGER)");
-        if (ret == true)
-            ret = query.exec("CREATE TABLE PreferenceDesirs (id INTEGER PRIMARY KEY, idPreference INTEGER, idDesir INTEGER)");
-        if (ret == true)
-            ret = query.exec("CREATE TABLE PreferenceBonus (id INTEGER PRIMARY KEY, idPreference INTEGER, idBonus INTEGER)");
-    }
-    return ret;
-}
 
 bool DbManager::createBonusTable()
 {
@@ -205,7 +195,7 @@ bool DbManager::createSimulationTable()
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec("CREATE TABLE Simulation (id INTEGER PRIMARY KEY, preference INTEGER, cursus INTEGER)");
+        ret = query.exec("CREATE TABLE Simulation (id INTEGER PRIMARY KEY, profil INTEGER, cursus INTEGER)");
         if (ret == true)
             ret = query.exec("CREATE TABLE SimulationInscr (id INTEGER PRIMARY KEY, idSimu INTEGER, inscription INTEGER)");
 
@@ -235,8 +225,254 @@ bool DbManager::createCursusTable()
     return ret;
 }
 
+int DbManager::insertItem(User* user)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into User values(NULL,'%1','%2','%3', '%4')").arg(user->getNom()).arg(user->getPrenom()).arg(user->getSimulation()->getId()).arg(user->getProfil()->getId()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(UV* uv)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen())
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into UV values(NULL,'%1','%2','%3')").arg(uv->getCode()).arg(uv->getCredits()).arg(uv->getCategorie()->getId()));
+        if (ret)
+        {
+            newId = query.lastInsertId().toInt();
+
+            QSqlQuery query2;
+            QMap<unsigned int, Cursus*> map = uv->getCursus();
+            for (QMap<unsigned int, Cursus*>::Iterator it = map.begin(); it != map.end(); ++it)
+            {
+                ret = query2.exec(QString("INSERT into UVCursus values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+            }
+        }
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Cursus* cursus)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Cursus values(NULL,'%1','%2')").arg(cursus->getBranche()->getId()).arg(cursus->getFiliere()->getId()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Branche* branche)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Branche values(NULL,'%1','%2')").arg(branche->getCode()).arg(branche->getNom()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Filiere* filiere)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Filiere values(NULL,'%1','%2')").arg(filiere->getCode()).arg(filiere->getNom()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(BonusUV* bonus)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Bonus values(NULL,'%1','%2')").arg(bonus->getUV()->getId()).arg(bonus->getBonus()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Categorie* categorie)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Categorie values(NULL,'%1','%2')").arg(categorie->getCode()).arg(categorie->getNom()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(DesirUV* desir)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Desir values(NULL,'%1','%2')").arg(desir->getUV()->getId()).arg(desir->getSemestre()->getId()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Etranger* etranger)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Desir values(NULL,'%1','%2')").arg(etranger->getTitre()).arg(etranger->getSemestre()->getId()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Inscription* inscription)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Inscription values(NULL,'%1','%2', '3', '4', '5')").arg(inscription->getUV()->getId()).arg(inscription->getSemestre()->getId()).arg(inscription->getNote()->getId()).arg(inscription->getCursus()->getId()).arg(inscription->getCategorie()->getId()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Note* note)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Note values(NULL,'%1')").arg(note->getCode()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+
+int DbManager::insertItem(Profil* profil)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen())
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Profil values(NULL,'%1', '%2')").arg(profil->getActuel()->getId()).arg(profil->getVise()->getId()));
+        if (ret)
+        {
+            newId = query.lastInsertId().toInt();
+
+            QSqlQuery query2;
+            QMap<unsigned int, Inscription*> map = profil->getInscriptions();
+            for (QMap<unsigned int, Inscription*>::Iterator it = map.begin(); it != map.end(); ++it)
+            {
+                ret = query2.exec(QString("INSERT into ProfilInscr values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+            }
+            QMap<unsigned int, Etranger*> map2 = profil->getEtranger();
+            for (QMap<unsigned int, Etranger*>::Iterator it = map2.begin(); it != map2.end(); ++it)
+            {
+                ret = query2.exec(QString("INSERT into ProfilEtr values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+            }
+            QMap<unsigned int, Etranger*> map3 = profil->getPrefEtranger();
+            for (QMap<unsigned int, Etranger*>::Iterator it = map3.begin(); it != map3.end(); ++it)
+            {
+                ret = query2.exec(QString("INSERT into ProPrefEtr values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+            }
+            QMap<unsigned int, DesirUV*> map4 = profil->getDesirs();
+            for (QMap<unsigned int, DesirUV*>::Iterator it = map4.begin(); it != map4.end(); ++it)
+            {
+                ret = query2.exec(QString("INSERT into ProPrefDesirs values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+            }
+            QMap<unsigned int, BonusUV*> map5 = profil->getBonus();
+            for (QMap<unsigned int, BonusUV*>::Iterator it = map5.begin(); it != map5.end(); ++it)
+            {
+                ret = query2.exec(QString("INSERT into ProPrefBonus values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+            }
+
+        }
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Semestre* semestre)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Semestre values(NULL,'%1','%2')").arg(semestre->getSaison()).arg(semestre->getAnnee()));
+        if (ret)
+            newId = query.lastInsertId().toInt();
+    }
+    return newId;
+}
+
+int DbManager::insertItem(Simulation* simulation)
+{
+    bool ret = false;
+    int newId = -1;
+    if (db.isOpen())
+    {
+        QSqlQuery query;
+        ret = query.exec(QString("INSERT into Simulation values(NULL,'%1', '%2')").arg(simulation->getProfil()->getId()).arg(simulation->getCursus()->getId()));
+        if (ret)
+        {
+            newId = query.lastInsertId().toInt();
+
+            QSqlQuery query2;
+            QMap<unsigned int, Inscription*> map = simulation->getInscriptions();
+            for (QMap<unsigned int, Inscription*>::Iterator it = map.begin(); it != map.end(); ++it)
+            {
+                ret = query2.exec(QString("INSERT into SimulationInscr values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+            }
+        }
+    }
+    return newId;
+}
+
+
 /*
-int DbManager::insertUser(User* user)
+int DbManager::insertItem(User* user)
 {
     int newId = -1;
     bool ret = false;
@@ -254,26 +490,52 @@ int DbManager::insertUser(User* user)
 }
 */
 
-QString DbManager::getUV(int id)
+
+QSqlQueryModel* DbManager::getUserList()
 {
-    bool ret = false;
+    QSqlQueryModel* userList = new QSqlQueryModel;
+    userList->setQuery("SELECT * FROM User");
+    return userList;
+}
 
-    unsigned int idUV, credits, categorie;
-    QString code;
-
-    QSqlQuery query(QString("SELECT * FROM UV WHERE id = %1").arg(id));
+User* DbManager::getItem(User* user, int id)
+{
+    QSqlQuery query(QString("SELECT * FROM User WHERE id = '%1'").arg(id));
+    int idSimu, idProfil;
 
     if (query.next())
     {
-        idUV = query.value(0).toInt();
-        code = query.value(1).toString();
-        credits = query.value(2).toInt();
-        categorie = query.value(3).toInt();
-        ret = true;
-    }
+        user->setNom(query.value(1).toString());
+        user->setPrenom(query.value(2).toString());
+        idSimu = query.value(3).toInt();
+        idProfil = query.value(4).toInt();
 
-    return code;
+        if (idSimu != 0)
+        {
+            Simulation* simulation = new Simulation;
+            user->setSimulation(this->getItem(simulation, idSimu));
+        }
+        if (idProfil != 0)
+        {
+            Profil* profil = new Profil;
+            user->setProfil(this->getItem(profil, idProfil));
+        }
+    }
+    return user;
 }
+
+Simulation* DbManager::getItem(Simulation*, unsigned int id)
+{
+    return NULL;
+}
+
+Profil* DbManager::getItem(Profil*, unsigned int id)
+{
+    return NULL;
+}
+
+
+
 
 
 bool DbManager::deleteItem(int id)
@@ -287,15 +549,6 @@ bool DbManager::deleteItem(int id)
     return ret;
 }
 
-bool DbManager::opendb()
-{
-    return this->openDB();
-}
-
-bool DbManager::deletedb()
-{
-    return this->deleteDB();
-}
 
 bool DbManager::createTables()
 {
@@ -327,8 +580,6 @@ bool DbManager::createTables()
         ret = createFiliereTable();
     if (ret == true)
         ret = createNoteTable();
-    if (ret == true)
-        ret = createPreferenceTable();
 
     return ret;
 }
