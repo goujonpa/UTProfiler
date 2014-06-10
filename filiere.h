@@ -16,6 +16,7 @@ class Filiere : public QObject
         QString getNom() const {return m_nom;}
         bool setCode(QString code);
         bool setNom(QString nom);
+        bool setId(unsigned int id);
 
     protected:
 

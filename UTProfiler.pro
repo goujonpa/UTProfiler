@@ -7,6 +7,7 @@
 QT       += core gui
 QT       += sql
 QT       += core
+QT       += xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -30,7 +31,8 @@ SOURCES += main.cpp\
     simulation.cpp \
     desiruv.cpp \
     bonusuv.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    xmlmanager.cpp
 
 HEADERS  += mainwindow.h \
     semestre.h \
@@ -47,6 +49,7 @@ HEADERS  += mainwindow.h \
     simulation.h \
     desiruv.h \
     bonusuv.h \
-    dbmanager.h
+    dbmanager.h \
+    xmlmanager.h
 
 FORMS    += mainwindow.ui

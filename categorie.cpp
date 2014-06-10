@@ -17,3 +17,9 @@ bool Categorie::setNom(QString nom)
     m_nom = nom;
     return true;
 }
+
+bool Categorie::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}

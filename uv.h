@@ -80,6 +80,9 @@ class UV : public QObject
          */
         QMap<unsigned int, Cursus*> getCursus() const {return m_cursus;}
 
+        bool setId(unsigned int id);
+
+
         /*!
          * \brief méthode setCode
          * Modifie le code de l'UV

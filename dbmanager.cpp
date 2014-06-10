@@ -232,7 +232,7 @@ int DbManager::insertItem(User* user)
     if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into User values(NULL,'%1','%2','%3', '%4')").arg(user->getNom()).arg(user->getPrenom()).arg(user->getSimulation()->getId()).arg(user->getProfil()->getId()));
+        ret = query.exec(QString("INSERT into User values(NULL,'%1','%2','%3', '%4')").arg(user->getNom()).arg(user->getPrenom()).arg(0).arg(0));
         if (ret)
             newId = query.lastInsertId().toInt();
     }
@@ -246,17 +246,24 @@ int DbManager::insertItem(UV* uv)
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into UV values(NULL,'%1','%2','%3')").arg(uv->getCode()).arg(uv->getCredits()).arg(uv->getCategorie()->getId()));
+        int idCategorie = 0;
+        /*
+        if (uv->getCategorie() != 0)
+            idCategorie = uv->getCategorie()->getId();
+        */
+        ret = query.exec(QString("INSERT into UV values(NULL,'%1','%2','%3')").arg(uv->getCode()).arg(uv->getCredits()).arg(idCategorie));
+
         if (ret)
         {
             newId = query.lastInsertId().toInt();
-
+/*
             QSqlQuery query2;
             QMap<unsigned int, Cursus*> map = uv->getCursus();
             for (QMap<unsigned int, Cursus*>::Iterator it = map.begin(); it != map.end(); ++it)
             {
                 ret = query2.exec(QString("INSERT into UVCursus values(NULL,'%1','%2')").arg(newId).arg(it.key()));
             }
+*/
         }
     }
     return newId;
@@ -470,33 +477,68 @@ int DbManager::insertItem(Simulation* simulation)
     return newId;
 }
 
-
-/*
-int DbManager::insertItem(User* user)
-{
-    int newId = -1;
-    bool ret = false;
-
-    if (db.isOpen())
-    {
-        QSqlQuery query;
-        ret = query.exec(QString("INSERT into USER values(NULL,'%1','%2','%3', '%4')").arg(user->getNom()).arg(user->getPrenom()).arg(user->getSimulation()->getId()).arg(user->getProfil()->getId).arg(user->getPreference()->getId()));
-        if (ret)
-        {
-            newId = query.lastInsertId().toInt();
-        }
-    }
-    return newId;
-}
-*/
-
-
 QSqlQueryModel* DbManager::getUserList()
 {
     QSqlQueryModel* userList = new QSqlQueryModel;
-    userList->setQuery("SELECT * FROM User");
+    userList->setQuery("SELECT id, nom, prenom FROM User");
     return userList;
 }
+
+QSqlQueryModel* DbManager::getBranchList()
+{
+    QSqlQueryModel* branchList = new QSqlQueryModel;
+    branchList->setQuery("SELECT * FROM Branche");
+    return branchList;
+}
+
+QSqlQueryModel* DbManager::getCatList()
+{
+    QSqlQueryModel* catList = new QSqlQueryModel;
+    catList->setQuery("SELECT * FROM Categorie");
+    return catList;
+}
+
+QSqlQueryModel* DbManager::getFiliereList()
+{
+    QSqlQueryModel* filiereList = new QSqlQueryModel;
+    filiereList->setQuery("SELECT * FROM Filiere");
+    return filiereList;
+}
+
+QSqlQueryModel* DbManager::getUVList()
+{
+    QSqlQueryModel* uvList = new QSqlQueryModel;
+    uvList->setQuery("SELECT id, code, credits FROM UV");
+    return uvList;
+}
+
+
+
+
+int DbManager::find(Branche* branche)
+{
+    QSqlQuery query;
+    int ret = -1;
+    query.exec(QString("SELECT * FROM Branche WHERE code = '%1'").arg(branche->getCode()));
+    if (query.next())
+    {
+        ret = query.value(0).toInt();
+    }
+    return ret;
+}
+
+int DbManager::find(Categorie* categorie)
+{
+    QSqlQuery query;
+    int ret = -1;
+    query.exec(QString("SELECT * FROM Categorie WHERE code = '%1'").arg(categorie->getCode()));
+    if (query.next())
+    {
+        ret = query.value(0).toInt();
+    }
+    return ret;
+}
+
 
 User* DbManager::getItem(User* user, int id)
 {
@@ -505,6 +547,7 @@ User* DbManager::getItem(User* user, int id)
 
     if (query.next())
     {
+        user->setId(query.value(0).toInt());
         user->setNom(query.value(1).toString());
         user->setPrenom(query.value(2).toString());
         idSimu = query.value(3).toInt();
@@ -524,12 +567,38 @@ User* DbManager::getItem(User* user, int id)
     return user;
 }
 
-Simulation* DbManager::getItem(Simulation*, unsigned int id)
+Filiere* DbManager::getItem(Filiere* filiere, unsigned int id)
+{
+    QSqlQuery query(QString("SELECT * FROM Filiere WHERE id = '%1'").arg(id));
+
+    if (query.next())
+    {
+        filiere->setId(query.value(0).toInt());
+        filiere->setCode(query.value(1).toString());
+        filiere->setNom(query.value(2).toString());
+    }
+    return filiere;
+}
+
+Branche* DbManager::getItem(Branche* branche, unsigned int id)
+{
+    QSqlQuery query(QString("SELECT * FROM Branche WHERE id = '%1'").arg(id));
+
+    if (query.next())
+    {
+        branche->setId(query.value(0).toInt());
+        branche->setCode(query.value(1).toString());
+        branche->setNom(query.value(2).toString());
+    }
+    return branche;
+}
+
+Simulation* DbManager::getItem(Simulation* simulation, unsigned int id)
 {
     return NULL;
 }
 
-Profil* DbManager::getItem(Profil*, unsigned int id)
+Profil* DbManager::getItem(Profil* profil, unsigned int id)
 {
     return NULL;
 }

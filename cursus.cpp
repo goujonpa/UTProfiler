@@ -17,3 +17,9 @@ bool Cursus::setFiliere(Filiere* filiere)
     m_filiere = filiere;
     return true;
 }
+
+bool Cursus::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}

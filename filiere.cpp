@@ -16,3 +16,9 @@ bool Filiere::setNom(QString nom)
     m_nom = nom;
     return true;
 }
+
+bool Filiere::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}

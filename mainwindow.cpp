@@ -35,6 +35,10 @@ MainWindow::MainWindow(QWidget *parent) :
     openDb();
     createTables();
 
+    // ===== Init xml =====
+
+    xml = new XmlManager;
+
     // ===== Main Layout =====
 
     mainLayout = new QGridLayout;
@@ -67,7 +71,6 @@ MainWindow::MainWindow(QWidget *parent) :
     titre = new QLabel;
     mainLayout->addWidget(titre, 1,0,1,3);
 
-
     // ===== Init buttons =====
 
     Butt1 = new QPushButton;
@@ -75,7 +78,14 @@ MainWindow::MainWindow(QWidget *parent) :
     Butt3 = new QPushButton;
     Butt4 = new QPushButton;
     Butt5 = new QPushButton;
+    Butt6 = new QPushButton;
+    Butt7 = new QPushButton;
+    Butt8 = new QPushButton;
+    Butt9 = new QPushButton;
 
+    // ===== Init QSIM =====
+
+    stdItMod1 = new QStandardItemModel;
 
     // ===== Init LineEdits =====
 
@@ -95,11 +105,14 @@ MainWindow::MainWindow(QWidget *parent) :
     label9 = new QLabel;
     label10 = new QLabel;
     label11 = new QLabel;
+    label12 = new QLabel;
 
     // ===== Init Sql MVC =====
 
     sqlModel1 = new QSqlQueryModel;
+    sqlModel2 = new QSqlQueryModel;
     tableView1 = new QTableView;
+    tableView2 = new QTableView;
 
     // ===== Divers =====
 
@@ -132,6 +145,10 @@ void MainWindow::showProfilEdit()
     Butt2->show();
     QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showProfilEdit()));
     QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showUserList()));
+
+    Butt6->setText("Renseigner Profil");
+    Butt6->show();
+    mainLayout->addWidget(Butt6, 4,0,1,2);
 
     if (user != NULL)
         showUser();
@@ -175,14 +192,14 @@ void MainWindow::showUserList()
     showProfilEdit();
     sqlModel1 = Db->getUserList();
     label11->setText("Liste des utilisateurs :");
-    mainLayout->addWidget(label11, 2,2,1,1);
+    mainLayout->addWidget(label11, 2,3,1,1);
     label11->show();
     tableView1->setModel(sqlModel1);
     tableView1->verticalHeader()->setVisible(false);
-    mainLayout->addWidget(tableView1,3,2,5,3);
+    mainLayout->addWidget(tableView1,3,3,5,2);
     tableView1->show();
     valider->setText("Valider choix");
-    mainLayout->addWidget(valider,9,2,1,1);
+    mainLayout->addWidget(valider,9,3,1,1);
     valider->show();
     QObject::connect(valider, SIGNAL(clicked()), this, SLOT(selectUser()));
 }
@@ -193,41 +210,35 @@ void MainWindow::selectUser()
     QModelIndex index1 = selection->currentIndex();
     QModelIndex index2 = index1.sibling(index1.row(),0);
     QVariant variant1 = sqlModel1->data(index2);
-    user = new User;
+    user = new User(0, "", "", NULL, NULL);
     user = Db->getItem(user, variant1.toInt());
     QMessageBox::information(this, "Utilisateur selectionné", user->getPrenom() + " " + user->getNom());
     clear();
     showProfilEdit();
 }
 
-void MainWindow::showUser() //OK
+void MainWindow::showUser()
 {
-    label3->setText("Utilisateur courant :");
+    stdItMod1->setColumnCount(2);
+    stdItMod1->setRowCount(4);
+    stdItMod1->setItem(0,0, new QStandardItem("Utilisateur Courant"));
     QString name = user->getPrenom() + " " + user->getNom();
-    label4->setText(name);
-    label1->setText("Profil");
-    label2->setText("Simulation");
-    label5->setText("Renseignés :");
-    label7->setText("Non");
+    stdItMod1->setItem(0,1, new QStandardItem(name));
+    stdItMod1->setItem(1,0, new QStandardItem("Renseignés :"));
+    stdItMod1->setItem(2,0, new QStandardItem("Profil"));
+    stdItMod1->setItem(3,0, new QStandardItem("Simulation"));
+    QString profilRep = "Non";
+    QString simuRep = "Non";
     if (user->getProfil() != 0)
-        label7->setText("Oui");
-    label9->setText("Non");
+        profilRep = "Oui";
     if (user->getSimulation() != 0)
-        label9->setText("Oui");
-    mainLayout->addWidget(label3, 7,0,1,1);
-    mainLayout->addWidget(label4, 7,1,1,1);
-    mainLayout->addWidget(label5, 8,0,1,1);
-    mainLayout->addWidget(label1, 9,0,1,1);
-    mainLayout->addWidget(label7, 9,1,1,1);
-    mainLayout->addWidget(label2, 10,0,1,1);
-    mainLayout->addWidget(label9, 10,1,1,1);
-    label1->show();
-    label2->show();
-    label3->show();
-    label4->show();
-    label5->show();
-    label7->show();
-    label9->show();
+        simuRep = "Oui";
+    stdItMod1->setItem(2,1, new QStandardItem(profilRep));
+    stdItMod1->setItem(3,1, new QStandardItem(simuRep));
+    tableView1->setModel(stdItMod1);
+    mainLayout->addWidget(tableView1, 6,0,4,2);
+    tableView1->show();
+
 }
 
 void MainWindow::clear()
@@ -239,6 +250,10 @@ void MainWindow::clear()
     stop(Butt3);
     stop(Butt4);
     stop(Butt5);
+    stop(Butt6);
+    stop(Butt7);
+    stop(Butt8);
+    stop(Butt9);
 
     stop(label1);
     stop(label2);
@@ -251,11 +266,13 @@ void MainWindow::clear()
     stop(label9);
     stop(label10);
     stop(label11);
+    stop(label12);
 
     stop(le1);
     stop(le2);
 
     stop(tableView1);
+    stop(tableView2);
 
     stop(valider);
 }
@@ -271,33 +288,300 @@ void MainWindow::showConfigEdit()
 {
     titre->setText("Gestion de la configuration");
 
-    /*
-    mainLayout->addWidget(Butt1, 2,0,1,2);
-    Butt1->setText("Open DB");
+    mainLayout->addWidget(Butt1, 2,0,1,1);
+    Butt1->setText("Ajout Branche");
     Butt1->show();
-    QObject::connect(Butt1, SIGNAL(clicked()), this, SLOT(opendb()));
+    QObject::connect(Butt1, SIGNAL(clicked()), this, SLOT(showNewBranchForm()));
 
-    mainLayout->addWidget(Butt2, 3,0,1,2);
-    Butt2->setText("Delete DB");
+    mainLayout->addWidget(Butt2, 2,1,1,1);
+    Butt2->setText("Catalogue Branches");
     Butt2->show();
-    QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(deletedb()));
+    QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showBranchList()));
 
-    mainLayout->addWidget(Butt3, 4,0,1,2);
-    Butt3->setText("Create tables");
+    mainLayout->addWidget(Butt3, 3,0,1,2);
+    Butt3->setText("TEST");
     Butt3->show();
-    QObject::connect(Butt3, SIGNAL(clicked()), this, SLOT(createTables()));
+    QObject::connect(Butt3, SIGNAL(clicked()), this, SLOT(test()));
 
-    mainLayout->addWidget(Butt4, 5,0,1,2);
-    Butt4->setText("Insert UV");
+    mainLayout->addWidget(Butt4, 4,0,1,1);
+    Butt4->setText("Ajout Categorie");
     Butt4->show();
-    QObject::connect(Butt4, SIGNAL(clicked()), this, SLOT(insertuv()));
+    QObject::connect(Butt4, SIGNAL(clicked()), this, SLOT(showNewCatForm()));
 
-    mainLayout->addWidget(Butt5, 6,0,1,2);
-    Butt5->setText("TEST");
+    mainLayout->addWidget(Butt5, 4,1,1,1);
+    Butt5->setText("Catalogue Categories");
     Butt5->show();
-    QObject::connect(Butt5, SIGNAL(clicked()), this, SLOT(test()));
-    */
+    QObject::connect(Butt5, SIGNAL(clicked()), this, SLOT(showCatList()));
+
+    mainLayout->addWidget(Butt6, 5,0,1,1);
+    Butt6->setText("Ajout Filiere");
+    Butt6->show();
+    QObject::connect(Butt6, SIGNAL(clicked()), this, SLOT(showNewFiliereForm()));
+
+    mainLayout->addWidget(Butt7, 5,1,1,1);
+    Butt7->setText("Catalogue Filieres");
+    Butt7->show();
+    QObject::connect(Butt7, SIGNAL(clicked()), this, SLOT(showFiliereList()));
+
+
+    mainLayout->addWidget(Butt8, 6,0,1,2);
+    Butt8->setText("Catalogue d'UVs");
+    Butt8->show();
+    QObject::connect(Butt8, SIGNAL(clicked()), this, SLOT(showUVList()));
+/*
+    mainLayout->addWidget(Butt9, 6,1,1,1);
+    Butt9->setText("Catalogue Cursus");
+    Butt9->show();
+    //QObject::connect(Butt5, SIGNAL(clicked()), this, SLOT(showCursusList()));
+*/
 }
+
+void MainWindow::showNewBranchForm()
+{
+    clear();
+    label10->setText("Code :");
+    mainLayout->addWidget(label10, 2,3,1,1);
+    label11->setText("Nom :");
+    mainLayout->addWidget(label11, 3,3,1,1);
+    mainLayout->addWidget(le1, 2,4,1,2);
+    mainLayout->addWidget(le2, 3,4,1,2);
+    mainLayout->addWidget(valider, 4,4,1,2);
+    label10->show();
+    label11->show();
+    le1->show();
+    le2->show();
+    valider->show();
+    showConfigEdit();
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewBranchForm()));
+}
+
+void MainWindow::showNewFiliereForm()
+{
+    clear();
+    label10->setText("Code :");
+    mainLayout->addWidget(label10, 2,3,1,1);
+    label11->setText("Nom :");
+    mainLayout->addWidget(label11, 3,3,1,1);
+    mainLayout->addWidget(le1, 2,4,1,2);
+    mainLayout->addWidget(le2, 3,4,1,2);
+    mainLayout->addWidget(valider, 4,4,1,2);
+    label10->show();
+    label11->show();
+    le1->show();
+    le2->show();
+    valider->show();
+    showConfigEdit();
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewFiliereForm()));
+}
+
+void MainWindow::showNewCatForm()
+{
+    clear();
+    label10->setText("Code :");
+    mainLayout->addWidget(label10, 2,3,1,1);
+    label11->setText("Nom :");
+    mainLayout->addWidget(label11, 3,3,1,1);
+    mainLayout->addWidget(le1, 2,4,1,2);
+    mainLayout->addWidget(le2, 3,4,1,2);
+    mainLayout->addWidget(valider, 4,4,1,2);
+    label10->show();
+    label11->show();
+    le1->show();
+    le2->show();
+    valider->show();
+    showConfigEdit();
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewCatForm()));
+}
+
+void MainWindow::showNewCursusForm()
+{
+    clear();
+    label10->setText("Nom du Cursus :");
+    mainLayout->addWidget(label10, 2,3,1,1);
+    label10->show();
+    mainLayout->addWidget(le1, 2,4,1,2);
+    le1->show();
+
+    label11->setText("Choix de la Branche :");
+    mainLayout->addWidget(label11, 3,3,1,1);
+    label11->show();
+
+    sqlModel1 = Db->getBranchList();
+    tableView1->setModel(sqlModel1);
+    tableView1->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView1,4,3,4,2);
+    tableView1->show();
+
+    label12->setText("Choix de la Filiere :");
+    mainLayout->addWidget(label12, 8,3,1,1);
+    label12->show();
+
+    sqlModel2 = Db->getFiliereList();
+    tableView2->setModel(sqlModel2);
+    tableView2->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView2,9,3,2,2);
+    tableView2->show();
+
+
+    valider->setText("Valider choix");
+    mainLayout->addWidget(valider,12,3,1,1);
+    valider->show();
+
+    showConfigEdit();
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewUserForm()));
+}
+
+void MainWindow::valideNewCursusForm()
+{
+    QItemSelectionModel* selection = tableView1->selectionModel();
+    QModelIndex index1 = selection->currentIndex();
+    QModelIndex index2 = index1.sibling(index1.row(),0);
+    QVariant variant1 = sqlModel1->data(index2);
+    branche = new Branche(0, "", "");
+    branche = Db->getItem(branche, variant1.toInt());
+
+    QItemSelectionModel* selection2 = tableView2->selectionModel();
+    QModelIndex index3 = selection2->currentIndex();
+    QModelIndex index4 = index3.sibling(index3.row(),0);
+    QVariant variant2 = sqlModel1->data(index4);
+    filiere = new Filiere(0, "", "");
+    filiere = Db->getItem(filiere, variant2.toInt());
+
+    cursus = new Cursus(0, branche, filiere);
+    int id = Db->insertItem(cursus);
+    cursus->setId(id);
+
+    QString message = branche->getCode() + " => " + filiere->getCode();
+
+    if (id > 0)
+        QMessageBox::information(this, "Cursus inséré", message);
+    else
+        affiche("Erreur ZBleh");
+
+    clear();
+    showConfigEdit();
+
+}
+
+void MainWindow::valideNewBranchForm()
+{
+    branche = new Branche(0, le1->text(), le2->text());
+    int id = Db->insertItem(branche);
+    branche->setId(id);
+    if (id > 0)
+        affiche("Nouvelle branche créée.");
+    if (id == -1)
+        affiche("Erreur : echec, too bad, my bad.");
+    clear();
+    showConfigEdit();
+}
+
+void MainWindow::valideNewFiliereForm()
+{
+    filiere = new Filiere(0, le1->text(), le2->text());
+    int id = Db->insertItem(filiere);
+    filiere->setId(id);
+    if (id > 0)
+        affiche("Nouvelle filière créée.");
+    if (id == -1)
+        affiche("Erreur : echec, too bad, my bad.");
+    clear();
+    showConfigEdit();
+}
+
+
+void MainWindow::valideNewCatForm()
+{
+    categorie = new Categorie(0, le1->text(), le2->text());
+    int id = Db->insertItem(categorie);
+    categorie->setId(id);
+    if (id > 0)
+        affiche("Nouvelle catégorie créée.");
+    if (id == -1)
+        affiche("Erreur : echec, too bad, my bad.");
+    clear();
+    showConfigEdit();
+}
+
+
+void MainWindow::showBranchList()
+{
+    clear();
+    showConfigEdit();
+    sqlModel1 = Db->getBranchList();
+    label11->setText("Liste des Branches :");
+    mainLayout->addWidget(label11, 2,3,1,1);
+    label11->show();
+    tableView1->setModel(sqlModel1);
+    tableView1->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView1,3,3,5,2);
+    tableView1->show();
+    valider->setText("Valider choix");
+    mainLayout->addWidget(valider,9,3,1,1);
+    valider->show();
+    valider->hide(); // <============================== ICI !!!!
+    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(selectUser()));
+}
+
+void MainWindow::showFiliereList()
+{
+    clear();
+    showConfigEdit();
+    sqlModel1 = Db->getFiliereList();
+    label11->setText("Liste des Filieres :");
+    mainLayout->addWidget(label11, 2,3,1,1);
+    label11->show();
+    tableView1->setModel(sqlModel1);
+    tableView1->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView1,3,3,5,2);
+    tableView1->show();
+    valider->setText("Valider choix");
+    mainLayout->addWidget(valider,9,3,1,1);
+    valider->show();
+    valider->hide(); // <============================== ICI !!!!
+    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(selectUser()));
+}
+
+
+void MainWindow::showCatList()
+{
+    clear();
+    showConfigEdit();
+    sqlModel1 = Db->getCatList();
+    label11->setText("Liste des Categories d'UV :");
+    mainLayout->addWidget(label11, 2,3,1,1);
+    label11->show();
+    tableView1->setModel(sqlModel1);
+    tableView1->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView1,3,3,5,2);
+    tableView1->show();
+    valider->setText("Valider choix");
+    mainLayout->addWidget(valider,9,3,1,1);
+    valider->show();
+    valider->hide(); // <============================== ICI !!!!
+    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(selectUser()));
+}
+
+void MainWindow::showUVList()
+{
+    clear();
+    showConfigEdit();
+    sqlModel1 = Db->getUVList();
+    label11->setText("Catalogue d'UVs :");
+    mainLayout->addWidget(label11, 2,3,1,1);
+    label11->show();
+    tableView1->setModel(sqlModel1);
+    tableView1->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView1,3,2,15,4);
+    tableView1->show();
+    valider->setText("Valider choix");
+    mainLayout->addWidget(valider,9,3,1,1);
+    valider->show();
+    valider->hide(); // <============================== ICI !!!!
+    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(selectUser()));
+}
+
+
 
 void MainWindow::affiche(QString message)
 {
@@ -306,8 +590,9 @@ void MainWindow::affiche(QString message)
 
 void MainWindow::test()
 {
-    //QString code = Db->getUV(1);
-    //affiche(code);
+    uv = new UV;
+    QString filename("uvs.xml");
+    xml->load(filename, uv, Db);
 }
 
 bool MainWindow::openDb()

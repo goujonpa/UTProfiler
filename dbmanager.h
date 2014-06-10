@@ -59,12 +59,20 @@ class DbManager : public QObject
         int insertItem(Semestre* semestre);
         int insertItem(Simulation* simulation);
 
+        int find(Branche* branche);
+        int find(Categorie* categorie);
 
-        User* getItem(User*, int id);
-        Simulation* getItem(Simulation*, unsigned int id);
-        Profil* getItem(Profil*, unsigned int id);
+        User* getItem(User* user, int id);
+        Simulation* getItem(Simulation* simulation, unsigned int id);
+        Profil* getItem(Profil* profil, unsigned int id);
+        Filiere* getItem(Filiere* filiere, unsigned int id);
+        Branche* getItem(Branche* branche, unsigned int id);
 
         QSqlQueryModel* getUserList();
+        QSqlQueryModel* getBranchList();
+        QSqlQueryModel* getCatList();
+        QSqlQueryModel* getFiliereList();
+        QSqlQueryModel* getUVList();
 
         bool deleteItem(int id);
 
