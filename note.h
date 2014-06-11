@@ -56,6 +56,7 @@ class Note : public QObject
          * \return true si l'ajout s'est correctement déroulé
          */
         bool setCode(QString code);
+        bool setId(unsigned int id);
 
     protected:
 

@@ -67,7 +67,7 @@ class MainWindow : public QMainWindow
         void affiche(QString message);
         void showUser();
         void stop(QWidget* obj);
-
+        QTableView* getUvView();
 
 
     private:
@@ -84,6 +84,7 @@ class MainWindow : public QMainWindow
         QPushButton* Butt7;
         QPushButton* Butt8;
         QPushButton* Butt9;
+        QPushButton* Butt10;
         QPushButton* mainProfilButt;
         QPushButton* mainSimuButt;
         QPushButton* mainConfigButt;
@@ -110,42 +111,71 @@ class MainWindow : public QMainWindow
         Filiere* filiere = NULL;
         Cursus* cursus = NULL;
         UV* uv = NULL;
+        Note* note = NULL;
         QSqlQueryModel* sqlModel1;
         QSqlQueryModel* sqlModel2;
         QTableView* tableView1;
         QTableView* tableView2;
+        QTableView* selectView1;
         XmlManager* xml;
 
 
     public slots:
 
+
+
         void clear();
 
-        void showProfilEdit();
-        void showNewUserForm();
-        void showConfigEdit();
-        void showUserList();
-        void showNewBranchForm();
-        void showBranchList();
-        void showNewCatForm();
-        void showCatList();
-        void showNewFiliereForm();
-        void showFiliereList();
-        void showNewCursusForm();
-        void showUVList();
+        // ===== Tabs =====
 
-        void selectUser();
+        void showProfilEdit();
+        void showConfigEdit();
+        void showSimulationEdit();
+
+
+        // ===== Lists =====
+
+        void showUserList();
+        void showBranchList();
+        void showCatList();
+        void showFiliereList();
+        void showUVList();
+        void showNoteList();
+
+        // ===== Forms =====
+
+        void showNewBranchForm();
+        void showNewUserForm();
+        void showNewCatForm();
+        void showNewFiliereForm();
+        void showNewCursusForm();
+        void showNewNoteForm();
+        void showProfilForm();
+
+        // ===== Validation forms =====
 
         void valideNewUserForm();
         void valideNewBranchForm();
         void valideNewCatForm();
         void valideNewFiliereForm();
         void valideNewCursusForm();
+        void valideNewNoteForm();
+
+
+        // ===== Dialogs =======
+
+        void dialogAddInscr();
+
+
+        // ===== Selects =====
+
+        void selectUser();
+
 
         void test();
-        bool openDb();
-        bool deleteDb();
         bool createTables();
+        void exportDb();
+        void importDb();
 
 
 

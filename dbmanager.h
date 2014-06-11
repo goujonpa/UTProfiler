@@ -17,16 +17,34 @@
 #include "uv.h"
 
 
+
 class DbManager : public QObject
 {
         Q_OBJECT
-    public:
-        explicit DbManager(QObject *parent = 0);
+
+    protected:
+
+        User* m_user;
+        QMap<unsigned int, UV*>* m_uvs;
+        QMap<unsigned int, Branche*>* m_branches;
+        QMap<unsigned int, Semestre*>* m_semestres;
+        QMap<unsigned int, Filiere*>* m_filieres;
+        QMap<unsigned int, Categorie*>* m_categories;
+        QString m_test;
+
+        friend class MainWindow;
 
     public:
-        bool openDB();
-        bool deleteDB();
+
+        // ===== Init db =====
+
+        bool openDb();
+        bool deleteDb();
         bool createTables();
+        explicit DbManager(QObject *parent = 0);
+
+
+        // ===== create tables =====
 
         bool createUVTable();
         bool createUserTable();
@@ -44,6 +62,8 @@ class DbManager : public QObject
         bool createNoteTable();
         bool createPreferenceTable();
 
+        // ===== Insert items =====
+
         int insertItem(User* user);
         int insertItem(UV* uv);
         int insertItem(Cursus* cursus);
@@ -59,6 +79,17 @@ class DbManager : public QObject
         int insertItem(Semestre* semestre);
         int insertItem(Simulation* simulation);
 
+        // ===== Load =====
+
+        void loadUvs();
+        void loadBranches();
+        void loasSemestres();
+        void loadFilieres();
+        void loadCategories();
+        void loadCursus();
+
+        // ===== Divers =====
+
         int find(Branche* branche);
         int find(Categorie* categorie);
 
@@ -67,12 +98,16 @@ class DbManager : public QObject
         Profil* getItem(Profil* profil, unsigned int id);
         Filiere* getItem(Filiere* filiere, unsigned int id);
         Branche* getItem(Branche* branche, unsigned int id);
+        UV* getItem(UV* uv, int id);
+
+        // ===== getLists =====
 
         QSqlQueryModel* getUserList();
         QSqlQueryModel* getBranchList();
         QSqlQueryModel* getCatList();
         QSqlQueryModel* getFiliereList();
         QSqlQueryModel* getUVList();
+        QSqlQueryModel* getNoteList();
 
         bool deleteItem(int id);
 

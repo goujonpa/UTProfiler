@@ -156,9 +156,6 @@ class UV : public QObject
          */
         QMap<unsigned int, Cursus*> m_cursus;
 
-        // Comment initialiser ces pointeurs ? Ne vaudrait-il pas mieux donner un "id" à chaque objet ?
-        // (Certains objets étant des singletons). Ensuite les managers serviraient a remplir correctement chacun des objets.
-        // On ne stockerait que des int dans m_cat et m_cursus
 
     signals:
 
