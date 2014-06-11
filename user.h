@@ -75,7 +75,7 @@ class User : public QObject
          * Récupère le pointeur du profil
          * \return pointeur vers profil
          */
-        Profil* getProfil() const {return m_profil;}
+        Profil* getProfil() const;
 
         /*!
          * \brief méthode getPreference

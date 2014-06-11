@@ -117,6 +117,7 @@ MainWindow::MainWindow(QWidget *parent) :
     tableView2 = new QTableView;
     tableView3 = new QTableView;
     tableView4 = new QTableView;
+    utableView = new QTableView;
 
 
     // ===== Divers =====
@@ -125,6 +126,9 @@ MainWindow::MainWindow(QWidget *parent) :
     valider->setText("Valider");
 
     combo1 = new QComboBox;
+    dialog1 = new QDialog(this);
+    progress1 = new QProgressBar;
+
 
     // ===== Connect =====
 
@@ -182,10 +186,10 @@ void MainWindow::showUser()
         simuRep = "Oui";
     stdItMod1->setItem(2,1, new QStandardItem(profilRep));
     stdItMod1->setItem(3,1, new QStandardItem(simuRep));
-    tableView1->setModel(stdItMod1);
-    tableView1->horizontalHeader()->setVisible(false);
-    mainLayout->addWidget(tableView1, 6,0,4,2);
-    tableView1->show();
+    utableView->setModel(stdItMod1);
+    utableView->horizontalHeader()->setVisible(false);
+    mainLayout->addWidget(utableView, 6,0,4,2);
+    utableView->show();
 
 }
 
@@ -212,19 +216,26 @@ void MainWindow::showProfilEdit()
     mainLayout->addWidget(Butt3, 3,0,1,2);
     Butt3->setText("Renseigner Profil");
     Butt3->show();
+    QObject::connect(Butt3, SIGNAL(clicked()), this, SLOT(showProfilForm()));
 
     Butt4->setText("Ajouter Inscription");
     Butt4->show();
     mainLayout->addWidget(Butt4, 4,0,1,2);
     QObject::connect(Butt4, SIGNAL(clicked()), this, SLOT(showNewInscriptionForm()));
 
-    if (user != NULL)
+    if (Db->m_user != NULL)
     {
         showUser();
         Butt4->setEnabled(true);
+        if (Db->m_user->getProfil() == NULL)
+            Butt4->setEnabled(false);
+        Butt3->setEnabled(true);
     }
     else
+    {
         Butt4->setEnabled(false);
+        Butt3->setEnabled(false);
+    }
 }
 
 void MainWindow::showSimulationEdit()
@@ -345,7 +356,55 @@ void MainWindow::showConfigEdit()
 
 // ===== SHOW FORMS =======================================================
 
+void MainWindow::showProfilForm()
+{
+    clear();
+    label1->setText("Cursus actuel");
+    mainLayout->addWidget(label1, 2,3,1,1);
+    label1->show();
 
+    label2->setText("Branche :");
+    mainLayout->addWidget(label2, 3,3,1,1);
+    label2->show();
+
+    getBrancheView();
+    mainLayout->addWidget(tableView3, 4,3,2,3);
+    tableView3->show();
+
+    label3->setText("Filiere :");
+    mainLayout->addWidget(label3, 6,3,1,1);
+    label3->show();
+
+    getFiliereView();
+    mainLayout->addWidget(tableView4, 7,3,2,3);
+    tableView4->show();
+
+    label4->setText("Cursus visé");
+    mainLayout->addWidget(label4, 9,3,1,1);
+    label4->show();
+
+    label5->setText("Branche :");
+    mainLayout->addWidget(label5, 10,3,1,1);
+    label5->show();
+
+    getBrancheView2();
+    mainLayout->addWidget(tableView1, 11,3,2,3);
+    tableView1->show();
+
+    label6->setText("Filiere :");
+    mainLayout->addWidget(label6, 13,3,1,1);
+    label6->show();
+
+    getFiliereView2();
+    mainLayout->addWidget(tableView2, 14,3,2,3);
+    tableView2->show();
+
+    mainLayout->addWidget(valider, 16,3,1,1);
+    valider->show();
+
+    showProfilEdit();
+    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewBranchForm()));
+}
 
 void MainWindow::showNewBranchForm()
 {
@@ -482,7 +541,7 @@ void MainWindow::showNewInscriptionForm()
     label10->show();
 
     getUvView();
-    mainLayout->addWidget(tableView1, 3,3,2,3);
+    mainLayout->addWidget(tableView1, 3,3,3,3);
     tableView1->show();
 
     combo1->addItem("Printemps");
@@ -525,12 +584,102 @@ void MainWindow::showNewInscriptionForm()
     valider->setText("Valider");
     mainLayout->addWidget(valider, 14,3,2,3);
     valider->show();
-    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(dialogAddInscr()));
+
+    showProfilEdit();
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewInscriptionForm()));
 }
 
-// ===== Dialog ==========================================================
 
-void MainWindow::dialogAddInscr()
+// ===== VALIDE FORMS ==========================================================
+
+
+
+void MainWindow::valideProfilForm()
+{
+
+    QItemSelectionModel* selection = tableView3->selectionModel();
+    QModelIndex index1 = selection->currentIndex();
+    QModelIndex index2 = index1.sibling(index1.row(),0);
+    QVariant variant1 = sqlModel3->data(index2);
+    unsigned int id = variant1.toInt();
+    branche = Db->m_branches->find(id).value();
+
+    selection = tableView4->selectionModel();
+    index1 = selection->currentIndex();
+    index2 = index1.sibling(index1.row(),0);
+    variant1 = sqlModel4->data(index2);
+    id = variant1.toInt();
+    filiere = Db->m_filieres->find(id).value();
+
+    cursus = new Cursus(0, branche, filiere);
+
+    QMap<unsigned int, Cursus*>::iterator it;
+
+    for (it = Db->m_cursuss->begin(); it != Db->m_cursuss->end(); ++it)
+    {
+        if ((it.value()->getBranche() == branche) && (it.value()->getFiliere() == filiere))
+            cursus = it.value();
+    }
+
+    if (cursus->getId() == 0)
+    {
+        id = Db->insertItem(cursus);
+        cursus->setId(id);
+        Db->m_cursuss->insert(cursus->getId(), cursus);
+    }
+
+    selection = tableView1->selectionModel();
+    index1 = selection->currentIndex();
+    index2 = index1.sibling(index1.row(),0);
+    variant1 = sqlModel1->data(index2);
+    id = variant1.toInt();
+    branche = Db->m_branches->find(id).value();
+
+    selection = tableView2->selectionModel();
+    index1 = selection->currentIndex();
+    index2 = index1.sibling(index1.row(),0);
+    variant1 = sqlModel2->data(index2);
+    id = variant1.toInt();
+    filiere = Db->m_filieres->find(id).value();
+
+
+    cursus2 = new Cursus(0, branche, filiere);
+
+    QMap<unsigned int, Cursus*>::iterator it2;
+
+    for (it2 = Db->m_cursuss->begin(); it2 != Db->m_cursuss->end(); ++it2)
+    {
+        if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+            cursus2 = it2.value();
+    }
+
+    if (cursus2->getId() == 0)
+    {
+        id = Db->insertItem(cursus2);
+        cursus2->setId(id);
+        Db->m_cursuss->insert(cursus2->getId(), cursus2);
+    }
+
+
+    if (Db->m_user->getProfil() == NULL)
+    {
+        profil = new Profil(0, 0, cursus, cursus2, 0, 0, 0, 0);
+        id = Db->insertItem(profil);
+        profil->setId(id);
+        Db->m_profils->insert(profil->getId(), profil);
+    }
+    else
+    {
+        Db->m_profil->setActuel(cursus);
+        Db->m_profil->setVise(cursus2);
+    }
+
+    clear();
+    showProfilEdit();
+}
+
+
+void MainWindow::valideNewInscriptionForm()
 {
 
     QItemSelectionModel* selection = tableView1->selectionModel();
@@ -540,17 +689,12 @@ void MainWindow::dialogAddInscr()
     unsigned int id = variant1.toInt();
     uv = Db->m_uvs->find(id).value();
 
-    QMessageBox::information(this, "UV", uv->getCode());
-
-
     selection = tableView2->selectionModel();
     index1 = selection->currentIndex();
     index2 = index1.sibling(index1.row(),0);
     variant1 = sqlModel2->data(index2);
     id = variant1.toInt();
     note = Db->m_notes->find(id).value();
-
-    QMessageBox::information(this, "Note", note->getCode());
 
     selection = tableView3->selectionModel();
     index1 = selection->currentIndex();
@@ -559,9 +703,6 @@ void MainWindow::dialogAddInscr()
     id = variant1.toInt();
     branche = Db->m_branches->find(id).value();
 
-    QMessageBox::information(this, "Branche", branche->getCode());
-
-
     selection = tableView4->selectionModel();
     index1 = selection->currentIndex();
     index2 = index1.sibling(index1.row(),0);
@@ -569,15 +710,10 @@ void MainWindow::dialogAddInscr()
     id = variant1.toInt();
     filiere = Db->m_filieres->find(id).value();
 
-
-    QMessageBox::information(this, "Filiere", filiere->getCode());
-
-
     Saison saison = Printemps;
     if (combo1->currentText() == "Automne")
     {
         saison = Automne;
-        QMessageBox::information(this, "Saison", "Automne");
     }
 
     semestre = new Semestre(0, saison, le1->text().toInt());
@@ -597,10 +733,6 @@ void MainWindow::dialogAddInscr()
         Db->m_semestres->insert(semestre->getId(), semestre);
     }
 
-    QString mess = QString::number(semestre->getAnnee());
-    QMessageBox::information(this, "Semestre", mess);
-
-
     cursus = new Cursus(0, branche, filiere);
 
     QMap<unsigned int, Cursus*>::iterator it2;
@@ -618,19 +750,22 @@ void MainWindow::dialogAddInscr()
         Db->m_cursuss->insert(cursus->getId(), cursus);
     }
 
-    QString mess2 = QString::number(cursus->getId());
-    QMessageBox::information(this, "IdCursus", mess2);
-
+    QMessageBox::information(this, "Semestre", QString::number(semestre->getId()));
+    QMessageBox::information(this, "IdCursus", QString::number(cursus->getId()));
+    QMessageBox::information(this, "Filiere", QString::number(filiere->getId()));
+    QMessageBox::information(this, "Branche", QString::number(branche->getId()));
+    QMessageBox::information(this, "Note", QString::number(note->getId()));
+    QMessageBox::information(this, "UV", QString::number(uv->getId()));
 
     inscription = new Inscription(0, uv, semestre, note, cursus, uv->getCategorie());
     id = Db->insertItem(inscription);
-    inscription->setId(id);
-    Db->m_inscriptions->insert(inscription->getId(), inscription);
-    Db->m_userInscriptions->insert(inscription->getId(), inscription);
+    //inscription->setId(id);
+    //Db->m_inscriptions->insert(inscription->getId(), inscription);
+    //Db->m_userInscriptions->insert(inscription->getId(), inscription);
 
 
 
-    QMessageBox::information(this, "Inscription", inscription->getUV()->getCode());
+    //QMessageBox::information(this, "Inscription", inscription->getUV()->getCode());
 
 
     clear();
@@ -638,10 +773,6 @@ void MainWindow::dialogAddInscr()
 
 
 }
-
-
-// ===== VALIDE FORMS ==========================================================
-
 
 
 void MainWindow::valideNewNoteForm()
@@ -663,30 +794,20 @@ void MainWindow::valideNewCursusForm()
     QModelIndex index1 = selection->currentIndex();
     QModelIndex index2 = index1.sibling(index1.row(),0);
     QVariant variant1 = sqlModel1->data(index2);
-    branche = new Branche(0, "", "");
-    branche = Db->getItem(branche, variant1.toInt());
+    branche = Db->m_branches->find(variant1.toInt()).value();
 
-    QItemSelectionModel* selection2 = tableView2->selectionModel();
-    QModelIndex index3 = selection2->currentIndex();
-    QModelIndex index4 = index3.sibling(index3.row(),0);
-    QVariant variant2 = sqlModel1->data(index4);
-    filiere = new Filiere(0, "", "");
-    filiere = Db->getItem(filiere, variant2.toInt());
+    selection = tableView2->selectionModel();
+    index1 = selection->currentIndex();
+    index2 = index1.sibling(index1.row(),0);
+    variant1 = sqlModel1->data(index2);
+    filiere = Db->m_filieres->find(variant1.toInt()).value();
 
     cursus = new Cursus(0, branche, filiere);
     int id = Db->insertItem(cursus);
     cursus->setId(id);
 
-    QString message = branche->getCode() + " => " + filiere->getCode();
-
-    if (id > 0)
-        QMessageBox::information(this, "Cursus inséré", message);
-    else
-        affiche("Erreur ZBleh");
-
     clear();
     showConfigEdit();
-
 }
 
 void MainWindow::valideNewBranchForm()
@@ -734,7 +855,10 @@ void MainWindow::valideNewUserForm()
     int idUser = Db->insertItem(user);
     user->setId(idUser);
     if (idUser > 0)
+    {
         affiche("Nouvel Utilisateur créé.");
+        Db->m_user = user;
+    }
     if (idUser == -1)
         affiche("Erreur : echec, too bad, my bad.");
     clear();
@@ -873,6 +997,23 @@ QTableView* MainWindow::getFiliereView()
     return tableView4;
 }
 
+QTableView* MainWindow::getBrancheView2()
+{
+    sqlModel1 = Db->getBranchList();
+    tableView1->setModel(sqlModel1);
+    tableView1->verticalHeader()->setVisible(false);
+    return tableView1;
+}
+
+QTableView* MainWindow::getFiliereView2()
+{
+    sqlModel2 = Db->getFiliereList();
+    tableView2->setModel(sqlModel2);
+    tableView2->verticalHeader()->setVisible(false);
+    return tableView2;
+}
+
+
 
 
 // ===== DIVERS ========================================================
@@ -886,6 +1027,8 @@ void MainWindow::affiche(QString message)
 
 void MainWindow::test()
 {
+
+
 
     QString filename("uvs.xml");
     xml->load(filename, uv, Db);

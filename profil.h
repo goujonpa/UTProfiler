@@ -36,7 +36,7 @@ class Profil : public QObject
          * \param vise : pointeur vers le cursus visé
          * \param etr : conteneur de semestre à l'étranger
          */
-        Profil(unsigned int id, QMap<unsigned int, Inscription*> insc, Cursus* actuel, Cursus* vise, QMap<unsigned int, Etranger*> etr): m_id(id), m_inscriptions(insc), m_actuel(actuel), m_vise(vise), m_etranger(etr) {}
+        Profil(unsigned int id, QMap<unsigned int, Inscription*>* inscriptions, Cursus* actuel, Cursus* vise, QMap<unsigned int, Etranger*>* etrangers, QMap<unsigned int, Etranger*>* prefEtrangers, QMap<unsigned int, DesirUV*>* desirs, QMap<unsigned int, BonusUV*>* bonus): m_id(id), m_inscriptions(inscriptions), m_actuel(actuel), m_vise(vise), m_etrangers(etrangers), m_prefEtrangers(prefEtrangers), m_desirs(desirs), m_bonus(bonus) {}
 
     /*!
          * \brief Constructeur par défaut de Profil
@@ -56,7 +56,7 @@ class Profil : public QObject
          * Récupère les inscriptions
          * \return conteneur des inscriptions
          */
-        QMap<unsigned int, Inscription*> getInscriptions() const {return m_inscriptions;}
+        QMap<unsigned int, Inscription*>* getInscriptions() const {return m_inscriptions;}
 
         /*!
          * \brief méthode getActuel
@@ -77,7 +77,7 @@ class Profil : public QObject
          * Récupère les semestres réalisés à l'étranger
          * \return conteneur des semestres à l'étranger
          */
-        QMap<unsigned int, Etranger*> getEtranger() {return m_etranger;}
+        QMap<unsigned int, Etranger*>* getEtrangers() {return m_etrangers;}
 
         /*!
          * \brief méthode setInscriptions
@@ -85,7 +85,7 @@ class Profil : public QObject
          * \param insc : conteneur des inscriptions
          * \return true si l'ajout s'est réalisé correctement
          */
-        bool setInscriptions(QMap<unsigned int, Inscription*> insc);
+        bool setInscriptions(QMap<unsigned int, Inscription*>* inscriptions);
 
         /*!
          * \brief méthode addInscription
@@ -93,7 +93,7 @@ class Profil : public QObject
          * \param insc : pointeur vers une inscription
          * \return true si l'ajout s'est réalisé correctement
          */
-        bool addInscription(Inscription* insc);
+        bool addInscription(Inscription* inscription);
 
         /*!
          * \brief methode setActuel
@@ -117,7 +117,7 @@ class Profil : public QObject
          * \param etr : conteneur de semestre à l'étranger
          * \return true si l'ajout s'est réalisé correctement
          */
-        bool setEtranger(QMap<unsigned int, Etranger*> etr);
+        bool setEtrangers(QMap<unsigned int, Etranger*>* etrangers);
 
         /*!
          * \brief méthode addEtranger
@@ -125,14 +125,15 @@ class Profil : public QObject
          * \param etr : pointeur vers semestre à l'étranger
          * \return true si l'ajout s'est déroulé correctement
          */
-        bool addEtranger(Etranger* etr);
+        bool addEtranger(Etranger* etranger);
+        bool setId(unsigned int id);
 
-        QMap<unsigned int, Etranger*> getPrefEtranger() const {return m_prefEtrangers;}
-        QMap<unsigned int, DesirUV*> getDesirs() const {return m_desirs;}
-        QMap<unsigned int, BonusUV*> getBonus() const {return m_bonus;}
-        bool setPrefEtrangers(QMap<unsigned int, Etranger*> etranger);
-        bool setDesirs(QMap<unsigned int, DesirUV*> desirs);
-        bool setBonus(QMap<unsigned int, BonusUV*> bonus);
+        QMap<unsigned int, Etranger*>* getPrefEtranger() const {return m_prefEtrangers;}
+        QMap<unsigned int, DesirUV*>* getDesirs() const {return m_desirs;}
+        QMap<unsigned int, BonusUV*>* getBonus() const {return m_bonus;}
+        bool setPrefEtrangers(QMap<unsigned int, Etranger*>* etranger);
+        bool setDesirs(QMap<unsigned int, DesirUV*>* desirs);
+        bool setBonus(QMap<unsigned int, BonusUV*>* bonus);
         bool addPrefEtranger(Etranger* etranger);
         bool addDesir(DesirUV* desir);
         bool addBonus(BonusUV* bonus);
@@ -152,7 +153,7 @@ class Profil : public QObject
         /*!
          * \brief m_inscriptions : conteneur des inscriptions
          */
-        QMap<unsigned int, Inscription*> m_inscriptions;
+        QMap<unsigned int, Inscription*>* m_inscriptions;
 
         /*!
          * \brief m_actuel : pointeur vers le cursus actuel
@@ -167,10 +168,10 @@ class Profil : public QObject
         /*!
          * \brief m_etranger : conteneur des semestres à l'étranger
          */
-        QMap<unsigned int, Etranger*> m_etranger;
-        QMap<unsigned int, Etranger*> m_prefEtrangers;
-        QMap<unsigned int, DesirUV*> m_desirs;
-        QMap<unsigned int, BonusUV*> m_bonus;
+        QMap<unsigned int, Etranger*>* m_etrangers;
+        QMap<unsigned int, Etranger*>* m_prefEtrangers;
+        QMap<unsigned int, DesirUV*>* m_desirs;
+        QMap<unsigned int, BonusUV*>* m_bonus;
 
     signals:
 
