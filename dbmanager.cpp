@@ -3,9 +3,22 @@
 DbManager::DbManager(QObject *parent) :
     QObject(parent)
 {
-}
+    m_uvs = new QMap<unsigned int, UV*>;
+    openDb();
+    loadUvs();
+    loadBranches();
+    loadSemestres();
+    loadFilieres();
+    loadCategories();
+    loadCursus();
 
-bool DbManager::openDB()
+
+
+}
+// ===== Init ===========================================================
+
+
+bool DbManager::openDb()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
 
@@ -24,15 +37,120 @@ bool DbManager::openDB()
     return db.open();
 }
 
+
+
+// ===== LOAD ===========================================================
+
+
+void DbManager::loadBranches()
+{
+    m_branches->clear();
+
+    QSqlQuery query("SELECT * FROM Branche");
+
+    while (query.next())
+    {
+        Branche* branche = new Branche;
+        branche->setId(query.value(0).toInt());
+        branche->setCode(query.value(1).toString());
+        branche->setNom(query.value(2).toString());
+        m_branches->insert(branche->getId(), branche);
+    }
+}
+
+void DbManager::loadSemestres()
+{
+    m_semestres->clear();
+
+    QSqlQuery query("SELECT * FROM Semestre");
+
+    while (query.next())
+    {
+        Semestre* semestre = new Semestre;
+        semestre->setId(query.value(0).toInt());
+        semestre->setSaison(query.value(1).toString());
+        semestre->setAnnee(query.value(2).toInt());
+        m_semestres->insert(semestre->getId(), semestre);
+    }
+}
+
+
+void DbManager::loadUvs()
+{
+    m_uvs->clear();
+
+    QSqlQuery query("SELECT * FROM UV");
+
+    while (query.next())
+    {
+        UV* uv = new UV;
+        uv->setId(query.value(0).toInt());
+        uv->setCode(query.value(1).toString());
+        uv->setCredits(query.value(2).toInt());
+        m_uvs->insert(uv->getId(), uv);
+    }
+}
+
+void DbManager::loadFilieres()
+{
+    m_filieres->clear();
+
+    QSqlQuery query("SELECT * FROM Filiere");
+
+    while (query.next())
+    {
+        Filiere* filiere = new filiere;
+        filiere->setId(query.value(0).toInt());
+        filiere->setCode(query.value(1).toString());
+        filiere->setNom(query.value(2).toInt());
+        m_filieres->insert(filiere->getId(), filiere);
+    }
+}
+
+void DbManager::loadCategories()
+{
+    m_categories->clear();
+
+    QSqlQuery query("SELECT * FROM Categorie");
+
+    while (query.next())
+    {
+        Categorie* categorie = new categorie;
+        categorie->setId(query.value(0).toInt());
+        categorie->setCode(query.value(1).toString());
+        categorie->setNom(query.value(2).toInt());
+        m_categories->insert(categorie->getId(), categorie);
+    }
+}
+
+void DbManager::loadCursus()
+{
+    m_cursuss->clear();
+
+    QSqlQuery query("SELECT * FROM Cursus");
+
+    while (query.next())
+    {
+        Cursus* cursus = new categorie;
+        cursus->setId(query.value(0).toInt());
+        cursus->setBranche(m_branches->find(query.value(1).toInt()).value());
+        cursus->setFiliere(m_filieres->find(query.value(2).toInt()).value());
+        m_cursuss->insert(cursus->getId(), cursus);
+    }
+}
+
+
+
+
+// =====
+
+
 QSqlError DbManager::lastError()
 {
-    // If opening database has failed user can ask
-    // error description by QSqlError::text()
-
     return db.lastError();
 }
 
-bool DbManager::deleteDB()
+bool DbManager::deleteDb()
 {
     // Close database
     db.close();
@@ -512,7 +630,12 @@ QSqlQueryModel* DbManager::getUVList()
     return uvList;
 }
 
-
+QSqlQueryModel* DbManager::getNoteList()
+{
+    QSqlQueryModel* noteList = new QSqlQueryModel;
+    noteList->setQuery("SELECT * FROM Note");
+    return noteList;
+}
 
 
 int DbManager::find(Branche* branche)
@@ -604,6 +727,35 @@ Profil* DbManager::getItem(Profil* profil, unsigned int id)
 }
 
 
+UV* DbManager::getItem(UV* uv, int id)
+{
+    /*
+    QSqlQuery query(QString("SELECT * FROM User WHERE id = '%1'").arg(id));
+    int idSimu, idProfil;
+
+    if (query.next())
+    {
+        uv->setId(query.value(0).toInt());
+        user->setNom(query.value(1).toString());
+        user->setPrenom(query.value(2).toString());
+        idSimu = query.value(3).toInt();
+        idProfil = query.value(4).toInt();
+
+        if (idSimu != 0)
+        {
+            Simulation* simulation = new Simulation;
+            user->setSimulation(this->getItem(simulation, idSimu));
+        }
+        if (idProfil != 0)
+        {
+            Profil* profil = new Profil;
+            user->setProfil(this->getItem(profil, idProfil));
+        }
+    }
+    return user;
+    */
+
+}
 
 
 

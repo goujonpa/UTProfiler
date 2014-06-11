@@ -14,6 +14,7 @@ class Note : public QObject
         unsigned int getId() const {return m_id;}
         QString getCode() const {return m_code;}
         bool setCode(QString code);
+        bool setId(unsigned int id);
 
     protected:
 
