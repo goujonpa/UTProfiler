@@ -1,3 +1,13 @@
+/*!
+ * \file categorie.cpp
+ * \brief Méthodes de la classe Categorie
+ * \author Goujon & Cortyl
+ * \date 15 juin 2014
+ *
+ * Définition des méthodes de la classe Categorie
+ *
+ */
+
 #include "categorie.h"
 
 Categorie::Categorie(QObject *parent) :
