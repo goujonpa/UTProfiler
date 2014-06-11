@@ -37,11 +37,14 @@ bool User::setProfil(Profil* profil)
 
 Profil* User::getProfil() const
 {
-    if (m_profil == NULL)
-        return NULL;
-    if (m_profil == 0)
-        return NULL;
+    if (m_profil == NULL || m_profil == 0)
+        return 0;
     return m_profil;
 }
 
-
+Simulation* User::getSimulation() const
+{
+    if (m_simulation == NULL || m_profil == 0)
+        return 0;
+    return m_simulation;
+}

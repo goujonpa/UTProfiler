@@ -46,7 +46,6 @@ class MainWindow : public QMainWindow
         explicit MainWindow(QWidget *parent = 0);
         ~MainWindow();
         void affiche(QString message);
-        void showUser();
         void stop(QWidget* obj);
         QTableView* getUvView();
         QTableView* getNoteView();
@@ -91,6 +90,7 @@ class MainWindow : public QMainWindow
         QLabel* label12;
         QComboBox* combo1;
         QStandardItemModel* stdItMod1;
+        QStandardItemModel* stdItMod2;
         DbManager* Db;
         User* user = NULL;
         Branche* branche = NULL;
@@ -161,6 +161,10 @@ class MainWindow : public QMainWindow
         void valideNewInscriptionForm();
         void valideProfilForm();
 
+        // ===== show items =====
+
+        void showProfilInfo();
+        void showUser();
 
         // ===== Selects =====
 

@@ -68,7 +68,7 @@ class User : public QObject
          * Récupère le pointeur de la simulation
          * \return pointeur vers simulation
          */
-        Simulation* getSimulation() const {return m_simulation;}
+        Simulation* getSimulation() const;
 
         /*!
          * \brief méthode getProfil

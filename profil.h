@@ -56,28 +56,28 @@ class Profil : public QObject
          * Récupère les inscriptions
          * \return conteneur des inscriptions
          */
-        QMap<unsigned int, Inscription*>* getInscriptions() const {return m_inscriptions;}
+        QMap<unsigned int, Inscription*>* getInscriptions() const;
 
         /*!
          * \brief méthode getActuel
          * Récupère le cursus actuel
          * \return pointeur vers le cursus actuel
          */
-        Cursus* getActuel() const {return m_actuel;}
+        Cursus* getActuel() const;
 
         /*!
          * \brief méthode getVise
          * Récupère le cursus visé
          * \return pointeur vers cursus visé
          */
-        Cursus* getVise() const {return m_vise;}
+        Cursus* getVise() const;
 
         /*!
          * \brief méthode getEtranger
          * Récupère les semestres réalisés à l'étranger
          * \return conteneur des semestres à l'étranger
          */
-        QMap<unsigned int, Etranger*>* getEtrangers() {return m_etrangers;}
+        QMap<unsigned int, Etranger*>* getEtrangers() const;
 
         /*!
          * \brief méthode setInscriptions
@@ -128,9 +128,9 @@ class Profil : public QObject
         bool addEtranger(Etranger* etranger);
         bool setId(unsigned int id);
 
-        QMap<unsigned int, Etranger*>* getPrefEtranger() const {return m_prefEtrangers;}
-        QMap<unsigned int, DesirUV*>* getDesirs() const {return m_desirs;}
-        QMap<unsigned int, BonusUV*>* getBonus() const {return m_bonus;}
+        QMap<unsigned int, Etranger*>* getPrefEtrangers() const;
+        QMap<unsigned int, DesirUV*>* getDesirs() const;
+        QMap<unsigned int, BonusUV*>* getBonus() const;
         bool setPrefEtrangers(QMap<unsigned int, Etranger*>* etranger);
         bool setDesirs(QMap<unsigned int, DesirUV*>* desirs);
         bool setBonus(QMap<unsigned int, BonusUV*>* bonus);

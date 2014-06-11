@@ -27,17 +27,13 @@ class XmlManager : public QObject
         QVector<UV*>* getUV() const {return m_uvs;}
         QString getTest() const {return m_test;}
 
-        void load(QString filename, UV* uv, DbManager* db);
+        void load(QString filename, DbManager* db);
 
 
     protected:
 
-        //QDomDocument* dom;
-        //QFile* file;
         QVector<UV*>* m_uvs;
         QString m_test;
-        //Manager(const QString& f="");
-        //virtual ~Manager();
 
     signals:
 

@@ -12,7 +12,6 @@ DbManager::DbManager(QObject *parent) :
     m_cursuss = new QMap<unsigned int, Cursus*>;
     m_notes = new QMap<unsigned int, Note*>;
     m_inscriptions = new QMap<unsigned int, Inscription*>;
-    m_userInscriptions = new QMap<unsigned int, Inscription*>;
     m_profils = new QMap<unsigned int, Profil*>;
 
     openDb();
@@ -49,15 +48,175 @@ void DbManager::load()
     loadSemestres();
     loadFilieres();
     loadCategories();
-    loadCursus();
     loadNotes();
-    loadUsers();
+    loadCursus(); // verif
     loadUvs();
+    loadProfil();
+    loadUsers();
+
+}
+
+// ===== DESTRUCTEUR ==========================================================
+
+void DbManager::save()
+{
+
+}
+
+void DbManager::remove()
+{
+    QSqlQuery query;
+    bool ret = false;
+    ret = query.exec("DELETE FROM UVCursus");
+    if (ret)
+        ret = query.exec("DELETE FROM User");
+    if (ret)
+        ret = query.exec("DELETE FROM Profil");
+    if (ret)
+        ret = query.exec("DELETE FROM ProfilInscr");
+    if (ret)
+        ret = query.exec("DELETE FROM ProfilEtr");
+    if (ret)
+        ret = query.exec("DELETE FROM ProPrefEtr");
+    if (ret)
+        ret = query.exec("DELETE FROM ProPrefDesirs");
+    if (ret)
+        ret = query.exec("DELETE FROM ProPrefBonus");
+    if (ret)
+        ret = query.exec("DELETE FROM Inscription");
+    if (ret)
+        ret = query.exec("DELETE FROM Etranger");
+    if (ret)
+        ret = query.exec("DELETE FROM Semestre");
+    if (ret)
+        ret = query.exec("DELETE FROM Bonus");
+    if (ret)
+        ret = query.exec("DELETE FROM Branche");
+    if (ret)
+        ret = query.exec("DELETE FROM Desir");
+    if (ret)
+        ret = query.exec("DELETE FROM Simulation");
+    if (ret)
+        ret = query.exec("DELETE FROM SimulationInscr");
+    if (ret)
+        ret = query.exec("DELETE FROM Categorie");
+    if (ret)
+        ret = query.exec("DELETE FROM Cursus");
+    if (ret)
+        ret = query.exec("DELETE FROM Filiere");
+    if (ret)
+        ret = query.exec("DELETE FROM Note");
 }
 
 
-
 // ===== LOAD ===========================================================
+
+
+void DbManager::loadProfil()
+{
+
+        m_profils->clear();
+
+        QSqlQuery query("SELECT * FROM Profil");
+        QSqlQuery query2("SELECT * FROM ProfilInscr");
+        QSqlQuery query3("SELECT * FROM ProfilEtr");
+        QSqlQuery query4("SELECT * FROM ProPrefEtr");
+        QSqlQuery query5("SELECT * FROM ProPrefDesirs");
+        QSqlQuery query6("SELECT * FROM ProPrefBonus");
+
+        while (query.next())
+        {
+            Profil* profil = new Profil;
+            profil->setId(query.value(0).toInt());
+            profil->setActuel(0);
+            profil->setVise(0);
+
+            if (query.value(1).toInt() != 0)
+            {
+                profil->setActuel(m_cursuss->find(query.value(1).toInt()).value());
+            }
+
+            if (query.value(2).toInt() != 0)
+            {
+                profil->setVise(m_cursuss->find(query.value(2).toInt()).value());
+            }
+            profil->setEtrangers(0);
+            profil->setInscriptions(0);
+            profil->setPrefEtrangers(0);
+            profil->setDesirs(0);
+            profil->setBonus(0);
+        }
+
+        Inscription* inscription = new Inscription;
+
+        while (query2.next())
+        {
+            if (m_profils->find(query.value(1).toInt()).value()->getInscriptions() == 0)
+            {
+                QMap<unsigned int, Inscription*>* inscriptions = new QMap<unsigned int, Inscription*>;
+                m_profils->find(query.value(1).toInt()).value()->setInscriptions(inscriptions);
+            }
+
+            inscription = m_inscriptions->find(query2.value(2).toInt()).value();
+            m_profils->find(query.value(2).toInt()).value()->getInscriptions()->insert(inscription->getId(), inscription);
+        }
+
+        Etranger* etranger = new Etranger;
+
+        while (query3.next())
+        {
+            if (m_profils->find(query.value(1).toInt()).value()->getEtrangers() == 0)
+            {
+                QMap<unsigned int, Etranger*>* etrangers = new QMap<unsigned int, Etranger*>;
+                m_profils->find(query.value(1).toInt()).value()->setEtrangers(etrangers);
+            }
+
+            etranger = m_etrangers->find(query2.value(2).toInt()).value();
+            m_profils->find(query.value(2).toInt()).value()->getEtrangers()->insert(etranger->getId(), etranger);
+        }
+
+        while (query4.next())
+        {
+            if (m_profils->find(query.value(1).toInt()).value()->getPrefEtrangers() == 0)
+            {
+                QMap<unsigned int, Etranger*>* etrangers = new QMap<unsigned int, Etranger*>;
+                m_profils->find(query.value(1).toInt()).value()->setPrefEtrangers(etrangers);
+            }
+
+            etranger = m_prefEtrangers->find(query2.value(2).toInt()).value();
+            m_profils->find(query.value(2).toInt()).value()->getPrefEtrangers()->insert(etranger->getId(), etranger);
+        }
+
+        DesirUV* desir = new DesirUV;
+
+        while (query5.next())
+        {
+            if (m_profils->find(query.value(1).toInt()).value()->getDesirs() == 0)
+            {
+                QMap<unsigned int, DesirUV*>* desirs = new QMap<unsigned int, DesirUV*>;
+                m_profils->find(query.value(1).toInt()).value()->setDesirs(desirs);
+            }
+
+            desir = m_desirs->find(query2.value(2).toInt()).value();
+            m_profils->find(query.value(2).toInt()).value()->getDesirs()->insert(desir->getId(), desir);
+        }
+
+        BonusUV* bonus = new BonusUV;
+
+        while (query6.next())
+        {
+            if (m_profils->find(query.value(1).toInt()).value()->getBonus() == 0)
+            {
+                QMap<unsigned int, BonusUV*>* bonuss = new QMap<unsigned int, BonusUV*>;
+                m_profils->find(query.value(1).toInt()).value()->setBonus(bonuss);
+            }
+
+            bonus = m_bonus->find(query2.value(2).toInt()).value();
+            m_profils->find(query.value(2).toInt()).value()->getBonus()->insert(bonus->getId(), bonus);
+        }
+}
+
+
 
 
 void DbManager::loadBranches()
@@ -88,6 +247,17 @@ void DbManager::loadUsers()
         user->setId(query.value(0).toInt());
         user->setNom(query.value(1).toString());
         user->setPrenom(query.value(2).toString());
+        user->setSimulation(0);
+        user->setProfil(0);
+        if (query.value(3).toInt() != 0)
+        {
+            user->setSimulation(0);
+            //Simulation* simulation = new Simulation;
+        }
+        if (query.value(4).toInt() != 0)
+        {
+            user->setProfil(m_profils->find(query.value(4).toInt()).value());
+        }
         m_users->insert(user->getId(), user);
     }
 }
@@ -146,8 +316,12 @@ void DbManager::loadUvs()
         uv->setId(query.value(0).toInt());
         uv->setCode(query.value(1).toString());
         uv->setCredits(query.value(2).toInt());
-        categorie = m_categories->find(query.value(3).toInt()).value();
-        uv->setCategorie(categorie);
+        uv->setCategorie(0);
+        if (query.value(3).toInt() != 0)
+        {
+            categorie = m_categories->find(query.value(3).toInt()).value();
+            uv->setCategorie(categorie);
+        }
         m_uvs->insert(uv->getId(), uv);
     }
 }
@@ -187,15 +361,22 @@ void DbManager::loadCategories()
 void DbManager::loadCursus()
 {
     m_cursuss->clear();
-
     QSqlQuery query("SELECT * FROM Cursus");
 
     while (query.next())
     {
         Cursus* cursus = new Cursus;
         cursus->setId(query.value(0).toInt());
-        cursus->setBranche(m_branches->find(query.value(1).toInt()).value());
-        cursus->setFiliere(m_filieres->find(query.value(2).toInt()).value());
+        cursus->setBranche(0);
+        cursus->setFiliere(0);
+        if (query.value(1).toInt() != 0)
+        {
+            cursus->setBranche(m_branches->find(query.value(1).toInt()).value());
+        }
+        if (query.value(2).toInt() != 0)
+        {
+            cursus->setFiliere(m_filieres->find(query.value(2).toInt()).value());
+        }
         m_cursuss->insert(cursus->getId(), cursus);
     }
 }
@@ -269,11 +450,11 @@ bool DbManager::createProfilTable()
         if (ret == true)
             ret = query.exec("CREATE TABLE ProfilEtr (id INTEGER PRIMARY KEY, idProfil INTEGER, idEtranger INTEGER)");
         if (ret == true)
-            ret = query.exec("CREATE TABLE ProPrefEtr (id INTEGER PRIMARY KEY, idPreference INTEGER, idEtranger INTEGER)");
+            ret = query.exec("CREATE TABLE ProPrefEtr (id INTEGER PRIMARY KEY, idProfil INTEGER, idEtranger INTEGER)");
         if (ret == true)
-            ret = query.exec("CREATE TABLE ProPrefDesirs (id INTEGER PRIMARY KEY, idPreference INTEGER, idDesir INTEGER)");
+            ret = query.exec("CREATE TABLE ProPrefDesirs (id INTEGER PRIMARY KEY, idProfil INTEGER, idDesir INTEGER)");
         if (ret == true)
-            ret = query.exec("CREATE TABLE ProPrefBonus (id INTEGER PRIMARY KEY, idPreference INTEGER, idBonus INTEGER)");
+            ret = query.exec("CREATE TABLE ProPrefBonus (id INTEGER PRIMARY KEY, idProfil INTEGER, idBonus INTEGER)");
     }
     return ret;
 }
@@ -408,10 +589,15 @@ int DbManager::insertItem(User* user)
 {
     bool ret = false;
     int newId = -1;
-    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    unsigned int idProfil = 0, idSimulation = 0;
+    if (user->getProfil() != 0)
+        idProfil = user->getProfil()->getId();
+    if (user->getSimulation() != 0)
+        idSimulation = user->getSimulation()->getId();
+    if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into User values(NULL,'%1','%2','%3', '%4')").arg(user->getNom()).arg(user->getPrenom()).arg(0).arg(0));
+        ret = query.exec(QString("INSERT into User values(NULL,'%1','%2','%3', '%4')").arg(user->getNom()).arg(user->getPrenom()).arg(idProfil).arg(idSimulation));
         if (ret)
             newId = query.lastInsertId().toInt();
     }
@@ -425,24 +611,25 @@ int DbManager::insertItem(UV* uv)
     if (db.isOpen())
     {
         QSqlQuery query;
-        int idCategorie = 0;
-
+        unsigned int idCategorie = 0;
         if (uv->getCategorie() != 0)
             idCategorie = uv->getCategorie()->getId();
-
         ret = query.exec(QString("INSERT into UV values(NULL,'%1','%2','%3')").arg(uv->getCode()).arg(uv->getCredits()).arg(idCategorie));
 
         if (ret)
         {
             newId = query.lastInsertId().toInt();
-/*
+            unsigned int idCursus = 0;
+
             QSqlQuery query2;
-            QMap<unsigned int, Cursus*> map = uv->getCursus();
-            for (QMap<unsigned int, Cursus*>::Iterator it = map.begin(); it != map.end(); ++it)
+            QMap<unsigned int, Cursus*>* map = uv->getCursus();
+            QMap<unsigned int, Cursus*>::Iterator it;
+            for (it = map->begin(); it != map->end(); ++it)
             {
-                ret = query2.exec(QString("INSERT into UVCursus values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+                idCursus = it.value()->getId();
+                ret = query2.exec(QString("INSERT into UVCursus values(NULL,'%1','%2')").arg(newId).arg(idCursus));
             }
-*/
+
         }
     }
     return newId;
@@ -587,41 +774,72 @@ int DbManager::insertItem(Profil* profil)
 {
     bool ret = false;
     int newId = -1;
+    unsigned int idInscription = 0, idEtranger = 0, idPrefEtranger = 0, idDesir = 0, idBonus = 0;
     if (db.isOpen())
     {
         QSqlQuery query;
+        QSqlQuery query2;
         ret = query.exec(QString("INSERT into Profil values(NULL,'%1', '%2')").arg(profil->getActuel()->getId()).arg(profil->getVise()->getId()));
+
         if (ret)
         {
             newId = query.lastInsertId().toInt();
+            if (profil->getInscriptions() != 0)
+            {
 
-            QSqlQuery query2;
-            QMap<unsigned int, Inscription*>* map = profil->getInscriptions();
-            for (QMap<unsigned int, Inscription*>::Iterator it = map->begin(); it != map->end(); ++it)
-            {
-                ret = query2.exec(QString("INSERT into ProfilInscr values(NULL,'%1','%2')").arg(newId).arg(it.key()));
-            }
-            QMap<unsigned int, Etranger*>* map2 = profil->getEtrangers();
-            for (QMap<unsigned int, Etranger*>::Iterator it = map2->begin(); it != map2->end(); ++it)
-            {
-                ret = query2.exec(QString("INSERT into ProfilEtr values(NULL,'%1','%2')").arg(newId).arg(it.key()));
-            }
-            QMap<unsigned int, Etranger*>* map3 = profil->getPrefEtranger();
-            for (QMap<unsigned int, Etranger*>::Iterator it = map3->begin(); it != map3->end(); ++it)
-            {
-                ret = query2.exec(QString("INSERT into ProPrefEtr values(NULL,'%1','%2')").arg(newId).arg(it.key()));
-            }
-            QMap<unsigned int, DesirUV*>* map4 = profil->getDesirs();
-            for (QMap<unsigned int, DesirUV*>::Iterator it = map4->begin(); it != map4->end(); ++it)
-            {
-                ret = query2.exec(QString("INSERT into ProPrefDesirs values(NULL,'%1','%2')").arg(newId).arg(it.key()));
-            }
-            QMap<unsigned int, BonusUV*>* map5 = profil->getBonus();
-            for (QMap<unsigned int, BonusUV*>::Iterator it = map5->begin(); it != map5->end(); ++it)
-            {
-                ret = query2.exec(QString("INSERT into ProPrefBonus values(NULL,'%1','%2')").arg(newId).arg(it.key()));
+                QSqlQuery query2;
+                QMap<unsigned int, Inscription*>* map = profil->getInscriptions();
+                QMap<unsigned int, Inscription*>::Iterator it;
+                for ( it = map->begin(); it != map->end(); ++it)
+                {
+                    idInscription = it.value()->getId();
+                    ret = query2.exec(QString("INSERT into ProfilInscr values(NULL,'%1','%2')").arg(idInscription));
+                }
             }
 
+            if (profil->getEtrangers() != 0)
+            {
+                QMap<unsigned int, Etranger*>* map2 = profil->getEtrangers();
+                QMap<unsigned int, Etranger*>::Iterator it2;
+                for ( it2 = map2->begin(); it2 != map2->end(); ++it2)
+                {
+                    idEtranger = it2.value()->getId();
+                    ret = query2.exec(QString("INSERT into ProfilEtr values(NULL,'%1','%2')").arg(newId).arg(idEtranger));
+                }
+            }
+
+            if (profil->getPrefEtrangers() != 0)
+            {
+                QMap<unsigned int, Etranger*>* map3 = profil->getPrefEtrangers();
+                QMap<unsigned int, Etranger*>::Iterator it3;
+                for (QMap<unsigned int, Etranger*>::Iterator it3 = map3->begin(); it3 != map3->end(); ++it3)
+                {
+                    idPrefEtranger = it3.value()->getId();
+                    ret = query2.exec(QString("INSERT into ProPrefEtr values(NULL,'%1','%2')").arg(newId).arg(idPrefEtranger));
+                }
+            }
+
+            if (profil->getDesirs() != 0)
+            {
+                QMap<unsigned int, DesirUV*>* map4 = profil->getDesirs();
+                QMap<unsigned int, DesirUV*>::Iterator it4;
+                for (it4 = map4->begin(); it4 != map4->end(); ++it4)
+                {
+                    idDesir = it4.value()->getId();
+                    ret = query2.exec(QString("INSERT into ProPrefDesirs values(NULL,'%1','%2')").arg(newId).arg(idDesir));
+                }
+            }
+
+            if (profil->getBonus() != 0)
+            {
+                QMap<unsigned int, BonusUV*>* map5 = profil->getBonus();
+                QMap<unsigned int, BonusUV*>::Iterator it5;
+                for (it5 = map5->begin(); it5 != map5->end(); ++it5)
+                {
+                    idBonus = it5.value()->getId();
+                    ret = query2.exec(QString("INSERT into ProPrefBonus values(NULL,'%1','%2')").arg(newId).arg(idBonus));
+                }
+            }
         }
     }
     return newId;

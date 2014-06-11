@@ -43,7 +43,7 @@ class UV : public QObject
          * \param cat : catégorie de l'UV
          * \param cursus : cursus associé
         */
-        UV(unsigned int id, QString code, unsigned int credits, Categorie* cat, QMap<unsigned int, Cursus*> cursus): m_id(id), m_code(code), m_credits(credits), m_categorie(cat), m_cursus(cursus) {}
+        UV(unsigned int id, QString code, unsigned int credits, Categorie* categorie, QMap<unsigned int, Cursus*>* cursus): m_id(id), m_code(code), m_credits(credits), m_categorie(categorie), m_cursus(cursus) {}
 
         /*!
          * \brief méthode getId
@@ -71,14 +71,14 @@ class UV : public QObject
          * Récupère la catégorie de l'UV
          * \return la catégorie
          */
-        Categorie* getCategorie() const {return m_categorie;}
+        Categorie* getCategorie() const;
 
         /*!
          * \brief méthode getCursus
          * Récupère le cursus
          * \return le cursus associé
          */
-        QMap<unsigned int, Cursus*> getCursus() const {return m_cursus;}
+        QMap<unsigned int, Cursus*>* getCursus() const;
 
         bool setId(unsigned int id);
 
@@ -105,7 +105,7 @@ class UV : public QObject
          * \param cat : catégorie de l'UV
          * \return true si l'ajout s'est bien réalisé
          */
-        bool setCategorie(Categorie* cat);
+        bool setCategorie(Categorie* categorie);
 
         /*!
          * \brief méthode setCursus
@@ -113,7 +113,7 @@ class UV : public QObject
          * \param cursus : cursus associé
          * \return true si l'ajout s'est bien réalisé
          */
-        bool setCursus(QMap<unsigned int, Cursus*> cursus);
+        bool setCursus(QMap<unsigned int, Cursus*>* cursus);
 
         /*!
          * \brief méthode addCursus
@@ -148,11 +148,7 @@ class UV : public QObject
         /*!
          * \brief m_cursus : cursus associé à l'UV
          */
-        QMap<unsigned int, Cursus*> m_cursus;
-
-        // Comment initialiser ces pointeurs ? Ne vaudrait-il pas mieux donner un "id" à chaque objet ?
-        // (Certains objets étant des singletons). Ensuite les managers serviraient a remplir correctement chacun des objets.
-        // On ne stockerait que des int dans m_cat et m_cursus
+        QMap<unsigned int, Cursus*>* m_cursus;
 
     signals:
 
