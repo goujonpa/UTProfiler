@@ -79,6 +79,8 @@ class Semestre : public QObject
          */
         bool setAnnee(unsigned int annee);
 
+        bool setId(unsigned int id);
+
     protected:
 
         /*!

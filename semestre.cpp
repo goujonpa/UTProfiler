@@ -16,3 +16,9 @@ bool Semestre::setAnnee(unsigned int annee)
     m_annee = annee;
     return true;
 }
+
+bool Semestre::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}

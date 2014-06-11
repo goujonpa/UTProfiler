@@ -22,3 +22,4 @@ bool Branche::setId(unsigned int id)
     m_id = id;
     return true;
 }
+

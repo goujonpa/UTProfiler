@@ -27,6 +27,7 @@ class Inscription : public QObject
         bool setNote(Note* note);
         bool setCursus(Cursus* cursus);
         bool setCategorie(Categorie* categorie);
+        bool setId(unsigned int id);
 
     protected:
 

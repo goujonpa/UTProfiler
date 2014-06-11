@@ -3,15 +3,20 @@
 DbManager::DbManager(QObject *parent) :
     QObject(parent)
 {
+    m_user = new User;
+    m_users = new QMap<unsigned int, User*>;
     m_uvs = new QMap<unsigned int, UV*>;
-    openDb();
-    loadUvs();
-    loadBranches();
-    loadSemestres();
-    loadFilieres();
-    loadCategories();
-    loadCursus();
+    m_branches = new QMap<unsigned int, Branche*>;
+    m_filieres = new QMap<unsigned int, Filiere*>;
+    m_semestres = new QMap<unsigned int, Semestre*>;
+    m_categories = new QMap<unsigned int, Categorie*>;
+    m_cursuss = new QMap<unsigned int, Cursus*>;
+    m_notes = new QMap<unsigned int, Note*>;
+    m_inscriptions = new QMap<unsigned int, Inscription*>;
+    m_userInscriptions = new QMap<unsigned int, Inscription*>;
 
+    openDb();
+    load();
 
 
 }
@@ -37,6 +42,18 @@ bool DbManager::openDb()
     return db.open();
 }
 
+void DbManager::load()
+{
+    loadUvs();
+    loadBranches();
+    loadSemestres();
+    loadFilieres();
+    loadCategories();
+    loadCursus();
+    loadNotes();
+    loadUsers();
+}
+
 
 
 // ===== LOAD ===========================================================
@@ -58,17 +75,57 @@ void DbManager::loadBranches()
     }
 }
 
+void DbManager::loadUsers()
+{
+    m_users->clear();
+
+    QSqlQuery query("SELECT * FROM User");
+
+    while (query.next())
+    {
+        User* user = new User;
+        user->setId(query.value(0).toInt());
+        user->setNom(query.value(1).toString());
+        user->setPrenom(query.value(2).toString());
+        m_users->insert(user->getId(), user);
+    }
+}
+
+
+void DbManager::loadNotes()
+{
+    m_notes->clear();
+
+    QSqlQuery query("SELECT * FROM Note");
+
+    while (query.next())
+    {
+        Note* note = new Note;
+        note->setId(query.value(0).toInt());
+        note->setCode(query.value(1).toString());
+        m_notes->insert(note->getId(), note);
+    }
+}
+
+
 void DbManager::loadSemestres()
 {
     m_semestres->clear();
 
     QSqlQuery query("SELECT * FROM Semestre");
+    unsigned int idSaison;
+    Saison saison;
 
     while (query.next())
     {
         Semestre* semestre = new Semestre;
         semestre->setId(query.value(0).toInt());
-        semestre->setSaison(query.value(1).toString());
+        idSaison = query.value(1).toInt();
+        if (idSaison == 1)
+            saison = Printemps;
+        else
+            saison = Automne;
+        semestre->setSaison(saison);
         semestre->setAnnee(query.value(2).toInt());
         m_semestres->insert(semestre->getId(), semestre);
     }
@@ -99,10 +156,10 @@ void DbManager::loadFilieres()
 
     while (query.next())
     {
-        Filiere* filiere = new filiere;
+        Filiere* filiere = new Filiere;
         filiere->setId(query.value(0).toInt());
         filiere->setCode(query.value(1).toString());
-        filiere->setNom(query.value(2).toInt());
+        filiere->setNom(query.value(2).toString());
         m_filieres->insert(filiere->getId(), filiere);
     }
 }
@@ -115,10 +172,10 @@ void DbManager::loadCategories()
 
     while (query.next())
     {
-        Categorie* categorie = new categorie;
+        Categorie* categorie = new Categorie;
         categorie->setId(query.value(0).toInt());
         categorie->setCode(query.value(1).toString());
-        categorie->setNom(query.value(2).toInt());
+        categorie->setNom(query.value(2).toString());
         m_categories->insert(categorie->getId(), categorie);
     }
 }
@@ -131,7 +188,7 @@ void DbManager::loadCursus()
 
     while (query.next())
     {
-        Cursus* cursus = new categorie;
+        Cursus* cursus = new Cursus;
         cursus->setId(query.value(0).toInt());
         cursus->setBranche(m_branches->find(query.value(1).toInt()).value());
         cursus->setFiliere(m_filieres->find(query.value(2).toInt()).value());
@@ -246,7 +303,7 @@ bool DbManager::createSemestreTable()
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec("CREATE TABLE Semestre (id INTEGER PRIMARY KEY, saison VARCHAR(30), annee INTEGER)");
+        ret = query.exec("CREATE TABLE Semestre (id INTEGER PRIMARY KEY, saison INTEGER, annee INTEGER)");
     }
     return ret;
 }
@@ -561,11 +618,14 @@ int DbManager::insertItem(Profil* profil)
 int DbManager::insertItem(Semestre* semestre)
 {
     bool ret = false;
-    int newId = -1;
+    int newId = -1, idSaison = 1;
+    if (semestre->getSaison() == Automne)
+        idSaison = 0;
+
     if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into Semestre values(NULL,'%1','%2')").arg(semestre->getSaison()).arg(semestre->getAnnee()));
+        ret = query.exec(QString("INSERT into Semestre values(NULL,'%1','%2')").arg(idSaison).arg(semestre->getAnnee()));
         if (ret)
             newId = query.lastInsertId().toInt();
     }
