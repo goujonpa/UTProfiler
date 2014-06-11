@@ -5,6 +5,12 @@ User::User(QObject *parent) :
 {
 }
 
+bool User::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}
+
 bool User::setNom(QString nom)
 {
     m_nom = nom;
@@ -29,9 +35,4 @@ bool User::setProfil(Profil* profil)
     return true;
 }
 
-bool User::setPreference(Preference* pref)
-{
-    m_preference = pref;
-    return true;
-}
 

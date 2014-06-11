@@ -11,9 +11,9 @@
 
 #include <QObject>
 #include <QMap>
-#include "preference.h"
 #include "inscription.h"
 #include "cursus.h"
+#include "profil.h"
 
 /*!
  * \class Simulation
@@ -40,7 +40,7 @@ class Simulation : public QObject
          * \param inscription : conteneur contenant les pointeurs vers toutes les inscriptions que contient la simulation
          * \param cursus : pointeur vers objet cursus
          */
-        Simulation(unsigned int id, Preference* pref, QMap<unsigned int, Inscription*> inscription, Cursus* cursus): m_id(id), m_preference(pref), m_inscriptions(inscription), m_cursus(cursus) {}
+        Simulation(unsigned int id, Profil* profil, QMap<unsigned int, Inscription*> inscription, Cursus* cursus): m_id(id), m_profil(profil), m_inscriptions(inscription), m_cursus(cursus) {}
 
         /*!
          * \brief méthode getId
@@ -54,7 +54,7 @@ class Simulation : public QObject
          * Récupère le pointeur de la preference
          * \return pointeur vers preference
          */
-        Preference* getPreference() const {return m_preference;}
+        Profil* getProfil() const {return m_profil;}
 
         /*!
          * \brief méthode getInscriptions
@@ -75,7 +75,7 @@ class Simulation : public QObject
          * \param pref : pointeur vers Preference
          * \return true si l'ajout s'est bien réalisé
          */
-        bool setPreference(Preference* pref);
+        bool setProfil(Profil* profil);
 
         /*!
          * \brief méthode setInscriptions
@@ -112,7 +112,7 @@ class Simulation : public QObject
         /*!
          * \brief m_preference : pointeur vers preference
          */
-        Preference* m_preference;
+        Profil* m_profil;
 
         /*!
          * \brief m_inscriptions : conteneur des inscriptions

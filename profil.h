@@ -14,6 +14,9 @@
 #include "inscription.h"
 #include "cursus.h"
 #include "etranger.h"
+#include "desiruv.h"
+#include "bonusuv.h"
+
 
 /*!
  * \class Profil
@@ -124,6 +127,99 @@ class Profil : public QObject
          */
         bool addEtranger(Etranger* etr);
 
+        /*!
+         * \brief méthode getPrefEtranger
+         * Récupère les préférences de départ à l'étranger
+         * \return conteneur de semestre à l'étranger
+         */
+        QMap<unsigned int, Etranger*> getPrefEtranger() const {return m_prefEtrangers;}
+
+        /*!
+         * \brief méthode getDesirs
+         * Récupère les UVs les plus désirées
+         * \return : conteneur d'UV désirées
+         */
+        QMap<unsigned int, DesirUV*> getDesirs() const {return m_desirs;}
+
+        /*!
+         * \brief méthode getBonus
+         * Récupère les préférences envers des UVs
+         * \return conteneur d'avis sur des UVs
+         */
+        QMap<unsigned int, BonusUV*> getBonus() const {return m_bonus;}
+
+        /*!
+         * \brief méthode setPrefEtrangers
+         * Modifie les préférences de semestre à l'étranger
+         * \param etranger : conteneur de semestre à l'étranger
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool setPrefEtrangers(QMap<unsigned int, Etranger*> etranger);
+
+        /*!
+         * \brief méthode setDesirs
+         * Modifie les désirs de faire des UVs en particulier
+         * \param desirs : conteneur de désirs d'UVs
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool setDesirs(QMap<unsigned int, DesirUV*> desirs);
+
+        /*!
+         * \brief méthode setBonus
+         * Modifie les avis données à des UVs
+         * \param bonus : conteneur de BonusUV
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool setBonus(QMap<unsigned int, BonusUV*> bonus);
+
+        /*!
+         * \brief méthode addPrefEtranger
+         * Ajoute un souhait de départ à l'étranger
+         * \param etranger : pointeur vers un semestre à l'étranger
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool addPrefEtranger(Etranger* etranger);
+
+        /*!
+         * \brief méthode addDesir
+         * Ajoute un désir de faire une UV
+         * \param desir : pointeur vers un désir d'UV
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool addDesir(DesirUV* desir);
+
+        /*!
+         * \brief méthode addBonus
+         * Ajoute une préférence à une UV
+         * \param bonus : pointeur vers un BonusUV
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool addBonus(BonusUV* bonus);
+
+        /*!
+         * \brief méthode removePrefEtranger
+         * Retire un souhait de semestre à l'étranger
+         * \param etranger : pointeur vers un semestre à l'étranger
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool removePrefEtranger(Etranger* etranger);
+
+        /*!
+         * \brief méthode removeDesir
+         * Retire un désir de faire une UV
+         * \param desir : pointeur vers un désir d'UV
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool removeDesir(DesirUV* desir);
+
+        /*!
+         * \brief méthode removeBonus
+         * Retire une préférence donnée à une UV
+         * \param bonus : pointeur vers BonusUV
+         * \return true si la modification s'est correctement réalisée
+         */
+        bool removeBonus(BonusUV* bonus);
+
 
 
     protected:
@@ -152,6 +248,21 @@ class Profil : public QObject
          * \brief m_etranger : conteneur des semestres à l'étranger
          */
         QMap<unsigned int, Etranger*> m_etranger;
+
+        /*!
+         * \brief m_prefEtrangers : conteneur de semestre à l'étranger
+         */
+        QMap<unsigned int, Etranger*> m_prefEtrangers;
+
+        /*!
+         * \brief m_desirs : conteneur de désirs d'UV
+         */
+        QMap<unsigned int, DesirUV*> m_desirs;
+
+        /*!
+         * \brief m_bonus : conteneur d'UV à favoriser
+         */
+        QMap<unsigned int, BonusUV*> m_bonus;
 
     signals:
 

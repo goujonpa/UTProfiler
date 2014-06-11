@@ -12,7 +12,6 @@
 #include <QObject>
 #include "simulation.h"
 #include "profil.h"
-#include "preference.h"
 
 /*!
  * \class User
@@ -41,7 +40,7 @@ class User : public QObject
          * \param profil : pointeur vers objet Profil
          * \param pref : pointeur vers objet Preference
          */
-        User(unsigned int id, QString nom, QString prenom, Simulation* simu, Profil* profil, Preference* pref): m_id(id), m_nom(nom), m_prenom(prenom), m_simulation(simu), m_profil(profil), m_preference(pref) {}
+        User(unsigned int id = 0, QString nom = "", QString prenom = "", Simulation* simulation = NULL, Profil* profil = NULL): m_id(id), m_nom(nom), m_prenom(prenom), m_simulation(simulation), m_profil(profil) {}
 
         /*!
          * \brief méthode getId
@@ -83,8 +82,8 @@ class User : public QObject
          * Récupère le pointeur des préférences
          * \return pointeur vers Preference
          */
-        Preference* getPreference() const {return m_preference;}
 
+        bool setId(unsigned int id);
         /*!
          * \brief méthode setNom
          * Modifie le nom de user
@@ -123,7 +122,6 @@ class User : public QObject
          * \param pref : pointeur vers preference
          * \return true si l'ajout s'est bien réalisé
          */
-        bool setPreference(Preference* pref);
 
     protected:
 
@@ -155,7 +153,6 @@ class User : public QObject
         /*!
          * \brief m_preference : preference de user
          */
-        Preference* m_preference;
 
     signals:
 

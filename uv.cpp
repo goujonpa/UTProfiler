@@ -34,3 +34,9 @@ bool UV::addCursus(Cursus* cursus)
     m_cursus.insert(cursus->getId(), cursus);
     return true;
 }
+
+bool UV::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}

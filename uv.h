@@ -81,6 +81,15 @@ class UV : public QObject
         QMap<unsigned int, Cursus*> getCursus() const {return m_cursus;}
 
         /*!
+         * \brief méthode setId
+         * Modifie l'identificateur de l'UV
+         * \param id : identificateur de l'UV
+         * \return true si la modification c'est correctement déroulée
+         */
+        bool setId(unsigned int id);
+
+
+        /*!
          * \brief méthode setCode
          * Modifie le code de l'UV
          * \param code : code de l'UV

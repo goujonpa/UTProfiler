@@ -16,3 +16,9 @@ bool Branche::setNom(QString nom)
     m_nom = nom;
     return true;
 }
+
+bool Branche::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}

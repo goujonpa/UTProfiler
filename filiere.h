@@ -71,6 +71,7 @@ class Filiere : public QObject
          * \return true si l'ajout s'est déroulé correctement
          */
         bool setNom(QString nom);
+        bool setId(unsigned int id);
 
     protected:
 
