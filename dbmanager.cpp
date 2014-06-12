@@ -9,10 +9,17 @@ DbManager::DbManager(QObject *parent) :
     m_filieres = new QMap<unsigned int, Filiere*>;
     m_semestres = new QMap<unsigned int, Semestre*>;
     m_categories = new QMap<unsigned int, Categorie*>;
-    m_cursuss = new QMap<unsigned int, Cursus*>;
+    m_cursus = new QMap<unsigned int, Cursus*>;
     m_notes = new QMap<unsigned int, Note*>;
     m_inscriptions = new QMap<unsigned int, Inscription*>;
     m_profils = new QMap<unsigned int, Profil*>;
+    m_etrangers = new QMap<unsigned int, Etranger*>;
+    m_prefEtrangers = new QMap<unsigned int, Etranger*>;
+    m_desirs = new QMap<unsigned int, DesirUV*>;
+    m_bonus = new QMap<unsigned int, BonusUV*>;
+    m_simulations = new QMap<unsigned int, Simulation*>;
+
+
 
     openDb();
     load();
@@ -49,7 +56,7 @@ void DbManager::load()
     loadFilieres();
     loadCategories();
     loadNotes();
-    loadCursus(); // verif
+    loadCursus();
     loadUvs();
     loadProfil();
     loadUsers();
@@ -60,10 +67,99 @@ void DbManager::load()
 
 void DbManager::save()
 {
+    QMap<unsigned int, User*>::Iterator it;
+    for(it = m_users->begin(); it != m_users->end(); ++it)
+    {
+        insertItem(it.value());
+    }
+
+    QMap<unsigned int, Branche*>::Iterator it3;
+    for(it3 = m_branches->begin(); it3 != m_branches->end(); ++it3)
+    {
+        insertItem(it3.value());
+    }
+
+    QMap<unsigned int, Semestre*>::Iterator it4;
+    for(it4 = m_semestres->begin(); it4 != m_semestres->end(); ++it4)
+    {
+        insertItem(it4.value());
+    }
+
+    QMap<unsigned int, Filiere*>::Iterator it5;
+    for(it5 = m_filieres->begin(); it5 != m_filieres->end(); ++it5)
+    {
+        insertItem(it5.value());
+    }
+
+    QMap<unsigned int, Categorie*>::Iterator it6;
+    for(it6 = m_categories->begin(); it6 != m_categories->end(); ++it6)
+    {
+        insertItem(it6.value());
+    }
+
+    QMap<unsigned int, Cursus*>::Iterator it7;
+    for(it7 = m_cursus->begin(); it7 != m_cursus->end(); ++it7)
+    {
+        insertItem(it7.value());
+    }
+
+    QMap<unsigned int, Note*>::Iterator it8;
+    for(it8 = m_notes->begin(); it8 != m_notes->end(); ++it8)
+    {
+        insertItem(it8.value());
+    }
+
+    QMap<unsigned int, Inscription*>::Iterator it9;
+    for(it9 = m_inscriptions->begin(); it9 != m_inscriptions->end(); ++it9)
+    {
+        insertItem(it9.value());
+    }
+
+    QMap<unsigned int, Etranger*>::Iterator it10;
+    for(it10 = m_etrangers->begin(); it10 != m_etrangers->end(); ++it10)
+    {
+        insertItem(it10.value());
+    }
+
+    QMap<unsigned int, Etranger*>::Iterator it11;
+    for(it11 = m_prefEtrangers->begin(); it11 != m_prefEtrangers->end(); ++it11)
+    {
+        insertItem(it11.value());
+    }
+
+    QMap<unsigned int, Profil*>::Iterator it12;
+    for(it12 = m_profils->begin(); it12 != m_profils->end(); ++it12)
+    {
+        insertItem(it12.value());
+    }
+
+    QMap<unsigned int, DesirUV*>::Iterator it13;
+    for(it13 = m_desirs->begin(); it13 != m_desirs->end(); ++it13)
+    {
+        insertItem(it13.value());
+    }
+
+    QMap<unsigned int, BonusUV*>::Iterator it14;
+    for(it14 = m_bonus->begin(); it14 != m_bonus->end(); ++it14)
+    {
+        insertItem(it14.value());
+    }
+
+    QMap<unsigned int, Simulation*>::Iterator it15;
+    for(it15 = m_simulations->begin(); it15 != m_simulations->end(); ++it15)
+    {
+        insertItem(it15.value());
+    }
+
+    QMap<unsigned int, UV*>::Iterator it2;
+    for(it2 = m_uvs->begin(); it2 != m_uvs->end(); ++it2)
+    {
+        insertItem(it2.value());
+    }
 
 }
 
-void DbManager::remove()
+bool DbManager::remove()
 {
     QSqlQuery query;
     bool ret = false;
@@ -106,6 +202,10 @@ void DbManager::remove()
         ret = query.exec("DELETE FROM Filiere");
     if (ret)
         ret = query.exec("DELETE FROM Note");
+    if (ret)
+        ret = query.exec("DELETE FROM UV");
+
+    return ret;
 }
 
 
@@ -133,12 +233,12 @@ void DbManager::loadProfil()
 
             if (query.value(1).toInt() != 0)
             {
-                profil->setActuel(m_cursuss->find(query.value(1).toInt()).value());
+                profil->setActuel(m_cursus->find(query.value(1).toInt()).value());
             }
 
             if (query.value(2).toInt() != 0)
             {
-                profil->setVise(m_cursuss->find(query.value(2).toInt()).value());
+                profil->setVise(m_cursus->find(query.value(2).toInt()).value());
             }
             profil->setEtrangers(0);
             profil->setInscriptions(0);
@@ -262,6 +362,45 @@ void DbManager::loadUsers()
     }
 }
 
+void DbManager::loadInscriptions()
+{
+    m_inscriptions->clear();
+
+    QSqlQuery query("SELECT * FROM Inscription");
+
+    while (query.next())
+    {
+        Inscription* inscription = new Inscription;
+        inscription->setId(query.value(0).toInt());
+        inscription->setUV(0);
+        if (query.value(1).toInt() != 0)
+        {
+            inscription->setUV(m_uvs->find(query.value(1).toInt()).value());
+        }
+        inscription->setSemestre(0);
+        if (query.value(2).toInt() != 0)
+        {
+            inscription->setSemestre(m_semestres->find(query.value(2).toInt()).value());
+        }
+        inscription->setNote(0);
+        if (query.value(3).toInt() != 0)
+        {
+            inscription->setNote(m_notes->find(query.value(3).toInt()).value());
+        }
+        inscription->setCursus(0);
+        if (query.value(4).toInt() != 0)
+        {
+            inscription->setCursus(m_cursus->find(query.value(4).toInt()).value());
+        }
+        inscription->setCategorie(0);
+        if (query.value(5).toInt() != 0)
+        {
+            inscription->setCategorie(m_categories->find(query.value(5).toInt()).value());
+        }
+        m_inscriptions->insert(inscription->getId(), inscription);
+    }
+}
+
 
 void DbManager::loadNotes()
 {
@@ -322,6 +461,7 @@ void DbManager::loadUvs()
             categorie = m_categories->find(query.value(3).toInt()).value();
             uv->setCategorie(categorie);
         }
+        uv->setCursus(0);
         m_uvs->insert(uv->getId(), uv);
     }
 }
@@ -360,7 +500,7 @@ void DbManager::loadCategories()
 
 void DbManager::loadCursus()
 {
-    m_cursuss->clear();
+    m_cursus->clear();
     QSqlQuery query("SELECT * FROM Cursus");
 
     while (query.next())
@@ -377,7 +517,7 @@ void DbManager::loadCursus()
         {
             cursus->setFiliere(m_filieres->find(query.value(2).toInt()).value());
         }
-        m_cursuss->insert(cursus->getId(), cursus);
+        m_cursus->insert(cursus->getId(), cursus);
     }
 }
 
@@ -621,15 +761,17 @@ int DbManager::insertItem(UV* uv)
             newId = query.lastInsertId().toInt();
             unsigned int idCursus = 0;
 
-            QSqlQuery query2;
-            QMap<unsigned int, Cursus*>* map = uv->getCursus();
-            QMap<unsigned int, Cursus*>::Iterator it;
-            for (it = map->begin(); it != map->end(); ++it)
+            if (uv->getCursus() != 0)
             {
-                idCursus = it.value()->getId();
-                ret = query2.exec(QString("INSERT into UVCursus values(NULL,'%1','%2')").arg(newId).arg(idCursus));
+                QSqlQuery query2;
+                QMap<unsigned int, Cursus*>* map = uv->getCursus();
+                QMap<unsigned int, Cursus*>::Iterator it;
+                for (it = map->begin(); it != map->end(); ++it)
+                {
+                    idCursus = it.value()->getId();
+                    ret = query2.exec(QString("INSERT into UVCursus values(NULL,'%1','%2')").arg(newId).arg(idCursus));
+                }
             }
-
         }
     }
     return newId;
@@ -793,7 +935,7 @@ int DbManager::insertItem(Profil* profil)
                 for ( it = map->begin(); it != map->end(); ++it)
                 {
                     idInscription = it.value()->getId();
-                    ret = query2.exec(QString("INSERT into ProfilInscr values(NULL,'%1','%2')").arg(idInscription));
+                    ret = query2.exec(QString("INSERT into ProfilInscr values(NULL,'%1','%2')").arg(newId).arg(idInscription));
                 }
             }
 

@@ -32,7 +32,7 @@ class DbManager : public QObject
         QMap<unsigned int, Semestre*>* m_semestres;
         QMap<unsigned int, Filiere*>* m_filieres;
         QMap<unsigned int, Categorie*>* m_categories;
-        QMap<unsigned int, Cursus*>* m_cursuss;
+        QMap<unsigned int, Cursus*>* m_cursus;
         QMap<unsigned int, Note*>* m_notes;
         QMap<unsigned int, Inscription*>* m_inscriptions;
         QMap<unsigned int, Etranger*>* m_etrangers;
@@ -40,6 +40,8 @@ class DbManager : public QObject
         QMap<unsigned int, Profil*>* m_profils;
         QMap<unsigned int, DesirUV*>* m_desirs;
         QMap<unsigned int, BonusUV*>* m_bonus;
+        QMap<unsigned int, Simulation*>* m_simulations;
+
         QString m_test;
 
         friend class MainWindow;
@@ -103,6 +105,7 @@ class DbManager : public QObject
         void loadNotes();
         void loadUsers();
         void loadProfil();
+        void loadInscriptions();
 
         // ===== destructeur =====
 

@@ -656,7 +656,7 @@ void MainWindow::valideProfilForm()
 
     QMap<unsigned int, Cursus*>::iterator it;
 
-    for (it = Db->m_cursuss->begin(); it != Db->m_cursuss->end(); ++it)
+    for (it = Db->m_cursus->begin(); it != Db->m_cursus->end(); ++it)
     {
         if ((it.value()->getBranche() == branche) && (it.value()->getFiliere() == filiere))
             cursus = it.value();
@@ -666,7 +666,7 @@ void MainWindow::valideProfilForm()
     {
         id = Db->insertItem(cursus);
         cursus->setId(id);
-        Db->m_cursuss->insert(cursus->getId(), cursus);
+        Db->m_cursus->insert(cursus->getId(), cursus);
     }
 
     selection = tableView1->selectionModel();
@@ -691,7 +691,7 @@ void MainWindow::valideProfilForm()
 
     QMap<unsigned int, Cursus*>::iterator it2;
 
-    for (it2 = Db->m_cursuss->begin(); it2 != Db->m_cursuss->end(); ++it2)
+    for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
     {
         if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
             cursus2 = it2.value();
@@ -701,7 +701,7 @@ void MainWindow::valideProfilForm()
     {
         id = Db->insertItem(cursus2);
         cursus2->setId(id);
-        Db->m_cursuss->insert(cursus2->getId(), cursus2);
+        Db->m_cursus->insert(cursus2->getId(), cursus2);
     }
 
 
@@ -794,7 +794,7 @@ void MainWindow::valideNewInscriptionForm()
 
     QMap<unsigned int, Cursus*>::iterator it2;
 
-    for (it2 = Db->m_cursuss->begin(); it2 != Db->m_cursuss->end(); ++it2)
+    for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
     {
         if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
             cursus = it2.value();
@@ -804,7 +804,7 @@ void MainWindow::valideNewInscriptionForm()
     {
         id = Db->insertItem(cursus);
         cursus->setId(id);
-        Db->m_cursuss->insert(cursus->getId(), cursus);
+        Db->m_cursus->insert(cursus->getId(), cursus);
     }
 
     QMessageBox::information(this, "Semestre", QString::number(semestre->getId()));
@@ -1084,6 +1084,7 @@ void MainWindow::affiche(QString message)
 
 void MainWindow::test()
 {
+    //bool ret;
     //QString message;
     //message = Db->m_user->getProfil()->getActuel()->getBranche()->getCode();
     //QMessageBox::information(this, "Branche Actuelle", message);
@@ -1095,6 +1096,32 @@ void MainWindow::test()
     //QString filename("uvs.xml");
     //xml->load(filename, Db);
     Db->remove();
+    Db->save();
+    //Db->deleteDb();
+    //ret = Db->createTables();
+    //if (ret)
+        //QMessageBox::information(this, "tables", "ok");
+    //xml->load(filename, Db);
+    //Db->save();
+
+    /*
+    QMap<unsigned int, UV*>::Iterator it;
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it)
+    {
+        if (it.value()->getId() < 15)
+        {
+            QString message;
+            message += it.value()->getCode();
+            message += QString::number(it.value()->getCredits());
+            message += it.value()->getCategorie()->getCode();
+            if (it.value()->getCursus() == 0)
+                message += "oui";
+            QMessageBox::information(this, "", message);
+        }
+
+
+    }
+    */
 }
 
 
