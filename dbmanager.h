@@ -54,7 +54,10 @@ class DbManager : public QObject
         bool openDb();
         bool deleteDb();
         bool createTables();
+        QSqlError lastError();
+
         explicit DbManager(QObject *parent = 0);
+        ~DbManager();
         QMap<unsigned int, Categorie*>* getDbCat() const {return m_categories;}
 
 
@@ -121,9 +124,6 @@ class DbManager : public QObject
         QSqlQueryModel* getUVList();
         QSqlQueryModel* getNoteList();
 
-        bool deleteItem(int id);
-
-        QSqlError lastError();
 
     private:
         QSqlDatabase db;

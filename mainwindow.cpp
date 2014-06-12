@@ -129,6 +129,7 @@ MainWindow::MainWindow(QWidget *parent) :
     combo1 = new QComboBox;
     dialog1 = new QDialog(this);
     progress1 = new QProgressBar;
+    slider1 = new QSlider(Qt::Horizontal);
 
 
     // ===== Connect =====
@@ -281,12 +282,12 @@ void MainWindow::showSimulationEdit()
     titre->setText("Gestion de la simulation");
 
     mainLayout->addWidget(Butt1, 2,0,1,1);
-    Butt1->setText("Ajout Branche");
+    Butt1->setText("Ajout Bonus UV");
     Butt1->show();
-    //QObject::connect(Butt1, SIGNAL(clicked()), this, SLOT(showNewBranchForm()));
+    QObject::connect(Butt1, SIGNAL(clicked()), this, SLOT(showNewBonusForm()));
 
     mainLayout->addWidget(Butt2, 2,1,1,1);
-    Butt2->setText("Catalogue Branches");
+    Butt2->setText("Catalogue Bonus UV");
     Butt2->show();
     //QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showBranchList()));
 
@@ -394,10 +395,65 @@ void MainWindow::showConfigEdit()
 
 // ===== SHOW FORMS =======================================================
 
+void MainWindow::showNewBonusForm()
+{
+    clear();
+    label1->setText("Choix de l'UV :");
+    mainLayout->addWidget(label1, 2,3,1,1);
+    label1->show();
+
+    getUvView();
+    mainLayout->addWidget(tableView1, 3,3,5,3);
+    tableView1->show();
+
+    label2->setText("Bonus :");
+    mainLayout->addWidget(label2, 8,3,1,1);
+    label2->show();
+
+    slider1->setRange(-2, 2);
+    mainLayout->addWidget(slider1, 9,3,1,3);
+    slider1->show();
+
+/*
+    label3->setText("Filiere :");
+    mainLayout->addWidget(label3, 6,3,1,1);
+    label3->show();
+
+    getFiliereView();
+    mainLayout->addWidget(tableView4, 7,3,2,3);
+    tableView4->show();
+
+    label4->setText("Cursus visé");
+    mainLayout->addWidget(label4, 9,3,1,1);
+    label4->show();
+
+    label5->setText("Branche :");
+    mainLayout->addWidget(label5, 10,3,1,1);
+    label5->show();
+
+    getBrancheView2();
+    mainLayout->addWidget(tableView1, 11,3,2,3);
+    tableView1->show();
+
+    label6->setText("Filiere :");
+    mainLayout->addWidget(label6, 13,3,1,1);
+    label6->show();
+
+    getFiliereView2();
+    mainLayout->addWidget(tableView2, 14,3,2,3);
+    tableView2->show();
+
+    mainLayout->addWidget(valider, 16,3,1,1);
+    valider->show();
+*/
+    showSimulationEdit();
+    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideProfilForm()));
+}
+
 void MainWindow::showProfilForm()
 {
     clear();
-    label1->setText("Cursus actuel");
+    label1->setText("Choix UV :");
     mainLayout->addWidget(label1, 2,3,1,1);
     label1->show();
 
@@ -443,6 +499,7 @@ void MainWindow::showProfilForm()
     showProfilEdit();
     QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideProfilForm()));
 }
+
 
 void MainWindow::showNewBranchForm()
 {
@@ -1177,6 +1234,9 @@ void MainWindow::clear()
     stop(tableView2);
     stop(tableView3);
     stop(tableView4);
+    stop(utableView);
+
+    stop(slider1);
 
     stop(combo1);
     combo1->removeItem(1);

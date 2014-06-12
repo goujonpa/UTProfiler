@@ -31,6 +31,7 @@
 #include"semestre.h"
 #include "inscription.h"
 #include "xmlmanager.h"
+#include <QSlider>
 
 
 namespace Ui
@@ -115,6 +116,8 @@ class MainWindow : public QMainWindow
         QDialog* dialog1;
         QProgressBar* progress1;
         XmlManager* xml;
+        QSlider* slider1;
+
 
 
     public slots:
@@ -149,6 +152,7 @@ class MainWindow : public QMainWindow
         void showNewNoteForm();
         void showNewInscriptionForm();
         void showProfilForm();
+        void showNewBonusForm();
 
         // ===== Validation forms =====
 
@@ -160,6 +164,7 @@ class MainWindow : public QMainWindow
         void valideNewNoteForm();
         void valideNewInscriptionForm();
         void valideProfilForm();
+
 
         // ===== show items =====
 

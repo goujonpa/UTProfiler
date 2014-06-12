@@ -1069,18 +1069,6 @@ QSqlQueryModel* DbManager::getNoteList()
     return noteList;
 }
 
-bool DbManager::deleteItem(int id)
-{
-    bool ret = false;
-    if (db.isOpen())
-    {
-        QSqlQuery query;
-        ret = query.exec(QString("delete from person where id=%1").arg(id));
-    }
-    return ret;
-}
-
-
 bool DbManager::createTables()
 {
     bool ret;
@@ -1115,7 +1103,11 @@ bool DbManager::createTables()
     return ret;
 }
 
-
+DbManager::~DbManager()
+{
+    remove();
+    save();
+}
 
 
 
