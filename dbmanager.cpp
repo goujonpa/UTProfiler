@@ -746,7 +746,7 @@ int DbManager::insertItem(User* user)
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into User values(NULL,'%1','%2','%3', '%4')").arg(user->getNom()).arg(user->getPrenom()).arg(idProfil).arg(idSimulation));
+        ret = query.exec(QString("INSERT into User values(NULL,'%1','%2','%3', '%4')").arg(user->getNom()).arg(user->getPrenom()).arg(idSimulation).arg(idProfil));
         if (ret)
             newId = query.lastInsertId().toInt();
     }

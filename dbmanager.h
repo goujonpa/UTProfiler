@@ -108,6 +108,9 @@ class DbManager : public QObject
         void loadUsers();
         void loadProfils();
         void loadInscriptions();
+
+        // ===== Update =====
+
         void update();
 
         // ===== destructeur =====

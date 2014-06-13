@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     stdItMod1 = new QStandardItemModel;
     stdItMod2 = new QStandardItemModel;
+    stdItMod3 = new QStandardItemModel;
 
     // ===== Init LineEdits =====
 
@@ -153,7 +154,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::selectUser()
 {
-    Db->update();
+    if (Db->m_user != NULL)
+    {
+        QMessageBox::information(this, "Chargement de l'utilisateur", "Veuillez patienter pendant l'enregistrement des données courantes et le chargement du nouvel utilisateur. Cela peut prendre quelques instants.");
+        Db->update();
+    }
     QItemSelectionModel* selection = tableView1->selectionModel();
     QModelIndex index1 = selection->currentIndex();
     QModelIndex index2 = index1.sibling(index1.row(),0);
@@ -220,6 +225,37 @@ void MainWindow::showProfilInfo()
     tableView1->verticalHeader()->setVisible(false);
     mainLayout->addWidget(tableView1, 3,3,3,2);
     tableView1->show();
+
+    if (Db->m_user->getProfil()->getInscriptions() != 0)
+    {
+        label2->setText("Inscriptions :");
+        mainLayout->addWidget(label2, 6,3,1,2);
+        label2->show();
+
+        stdItMod3->setColumnCount(4);
+        stdItMod3->setItem(0,0, new QStandardItem("UV"));
+        stdItMod3->setItem(0,1, new QStandardItem("Saison"));
+        stdItMod3->setItem(0,2, new QStandardItem("Année"));
+        stdItMod3->setItem(0,3, new QStandardItem("Note"));
+        QMap<unsigned int, Inscription*>::Iterator it;
+        int i;
+        for (it = Db->m_user->getProfil()->getInscriptions()->begin(); it != Db->m_user->getProfil()->getInscriptions()->end(); ++it)
+        {
+            i++;
+            stdItMod3->setItem(i,1, new QStandardItem(it.value()->getUV()->getCode()));
+            QString saison = "Printemps";
+            if (it.value()->getSemestre()->getSaison() == Automne)
+                saison = Automne;
+            stdItMod3->setItem(i,2, new QStandardItem(saison));
+            stdItMod3->setItem(i,3, new QStandardItem(it.value()->getSemestre()->getAnnee()));
+            stdItMod3->setItem(i,4, new QStandardItem(it.value()->getNote()->getCode()));
+        }
+        tableView2->horizontalHeader()->setVisible(false);
+        tableView2->verticalHeader()->setVisible(false);
+        mainLayout->addWidget(tableView2, 3,3,3,2);
+        tableView2->show();
+    }
+
 }
 
 
@@ -854,13 +890,11 @@ void MainWindow::valideNewInscriptionForm()
 
     inscription = new Inscription(0, uv, semestre, note, cursus, uv->getCategorie());
     id = Db->insertItem(inscription);
-    //inscription->setId(id);
-    //Db->m_inscriptions->insert(inscription->getId(), inscription);
-    //Db->m_userInscriptions->insert(inscription->getId(), inscription);
+    inscription->setId(id);
+    Db->m_inscriptions->insert(inscription->getId(), inscription);
+    Db->m_user->getProfil()->addInscription(inscription);
 
-
-
-    //QMessageBox::information(this, "Inscription", inscription->getUV()->getCode());
+    QMessageBox::information(this, "Inscription", Db->m_user->getProfil()->getInscriptions()->find(id).value()->getUV()->getCode());
 
 
     clear();
@@ -1204,6 +1238,16 @@ void MainWindow::clear()
     stop(Butt8);
     stop(Butt9);
     stop(Butt10);
+    Butt1->setEnabled(true);
+    Butt2->setEnabled(true);
+    Butt3->setEnabled(true);
+    Butt4->setEnabled(true);
+    Butt5->setEnabled(true);
+    Butt6->setEnabled(true);
+    Butt7->setEnabled(true);
+    Butt8->setEnabled(true);
+    Butt9->setEnabled(true);
+    Butt10->setEnabled(true);
 
     stop(label1);
     stop(label2);
