@@ -40,7 +40,7 @@ class User : public QObject
          * \param profil : pointeur vers objet Profil
          * \param pref : pointeur vers objet Preference
          */
-        User(unsigned int id = 0, QString nom = "", QString prenom = "", Simulation* simulation = NULL, Profil* profil = NULL): m_id(id), m_nom(nom), m_prenom(prenom), m_simulation(simulation), m_profil(profil) {}
+        User(unsigned int id, QString nom, QString prenom, Simulation* simulation, Profil* profil): m_id(id), m_nom(nom), m_prenom(prenom), m_simulation(simulation), m_profil(profil) {}
 
         /*!
          * \brief méthode getId
@@ -75,7 +75,7 @@ class User : public QObject
          * Récupère le pointeur du profil
          * \return pointeur vers profil
          */
-        Profil* getProfil() const {return m_profil;}
+        Profil* getProfil() const;
 
         /*!
          * \brief méthode getPreference

@@ -24,15 +24,23 @@ class DbManager : public QObject
 
     protected:
 
-        User* m_user;
+        User* m_user = NULL;
+        Profil* m_profil = NULL;
+        QMap<unsigned int, User*>* m_users;
         QMap<unsigned int, UV*>* m_uvs;
         QMap<unsigned int, Branche*>* m_branches;
         QMap<unsigned int, Semestre*>* m_semestres;
         QMap<unsigned int, Filiere*>* m_filieres;
         QMap<unsigned int, Categorie*>* m_categories;
+        QMap<unsigned int, Cursus*>* m_cursuss;
+        QMap<unsigned int, Note*>* m_notes;
+        QMap<unsigned int, Inscription*>* m_inscriptions;
+        QMap<unsigned int, Inscription*>* m_userInscriptions;
+        QMap<unsigned int, Profil*>* m_profils;
         QString m_test;
 
         friend class MainWindow;
+        friend class XmlManager;
 
     public:
 
@@ -42,6 +50,7 @@ class DbManager : public QObject
         bool deleteDb();
         bool createTables();
         explicit DbManager(QObject *parent = 0);
+        QMap<unsigned int, Categorie*>* getDbCat() const {return m_categories;}
 
 
         // ===== create tables =====
@@ -81,24 +90,15 @@ class DbManager : public QObject
 
         // ===== Load =====
 
+        void load();
         void loadUvs();
         void loadBranches();
-        void loasSemestres();
+        void loadSemestres();
         void loadFilieres();
         void loadCategories();
         void loadCursus();
-
-        // ===== Divers =====
-
-        int find(Branche* branche);
-        int find(Categorie* categorie);
-
-        User* getItem(User* user, int id);
-        Simulation* getItem(Simulation* simulation, unsigned int id);
-        Profil* getItem(Profil* profil, unsigned int id);
-        Filiere* getItem(Filiere* filiere, unsigned int id);
-        Branche* getItem(Branche* branche, unsigned int id);
-        UV* getItem(UV* uv, int id);
+        void loadNotes();
+        void loadUsers();
 
         // ===== getLists =====
 
@@ -117,6 +117,7 @@ class DbManager : public QObject
         QSqlDatabase db;
 
     signals:
+
 
     public slots:
 };

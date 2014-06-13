@@ -24,11 +24,20 @@
 #include <QModelIndex>
 #include <QVariant>
 #include <QStandardItemModel>
+#include <QComboBox>
+#include <QDialog>
+#include <semestre.h>
+#include <QProgressBar>
 #include "user.h"
 #include "filiere.h"
 #include "branche.h"
 #include "cursus.h"
 #include "dbmanager.h"
+#include "note.h"
+#include "uv.h"
+#include "categorie.h"
+#include"semestre.h"
+#include "inscription.h"
 #include "xmlmanager.h"
 
 /*!
@@ -68,6 +77,11 @@ class MainWindow : public QMainWindow
         void showUser();
         void stop(QWidget* obj);
         QTableView* getUvView();
+        QTableView* getNoteView();
+        QTableView* getBrancheView();
+        QTableView* getFiliereView();
+        QTableView* getBrancheView2();
+        QTableView* getFiliereView2();
 
 
     private:
@@ -103,6 +117,7 @@ class MainWindow : public QMainWindow
         QLabel* label10;
         QLabel* label11;
         QLabel* label12;
+        QComboBox* combo1;
         QStandardItemModel* stdItMod1;
         DbManager* Db;
         User* user = NULL;
@@ -110,13 +125,23 @@ class MainWindow : public QMainWindow
         Categorie* categorie = NULL;
         Filiere* filiere = NULL;
         Cursus* cursus = NULL;
+        Cursus* cursus2 = NULL;
         UV* uv = NULL;
         Note* note = NULL;
+        Semestre* semestre = NULL;
+        Inscription* inscription = NULL;
+        Profil* profil = NULL;
         QSqlQueryModel* sqlModel1;
         QSqlQueryModel* sqlModel2;
+        QSqlQueryModel* sqlModel3;
+        QSqlQueryModel* sqlModel4;
         QTableView* tableView1;
         QTableView* tableView2;
-        QTableView* selectView1;
+        QTableView* tableView3;
+        QTableView* tableView4;
+        QTableView* utableView;
+        QDialog* dialog1;
+        QProgressBar* progress1;
         XmlManager* xml;
 
 
@@ -150,6 +175,7 @@ class MainWindow : public QMainWindow
         void showNewFiliereForm();
         void showNewCursusForm();
         void showNewNoteForm();
+        void showNewInscriptionForm();
         void showProfilForm();
 
         // ===== Validation forms =====
@@ -160,11 +186,8 @@ class MainWindow : public QMainWindow
         void valideNewFiliereForm();
         void valideNewCursusForm();
         void valideNewNoteForm();
-
-
-        // ===== Dialogs =======
-
-        void dialogAddInscr();
+        void valideNewInscriptionForm();
+        void valideProfilForm();
 
 
         // ===== Selects =====
@@ -173,7 +196,6 @@ class MainWindow : public QMainWindow
 
 
         void test();
-        bool createTables();
         void exportDb();
         void importDb();
 

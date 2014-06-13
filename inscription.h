@@ -124,6 +124,7 @@ class Inscription : public QObject
          * \return true si l'ajout s'est correcement réalisé
          */
         bool setCategorie(Categorie* categorie);
+        bool setId(unsigned int id);
 
     protected:
 

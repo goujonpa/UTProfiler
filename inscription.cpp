@@ -34,3 +34,9 @@ bool Inscription::setCategorie(Categorie* categorie)
     m_categorie = categorie;
     return true;
 }
+
+bool Inscription::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}

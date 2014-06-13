@@ -36,7 +36,7 @@ class Cursus : public QObject
          * \param branche : pointeur vers la branche associée au cursus
          * \param filiere : pointeur vers la filière associée au cursus
          */
-        Cursus(unsigned int id = 0, Branche* branche = NULL, Filiere* filiere = NULL): m_id(id), m_branche(branche), m_filiere(filiere) {}
+    Cursus(unsigned int id, Branche* branche, Filiere* filiere): m_id(id), m_branche(branche), m_filiere(filiere) {}
 
         /*!
          * \brief méthode getId

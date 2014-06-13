@@ -16,11 +16,14 @@ void XmlManager::load(QString filename, UV* uv, DbManager* db)
     QString nom;
     QString input;
     int credits, idCategorie, idUV, i = 0;
+    Categorie* newCategorie;
+    QMap<unsigned int, Categorie*>* dbCat = db->getDbCat();
     QString categorie;
     QString branche;
     QVector<QString> branches;
     QString mess;
     QString message;
+    QMap<unsigned int, Categorie*>::Iterator it;
 
     if (!file->open(QFile::ReadOnly | QFile::Text))
         m_test = "NOK";
@@ -61,10 +64,19 @@ void XmlManager::load(QString filename, UV* uv, DbManager* db)
             //idCategorie = db->find(newCategorie); // bug
             //newCategorie->setId(idCategorie);
 
-            UV* newUV = new UV;//(0, code, credits, 0, newCursus);
+            for (it = dbCat->begin(); it != dbCat->end(); ++it)
+            {
+                if (it.value()->getCode() == categorie)
+                {
+                    newCategorie = it.value();
+                }
+            }
+
+
+            UV* newUV = new UV;
             newUV->setCode(code);
             newUV->setCredits(credits);
-            newUV->setCategorie(0);
+            newUV->setCategorie(newCategorie);
             newUV->setCursus(newCursus);
             idUV = db->insertItem(newUV);
             newUV->setId(idUV);

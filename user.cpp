@@ -35,4 +35,13 @@ bool User::setProfil(Profil* profil)
     return true;
 }
 
+Profil* User::getProfil() const
+{
+    if (m_profil == NULL)
+        return NULL;
+    if (m_profil == 0)
+        return NULL;
+    return m_profil;
+}
+
 

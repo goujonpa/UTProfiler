@@ -28,19 +28,21 @@ class Branche : public QObject
          */
         explicit Branche(QObject *parent = 0);
 
+
     /*!
          * \brief méthode Branche
          * \param id : identificateur de la branche
          * \param code : code de la branche
          * \param nom : nom de la branche
          */
-        Branche(unsigned int id = 0, QString code = "", QString nom = ""): m_id(id), m_code(code), m_nom(nom) {}
+        Branche(unsigned int id, QString code, QString nom): m_id(id), m_code(code), m_nom(nom) {}
 
         /*!
          * \brief méthode getId
          * Récupère l'identificateur de la branche
          * \return id de la branche
          */
+
         unsigned int getId() const {return m_id;}
 
         /*!
