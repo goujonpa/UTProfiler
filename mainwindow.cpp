@@ -86,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // ===== Init QSIM =====
 
     stdItMod1 = new QStandardItemModel;
+    stdItMod2 = new QStandardItemModel;
 
     // ===== Init LineEdits =====
 
@@ -128,6 +129,7 @@ MainWindow::MainWindow(QWidget *parent) :
     combo1 = new QComboBox;
     dialog1 = new QDialog(this);
     progress1 = new QProgressBar;
+    slider1 = new QSlider(Qt::Horizontal);
 
 
     // ===== Connect =====
@@ -157,6 +159,7 @@ void MainWindow::selectUser()
     QVariant variant1 = sqlModel1->data(index2);
     user = Db->m_users->find(variant1.toInt()).value();
     Db->m_user = user;
+    Db->m_profil = Db->m_user->getProfil();
     QMessageBox::information(this, "Utilisateur selectionné", user->getPrenom() + " " + user->getNom());
     clear();
     showProfilEdit();
@@ -180,17 +183,43 @@ void MainWindow::showUser()
     stdItMod1->setItem(3,0, new QStandardItem("Simulation"));
     QString profilRep = "Non";
     QString simuRep = "Non";
-    if (user->getProfil() != 0)
+    if (Db->m_user->getProfil() != 0)
         profilRep = "Oui";
-    if (user->getSimulation() != 0)
+    if (Db->m_user->getSimulation() != 0)
         simuRep = "Oui";
     stdItMod1->setItem(2,1, new QStandardItem(profilRep));
     stdItMod1->setItem(3,1, new QStandardItem(simuRep));
     utableView->setModel(stdItMod1);
     utableView->horizontalHeader()->setVisible(false);
+    utableView->verticalHeader()->setVisible(false);
     mainLayout->addWidget(utableView, 6,0,4,2);
     utableView->show();
 
+}
+
+void MainWindow::showProfilInfo()
+{
+    clear();
+    showProfilEdit();
+    label1->setText("Informations du Profil :");
+    mainLayout->addWidget(label1, 2,3,1,2);
+    label1->show();
+
+    stdItMod2->setColumnCount(2);
+    stdItMod2->setRowCount(4);
+    stdItMod2->setItem(0,0, new QStandardItem("Branche :"));
+    stdItMod2->setItem(1,0, new QStandardItem("Filière :"));
+    stdItMod2->setItem(2,0, new QStandardItem("Branche désirée :"));
+    stdItMod2->setItem(3,0, new QStandardItem("Filière désirée :"));
+    stdItMod2->setItem(0,1, new QStandardItem(Db->m_profil->getActuel()->getBranche()->getCode()));
+    stdItMod2->setItem(1,1, new QStandardItem(Db->m_profil->getActuel()->getFiliere()->getCode()));
+    stdItMod2->setItem(2,1, new QStandardItem(Db->m_profil->getVise()->getBranche()->getCode()));
+    stdItMod2->setItem(3,1, new QStandardItem(Db->m_profil->getVise()->getFiliere()->getCode()));
+    tableView1->setModel(stdItMod2);
+    tableView1->horizontalHeader()->setVisible(false);
+    tableView1->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView1, 3,3,3,2);
+    tableView1->show();
 }
 
 
@@ -213,28 +242,38 @@ void MainWindow::showProfilEdit()
     Butt2->show();
     QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showUserList()));
 
-    mainLayout->addWidget(Butt3, 3,0,1,2);
+    mainLayout->addWidget(Butt3, 3,0,1,1);
     Butt3->setText("Renseigner Profil");
     Butt3->show();
     QObject::connect(Butt3, SIGNAL(clicked()), this, SLOT(showProfilForm()));
 
-    Butt4->setText("Ajouter Inscription");
+    Butt4->setText("Afficher Profil");
     Butt4->show();
-    mainLayout->addWidget(Butt4, 4,0,1,2);
-    QObject::connect(Butt4, SIGNAL(clicked()), this, SLOT(showNewInscriptionForm()));
+    mainLayout->addWidget(Butt4, 3,1,1,1);
+    QObject::connect(Butt4, SIGNAL(clicked()), this, SLOT(showProfilInfo()));
+
+    Butt5->setText("Ajouter Inscription");
+    Butt5->show();
+    mainLayout->addWidget(Butt5, 4,0,1,2);
+    QObject::connect(Butt5, SIGNAL(clicked()), this, SLOT(showNewInscriptionForm()));
 
     if (Db->m_user != NULL)
     {
         showUser();
-        Butt4->setEnabled(true);
-        if (Db->m_user->getProfil() == NULL)
-            Butt4->setEnabled(false);
         Butt3->setEnabled(true);
+        Butt4->setEnabled(true);
+        Butt5->setEnabled(true);
+        if (Db->m_user->getProfil() == 0)
+        {
+            Butt4->setEnabled(false);
+            Butt5->setEnabled(false);
+        }
     }
     else
     {
-        Butt4->setEnabled(false);
         Butt3->setEnabled(false);
+        Butt4->setEnabled(false);
+        Butt5->setEnabled(false);
     }
 }
 
@@ -243,12 +282,12 @@ void MainWindow::showSimulationEdit()
     titre->setText("Gestion de la simulation");
 
     mainLayout->addWidget(Butt1, 2,0,1,1);
-    Butt1->setText("Ajout Branche");
+    Butt1->setText("Ajout Bonus UV");
     Butt1->show();
-    //QObject::connect(Butt1, SIGNAL(clicked()), this, SLOT(showNewBranchForm()));
+    QObject::connect(Butt1, SIGNAL(clicked()), this, SLOT(showNewBonusForm()));
 
     mainLayout->addWidget(Butt2, 2,1,1,1);
-    Butt2->setText("Catalogue Branches");
+    Butt2->setText("Catalogue Bonus UV");
     Butt2->show();
     //QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showBranchList()));
 
@@ -310,7 +349,7 @@ void MainWindow::showConfigEdit()
     QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showBranchList()));
 
     mainLayout->addWidget(Butt3, 3,0,1,2);
-    Butt3->setText("Load UVs");
+    Butt3->setText("Test");
     Butt3->show();
     QObject::connect(Butt3, SIGNAL(clicked()), this, SLOT(test()));
 
@@ -356,10 +395,65 @@ void MainWindow::showConfigEdit()
 
 // ===== SHOW FORMS =======================================================
 
+void MainWindow::showNewBonusForm()
+{
+    clear();
+    label1->setText("Choix de l'UV :");
+    mainLayout->addWidget(label1, 2,3,1,1);
+    label1->show();
+
+    getUvView();
+    mainLayout->addWidget(tableView1, 3,3,5,3);
+    tableView1->show();
+
+    label2->setText("Bonus :");
+    mainLayout->addWidget(label2, 8,3,1,1);
+    label2->show();
+
+    slider1->setRange(-2, 2);
+    mainLayout->addWidget(slider1, 9,3,1,3);
+    slider1->show();
+
+/*
+    label3->setText("Filiere :");
+    mainLayout->addWidget(label3, 6,3,1,1);
+    label3->show();
+
+    getFiliereView();
+    mainLayout->addWidget(tableView4, 7,3,2,3);
+    tableView4->show();
+
+    label4->setText("Cursus visé");
+    mainLayout->addWidget(label4, 9,3,1,1);
+    label4->show();
+
+    label5->setText("Branche :");
+    mainLayout->addWidget(label5, 10,3,1,1);
+    label5->show();
+
+    getBrancheView2();
+    mainLayout->addWidget(tableView1, 11,3,2,3);
+    tableView1->show();
+
+    label6->setText("Filiere :");
+    mainLayout->addWidget(label6, 13,3,1,1);
+    label6->show();
+
+    getFiliereView2();
+    mainLayout->addWidget(tableView2, 14,3,2,3);
+    tableView2->show();
+
+    mainLayout->addWidget(valider, 16,3,1,1);
+    valider->show();
+*/
+    showSimulationEdit();
+    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideProfilForm()));
+}
+
 void MainWindow::showProfilForm()
 {
     clear();
-    label1->setText("Cursus actuel");
+    label1->setText("Choix UV :");
     mainLayout->addWidget(label1, 2,3,1,1);
     label1->show();
 
@@ -403,8 +497,9 @@ void MainWindow::showProfilForm()
     valider->show();
 
     showProfilEdit();
-    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewBranchForm()));
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideProfilForm()));
 }
+
 
 void MainWindow::showNewBranchForm()
 {
@@ -613,9 +708,12 @@ void MainWindow::valideProfilForm()
 
     cursus = new Cursus(0, branche, filiere);
 
+    QMessageBox::information(this, "Br", cursus->getBranche()->getCode());
+    QMessageBox::information(this, "Fil", cursus->getFiliere()->getCode());
+
     QMap<unsigned int, Cursus*>::iterator it;
 
-    for (it = Db->m_cursuss->begin(); it != Db->m_cursuss->end(); ++it)
+    for (it = Db->m_cursus->begin(); it != Db->m_cursus->end(); ++it)
     {
         if ((it.value()->getBranche() == branche) && (it.value()->getFiliere() == filiere))
             cursus = it.value();
@@ -625,7 +723,7 @@ void MainWindow::valideProfilForm()
     {
         id = Db->insertItem(cursus);
         cursus->setId(id);
-        Db->m_cursuss->insert(cursus->getId(), cursus);
+        Db->m_cursus->insert(cursus->getId(), cursus);
     }
 
     selection = tableView1->selectionModel();
@@ -644,10 +742,13 @@ void MainWindow::valideProfilForm()
 
 
     cursus2 = new Cursus(0, branche, filiere);
+    QMessageBox::information(this, "Br", cursus2->getBranche()->getCode());
+    QMessageBox::information(this, "Fil", cursus2->getFiliere()->getCode());
+
 
     QMap<unsigned int, Cursus*>::iterator it2;
 
-    for (it2 = Db->m_cursuss->begin(); it2 != Db->m_cursuss->end(); ++it2)
+    for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
     {
         if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
             cursus2 = it2.value();
@@ -657,22 +758,32 @@ void MainWindow::valideProfilForm()
     {
         id = Db->insertItem(cursus2);
         cursus2->setId(id);
-        Db->m_cursuss->insert(cursus2->getId(), cursus2);
+        Db->m_cursus->insert(cursus2->getId(), cursus2);
     }
 
 
-    if (Db->m_user->getProfil() == NULL)
+    QMessageBox::information(this, " ", QString::number(cursus->getId()));
+    QMessageBox::information(this, " ", QString::number(cursus2->getId()));
+    QMessageBox::information(this, " ", QString::number(Db->m_user->getId()));
+
+    if (Db->m_user->getProfil() == 0)
     {
+        QMessageBox::information(this, "if", "if");
         profil = new Profil(0, 0, cursus, cursus2, 0, 0, 0, 0);
         id = Db->insertItem(profil);
         profil->setId(id);
         Db->m_profils->insert(profil->getId(), profil);
+        Db->m_profil = profil;
+        Db->m_user->setProfil(profil);
     }
     else
     {
+        QMessageBox::information(this, "else", "else");
         Db->m_profil->setActuel(cursus);
         Db->m_profil->setVise(cursus2);
     }
+
+
 
     clear();
     showProfilEdit();
@@ -716,6 +827,9 @@ void MainWindow::valideNewInscriptionForm()
         saison = Automne;
     }
 
+    if (saison == Printemps)
+        QMessageBox::information(this, "", "printemps");
+
     semestre = new Semestre(0, saison, le1->text().toInt());
 
     QMap<unsigned int, Semestre*>::iterator it;
@@ -737,7 +851,7 @@ void MainWindow::valideNewInscriptionForm()
 
     QMap<unsigned int, Cursus*>::iterator it2;
 
-    for (it2 = Db->m_cursuss->begin(); it2 != Db->m_cursuss->end(); ++it2)
+    for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
     {
         if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
             cursus = it2.value();
@@ -747,7 +861,7 @@ void MainWindow::valideNewInscriptionForm()
     {
         id = Db->insertItem(cursus);
         cursus->setId(id);
-        Db->m_cursuss->insert(cursus->getId(), cursus);
+        Db->m_cursus->insert(cursus->getId(), cursus);
     }
 
     QMessageBox::information(this, "Semestre", QString::number(semestre->getId()));
@@ -1027,12 +1141,44 @@ void MainWindow::affiche(QString message)
 
 void MainWindow::test()
 {
+    //bool ret;
+    //QString message;
+    //message = Db->m_user->getProfil()->getActuel()->getBranche()->getCode();
+    //QMessageBox::information(this, "Branche Actuelle", message);
+    //message = Db->m_user->getProfil()->getVise()->getFiliere()->getCode();
+    //QMessageBox::information(this, "Filiere visée", message);
+
+    //QSqlError err = Db->lastError();
+    //affiche(err.text());
+    //QString filename("uvs.xml");
+    //xml->load(filename, Db);
+    Db->remove();
+    Db->save();
+    //Db->deleteDb();
+    //ret = Db->createTables();
+    //if (ret)
+        //QMessageBox::information(this, "tables", "ok");
+    //xml->load(filename, Db);
+    //Db->save();
+
+    /*
+    QMap<unsigned int, UV*>::Iterator it;
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it)
+    {
+        if (it.value()->getId() < 15)
+        {
+            QString message;
+            message += it.value()->getCode();
+            message += QString::number(it.value()->getCredits());
+            message += it.value()->getCategorie()->getCode();
+            if (it.value()->getCursus() == 0)
+                message += "oui";
+            QMessageBox::information(this, "", message);
+        }
 
 
-
-    QString filename("uvs.xml");
-    xml->load(filename, uv, Db);
-
+    }
+    */
 }
 
 
@@ -1088,8 +1234,13 @@ void MainWindow::clear()
     stop(tableView2);
     stop(tableView3);
     stop(tableView4);
+    stop(utableView);
+
+    stop(slider1);
 
     stop(combo1);
+    combo1->removeItem(1);
+    combo1->removeItem(0);
 
     stop(valider);
 }

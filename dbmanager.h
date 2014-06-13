@@ -32,11 +32,16 @@ class DbManager : public QObject
         QMap<unsigned int, Semestre*>* m_semestres;
         QMap<unsigned int, Filiere*>* m_filieres;
         QMap<unsigned int, Categorie*>* m_categories;
-        QMap<unsigned int, Cursus*>* m_cursuss;
+        QMap<unsigned int, Cursus*>* m_cursus;
         QMap<unsigned int, Note*>* m_notes;
         QMap<unsigned int, Inscription*>* m_inscriptions;
-        QMap<unsigned int, Inscription*>* m_userInscriptions;
+        QMap<unsigned int, Etranger*>* m_etrangers;
+        QMap<unsigned int, Etranger*>* m_prefEtrangers;
         QMap<unsigned int, Profil*>* m_profils;
+        QMap<unsigned int, DesirUV*>* m_desirs;
+        QMap<unsigned int, BonusUV*>* m_bonus;
+        QMap<unsigned int, Simulation*>* m_simulations;
+
         QString m_test;
 
         friend class MainWindow;
@@ -49,7 +54,10 @@ class DbManager : public QObject
         bool openDb();
         bool deleteDb();
         bool createTables();
+        QSqlError lastError();
+
         explicit DbManager(QObject *parent = 0);
+        ~DbManager();
         QMap<unsigned int, Categorie*>* getDbCat() const {return m_categories;}
 
 
@@ -99,6 +107,13 @@ class DbManager : public QObject
         void loadCursus();
         void loadNotes();
         void loadUsers();
+        void loadProfil();
+        void loadInscriptions();
+
+        // ===== destructeur =====
+
+        void save();
+        bool remove();
 
         // ===== getLists =====
 
@@ -109,9 +124,6 @@ class DbManager : public QObject
         QSqlQueryModel* getUVList();
         QSqlQueryModel* getNoteList();
 
-        bool deleteItem(int id);
-
-        QSqlError lastError();
 
     private:
         QSqlDatabase db;

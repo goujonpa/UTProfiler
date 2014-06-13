@@ -101,3 +101,53 @@ bool Profil::setId(unsigned int id)
     m_id = id;
     return true;
 }
+
+QMap<unsigned int, Inscription*>* Profil::getInscriptions() const
+{
+    if (m_inscriptions == NULL || m_inscriptions == 0)
+        return 0;
+    return m_inscriptions;
+}
+
+Cursus* Profil::getActuel() const
+{
+    if (m_actuel == NULL || m_actuel == 0)
+        return 0;
+    return m_actuel;
+}
+
+Cursus* Profil::getVise() const
+{
+    if (m_vise == NULL || m_vise == 0)
+        return 0;
+    return m_vise;
+}
+
+QMap<unsigned int, Etranger*>* Profil::getEtrangers() const
+{
+    if (m_etrangers == NULL || m_etrangers == 0)
+        return 0;
+    return m_etrangers;
+}
+
+QMap<unsigned int, Etranger*>* Profil::getPrefEtrangers() const
+{
+    if (m_prefEtrangers == NULL || m_prefEtrangers == 0)
+        return 0;
+    return m_prefEtrangers;
+}
+
+QMap<unsigned int, DesirUV*>* Profil::getDesirs() const
+{
+    if (m_desirs == NULL || m_desirs == 0)
+        return 0;
+    return m_desirs;
+}
+
+QMap<unsigned int, BonusUV*>* Profil::getBonus() const
+{
+    if (m_bonus == NULL || m_bonus == 0)
+        return 0;
+    return m_bonus;
+}
+

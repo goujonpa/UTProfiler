@@ -56,28 +56,28 @@ class Profil : public QObject
          * Récupère les inscriptions
          * \return conteneur des inscriptions
          */
-        QMap<unsigned int, Inscription*>* getInscriptions() const {return m_inscriptions;}
+        QMap<unsigned int, Inscription*>* getInscriptions() const;
 
         /*!
          * \brief méthode getActuel
          * Récupère le cursus actuel
          * \return pointeur vers le cursus actuel
          */
-        Cursus* getActuel() const {return m_actuel;}
+        Cursus* getActuel() const;
 
         /*!
          * \brief méthode getVise
          * Récupère le cursus visé
          * \return pointeur vers cursus visé
          */
-        Cursus* getVise() const {return m_vise;}
+        Cursus* getVise() const;
 
         /*!
          * \brief méthode getEtranger
          * Récupère les semestres réalisés à l'étranger
          * \return conteneur des semestres à l'étranger
          */
-        QMap<unsigned int, Etranger*>* getEtrangers() {return m_etrangers;}
+        QMap<unsigned int, Etranger*>* getEtrangers() const;
 
         /*!
          * \brief méthode setInscriptions
@@ -139,7 +139,7 @@ class Profil : public QObject
          * Récupère les préférences de départ à l'étranger
          * \return conteneur de semestre à l'étranger
          */
-        QMap<unsigned int, Etranger*>* getPrefEtranger() const {return m_prefEtrangers;}
+        QMap<unsigned int, Etranger*>* getPrefEtrangers() const;
 
 
         /*!
@@ -147,14 +147,14 @@ class Profil : public QObject
          * Récupère les UVs les plus désirées
          * \return : conteneur d'UV désirées
          */
-        QMap<unsigned int, DesirUV*>* getDesirs() const {return m_desirs;}
+        QMap<unsigned int, DesirUV*>* getDesirs() const;
 
         /*!
          * \brief méthode getBonus
          * Récupère les préférences envers des UVs
          * \return conteneur d'avis sur des UVs
          */
-        QMap<unsigned int, BonusUV*>* getBonus() const {return m_bonus;}
+        QMap<unsigned int, BonusUV*>* getBonus() const;
 
         /*!
          * \brief méthode setPrefEtrangers
@@ -162,6 +162,7 @@ class Profil : public QObject
          * \param etranger : pointeur vers conteneur de semestre à l'étranger
          * \return true si la modification s'est correctement réalisée
          */
+
         bool setPrefEtrangers(QMap<unsigned int, Etranger*>* etranger);
 
         /*!

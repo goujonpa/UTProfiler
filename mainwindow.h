@@ -39,6 +39,7 @@
 #include"semestre.h"
 #include "inscription.h"
 #include "xmlmanager.h"
+#include <QSlider>
 
 /*!
  * \namespace Ui
@@ -74,7 +75,6 @@ class MainWindow : public QMainWindow
          * \param message : message affiché
          */
         void affiche(QString message);
-        void showUser();
         void stop(QWidget* obj);
         QTableView* getUvView();
         QTableView* getNoteView();
@@ -119,6 +119,7 @@ class MainWindow : public QMainWindow
         QLabel* label12;
         QComboBox* combo1;
         QStandardItemModel* stdItMod1;
+        QStandardItemModel* stdItMod2;
         DbManager* Db;
         User* user = NULL;
         Branche* branche = NULL;
@@ -143,6 +144,8 @@ class MainWindow : public QMainWindow
         QDialog* dialog1;
         QProgressBar* progress1;
         XmlManager* xml;
+        QSlider* slider1;
+
 
 
     public slots:
@@ -177,6 +180,7 @@ class MainWindow : public QMainWindow
         void showNewNoteForm();
         void showNewInscriptionForm();
         void showProfilForm();
+        void showNewBonusForm();
 
         // ===== Validation forms =====
 
@@ -189,6 +193,11 @@ class MainWindow : public QMainWindow
         void valideNewInscriptionForm();
         void valideProfilForm();
 
+
+        // ===== show items =====
+
+        void showProfilInfo();
+        void showUser();
 
         // ===== Selects =====
 

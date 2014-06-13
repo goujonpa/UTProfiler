@@ -8,21 +8,19 @@ XmlManager::XmlManager(QObject *parent) :
 
 
 
-void XmlManager::load(QString filename, UV* uv, DbManager* db)
+void XmlManager::load(QString filename, DbManager* db)
 {
     QFile* file = new QFile(filename);
     QXmlStreamReader reader;
     QString code;
     QString nom;
     QString input;
-    int credits, idCategorie, idUV, i = 0;
+    int credits, idUV, i = 0;
     Categorie* newCategorie;
     QMap<unsigned int, Categorie*>* dbCat = db->getDbCat();
     QString categorie;
     QString branche;
     QVector<QString> branches;
-    QString mess;
-    QString message;
     QMap<unsigned int, Categorie*>::Iterator it;
 
     if (!file->open(QFile::ReadOnly | QFile::Text))
@@ -59,7 +57,7 @@ void XmlManager::load(QString filename, UV* uv, DbManager* db)
             } while(!(reader.isEndElement() && (reader.name() == "uv")));
 
 
-            QMap<unsigned int, Cursus*> newCursus;
+            //QMap<unsigned int, Cursus*>* newCursus;
             //Categorie* newCategorie = new Categorie(0, categorie, "");
             //idCategorie = db->find(newCategorie); // bug
             //newCategorie->setId(idCategorie);
@@ -77,7 +75,7 @@ void XmlManager::load(QString filename, UV* uv, DbManager* db)
             newUV->setCode(code);
             newUV->setCredits(credits);
             newUV->setCategorie(newCategorie);
-            newUV->setCursus(newCursus);
+            newUV->setCursus(0);
             idUV = db->insertItem(newUV);
             newUV->setId(idUV);
             i++;
