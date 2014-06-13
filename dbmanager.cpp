@@ -58,7 +58,7 @@ void DbManager::load()
     loadNotes();
     loadCursus();
     loadUvs();
-    loadProfil();
+    loadProfils();
     loadUsers();
 
 }
@@ -211,8 +211,15 @@ bool DbManager::remove()
 
 // ===== LOAD ===========================================================
 
+void DbManager::update()
+{
+    remove();
+    save();
+    load();
+}
 
-void DbManager::loadProfil()
+
+void DbManager::loadProfils()
 {
 
         m_profils->clear();
@@ -245,6 +252,7 @@ void DbManager::loadProfil()
             profil->setPrefEtrangers(0);
             profil->setDesirs(0);
             profil->setBonus(0);
+            m_profils->insert(profil->getId(), profil);
         }
 
         Inscription* inscription = new Inscription;
@@ -357,6 +365,7 @@ void DbManager::loadUsers()
         if (query.value(4).toInt() != 0)
         {
             user->setProfil(m_profils->find(query.value(4).toInt()).value());
+            m_test = "Dernier utilisateur loadé : "+ QString::number(user->getId());
         }
         m_users->insert(user->getId(), user);
     }

@@ -25,7 +25,6 @@ class DbManager : public QObject
     protected:
 
         User* m_user = NULL;
-        Profil* m_profil = NULL;
         QMap<unsigned int, User*>* m_users;
         QMap<unsigned int, UV*>* m_uvs;
         QMap<unsigned int, Branche*>* m_branches;
@@ -107,8 +106,9 @@ class DbManager : public QObject
         void loadCursus();
         void loadNotes();
         void loadUsers();
-        void loadProfil();
+        void loadProfils();
         void loadInscriptions();
+        void update();
 
         // ===== destructeur =====
 
