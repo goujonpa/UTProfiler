@@ -46,18 +46,50 @@ class Etranger : public QObject // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Ajouter le
         unsigned int getId() const {return m_id;}
 
         /*!
-         * \brief getTitre
-         * \return
+         * \brief méthode getTitre
+         * Récupère l'intitulé du semestre
+         * \return intitulé du semestre
          */
         QString getTitre() const {return m_titre;}
+
+        /*!
+         * \brief méthode getSemestre
+         * Récupère le semestre
+         * \return pointeur vers semestre
+         */
         Semestre* getSemestre() const {return m_semestre;}
+
+        /*!
+         * \brief méthode setTitre
+         * Modifie l'intitulé du semestre
+         * \param titre : intitulé du semestre
+         * \return true si l'ajout s'est correctement déroulé
+         */
         bool setTitre(QString titre);
+
+        /*!
+         * \brief méthode setSemestre
+         * Modifie le semestre
+         * \param semestre : pointeur vers semestre
+         * \return true si l'ajout s'est correctement déroulé
+         */
         bool setSemestre(Semestre* semestre);
 
     protected:
 
+        /*!
+         * \brief m_id : identificateur de semestre à l'étranger
+         */
         unsigned int m_id;
+
+        /*!
+         * \brief m_titre : nom du semestre à l'étranger
+         */
         QString m_titre;
+
+        /*!
+         * \brief m_semestre : pointeur vers le semestre
+         */
         Semestre* m_semestre;
 
 

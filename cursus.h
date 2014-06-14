@@ -80,7 +80,7 @@ class Cursus : public QObject
          * Permet de modifier manuellement l'identificateur
          * \return true si l'ajout s'est correctement déroulé
          */
-        bool setId(unsigned int);
+        bool setId(unsigned int id);
 
     protected:
 

@@ -71,6 +71,13 @@ class Filiere : public QObject
          * \return true si l'ajout s'est déroulé correctement
          */
         bool setNom(QString nom);
+
+        /*!
+         * \brief méthode setId
+         * Modifie l'identificateur de la filière
+         * \param id : identificateur de filière
+         * \return true si l'ajout s'est déroulé correctement
+         */
         bool setId(unsigned int id);
 
     protected:

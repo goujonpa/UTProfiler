@@ -124,6 +124,13 @@ class Inscription : public QObject
          * \return true si l'ajout s'est correcement réalisé
          */
         bool setCategorie(Categorie* categorie);
+
+        /*!
+         * \brief méthode setId
+         * Modifie l'identificateur d'une inscription
+         * \param id: indentificateur d'inscription
+         * \return true si l'ajout s'est correctement réalisé
+         */
         bool setId(unsigned int id);
 
     protected:

@@ -56,6 +56,13 @@ class Note : public QObject
          * \return true si l'ajout s'est correctement déroulé
          */
         bool setCode(QString code);
+
+        /*!
+         * \brief méthode setId
+         * Modifie l'identificateur
+         * \param id : identificateur de la note
+         * \return true si l'ajout s'est correctement déroulé
+         */
         bool setId(unsigned int id);
 
     protected:

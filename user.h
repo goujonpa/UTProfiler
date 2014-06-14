@@ -1,4 +1,4 @@
-#ifndef USER_H
+m_nom#ifndef USER_H
 #define USER_H
 
 /*!
@@ -77,13 +77,15 @@ class User : public QObject
          */
         Profil* getProfil() const;
 
-        /*!
-         * \brief méthode getPreference
-         * Récupère le pointeur des préférences
-         * \return pointeur vers Preference
-         */
 
+        /*!
+         * \brief méthode setId
+         * Modifie l'indentificateur du user
+         * \param id : identificateur du user
+         * \return true si l'ajout s'est correctement réalisé
+         */
         bool setId(unsigned int id);
+
         /*!
          * \brief méthode setNom
          * Modifie le nom de user
@@ -116,13 +118,6 @@ class User : public QObject
          */
         bool setProfil(Profil* profil);
 
-        /*!
-         * \brief méthode  setPreference
-         * Modifie la préférence
-         * \param pref : pointeur vers preference
-         * \return true si l'ajout s'est bien réalisé
-         */
-
     protected:
 
         /*!
@@ -149,10 +144,6 @@ class User : public QObject
          * \brief m_profil : profil de user
          */
         Profil* m_profil;
-
-        /*!
-         * \brief m_preference : preference de user
-         */
 
     signals:
 

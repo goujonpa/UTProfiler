@@ -82,7 +82,7 @@ class Profil : public QObject
         /*!
          * \brief méthode setInscriptions
          * Modifie les inscriptions
-         * \param insc : conteneur des inscriptions
+         * \param inscriptions : conteneur des inscriptions
          * \return true si l'ajout s'est réalisé correctement
          */
         bool setInscriptions(QMap<unsigned int, Inscription*>* inscriptions);
@@ -256,7 +256,7 @@ class Profil : public QObject
         Cursus* m_vise;
 
         /*!
-         * \brief m_etranger : pointeur vers conteneur des semestres à l'étranger
+         * \brief m_etrangers : pointeur vers conteneur des semestres à l'étranger
          */
         QMap<unsigned int, Etranger*>* m_etrangers;
 
