@@ -120,6 +120,7 @@ class MainWindow : public QMainWindow
         QComboBox* combo1;
         QStandardItemModel* stdItMod1;
         QStandardItemModel* stdItMod2;
+        QStandardItemModel* stdItMod3;
         DbManager* Db;
         User* user = NULL;
         Branche* branche = NULL;
