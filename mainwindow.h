@@ -142,6 +142,7 @@ class MainWindow : public QMainWindow
         void showFiliereList();
         void showUVList();
         void showNoteList();
+        void showBonusList();
 
         // ===== Forms =====
 
@@ -165,6 +166,7 @@ class MainWindow : public QMainWindow
         void valideNewNoteForm();
         void valideNewInscriptionForm();
         void valideProfilForm();
+        void valideNewBonusForm();
 
 
         // ===== show items =====
@@ -176,10 +178,12 @@ class MainWindow : public QMainWindow
 
         void selectUser();
 
+        // ===== Divers =====
 
         void test();
         void exportDb();
         void importDb();
+        void sliderBonus(int);
 
 
 

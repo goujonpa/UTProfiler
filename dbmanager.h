@@ -108,6 +108,7 @@ class DbManager : public QObject
         void loadUsers();
         void loadProfils();
         void loadInscriptions();
+        void loadBonus();
 
         // ===== Update =====
 
@@ -135,6 +136,7 @@ class DbManager : public QObject
 
 
     public slots:
+
 };
 
 

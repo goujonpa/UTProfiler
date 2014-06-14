@@ -40,7 +40,7 @@ class Simulation : public QObject
          * \param inscription : conteneur contenant les pointeurs vers toutes les inscriptions que contient la simulation
          * \param cursus : pointeur vers objet cursus
          */
-        Simulation(unsigned int id, Profil* profil, QMap<unsigned int, Inscription*> inscription, Cursus* cursus): m_id(id), m_profil(profil), m_inscriptions(inscription), m_cursus(cursus) {}
+        Simulation(unsigned int id, Profil* profil, QMap<unsigned int, Inscription*>* inscriptions, Cursus* cursus): m_id(id), m_profil(profil), m_inscriptions(inscriptions), m_cursus(cursus) {}
 
         /*!
          * \brief méthode getId
@@ -61,7 +61,7 @@ class Simulation : public QObject
          * Récupère le conteneur des inscriptions
          * \return conteneur des inscriptions
          */
-        QMap<unsigned int, Inscription*> getInscriptions() const {return m_inscriptions;}
+        QMap<unsigned int, Inscription*>* getInscriptions() const;
 
         /*!
          * \brief méthode getCursus
@@ -83,7 +83,7 @@ class Simulation : public QObject
          * \param inscr : conteneur des incriptions
          * \return true si l'ajout s'est bien réalisé
          */
-        bool setInscriptions(QMap<unsigned int, Inscription*> inscr);
+        bool setInscriptions(QMap<unsigned int, Inscription*>* inscriptions);
 
         /*!
          * \brief méthode setCursus
@@ -117,7 +117,7 @@ class Simulation : public QObject
         /*!
          * \brief m_inscriptions : conteneur des inscriptions
          */
-        QMap<unsigned int, Inscription*> m_inscriptions;
+        QMap<unsigned int, Inscription*>* m_inscriptions;
 
         /*!
          * \brief m_cursus : pointeur vers le cursus visé

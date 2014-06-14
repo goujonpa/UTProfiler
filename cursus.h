@@ -18,7 +18,7 @@ class Cursus : public QObject
         Filiere* getFiliere() const {return m_filiere;}
         bool setBranche(Branche* branche);
         bool setFiliere(Filiere* filiere);
-        bool setId(unsigned int);
+        bool setId(unsigned int id);
 
     protected:
 

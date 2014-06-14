@@ -31,6 +31,8 @@ bool UV::setCursus(QMap<unsigned int, Cursus*>* cursus)
 
 bool UV::addCursus(Cursus* cursus)
 {
+    if (this->getCursus() == 0)
+        m_cursus = new QMap<unsigned int, Cursus*>;
     m_cursus->insert(cursus->getId(), cursus);
     return true;
 }

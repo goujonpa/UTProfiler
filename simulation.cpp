@@ -11,9 +11,9 @@ bool Simulation::setProfil(Profil* profil)
     return true;
 }
 
-bool Simulation::setInscriptions(QMap<unsigned int, Inscription*> inscr)
+bool Simulation::setInscriptions(QMap<unsigned int, Inscription*>* inscriptions)
 {
-    m_inscriptions = inscr;
+    m_inscriptions = inscriptions;
     return true;
 }
 
@@ -25,6 +25,13 @@ bool Simulation::setCursus(Cursus *cursus)
 
 bool Simulation::addInscription(Inscription* inscription)
 {
-    m_inscriptions.insert(inscription->getId(), inscription);
+    m_inscriptions->insert(inscription->getId(), inscription);
     return true;
+}
+
+QMap<unsigned int, Inscription*>* Simulation::getInscriptions() const
+{
+    if (m_inscriptions == NULL || m_inscriptions == 0)
+        return 0;
+    return m_inscriptions;
 }

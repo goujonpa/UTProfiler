@@ -50,7 +50,6 @@ bool DbManager::openDb()
 
 void DbManager::load()
 {
-
     loadBranches();
     loadSemestres();
     loadFilieres();
@@ -58,12 +57,14 @@ void DbManager::load()
     loadNotes();
     loadCursus();
     loadUvs();
+    loadBonus();
+    loadInscriptions();
     loadProfils();
     loadUsers();
-
 }
 
 // ===== DESTRUCTEUR ==========================================================
+
 
 void DbManager::save()
 {
@@ -156,8 +157,8 @@ void DbManager::save()
     {
         insertItem(it2.value());
     }
-
 }
+
 
 bool DbManager::remove()
 {
@@ -218,6 +219,22 @@ void DbManager::update()
     load();
 }
 
+void DbManager::loadBonus()
+{
+    m_bonus->clear();
+
+    QSqlQuery query("SELECT * FROM Bonus");
+
+    while (query.next())
+    {
+        BonusUV* bonus = new BonusUV;
+        bonus->setId(query.value(0).toInt());
+        bonus->setUV(m_uvs->find(query.value(1).toInt()).value());
+        bonus->setBonus(query.value(2).toInt());
+        m_bonus->insert(bonus->getId(), bonus);
+    }
+}
+
 
 void DbManager::loadProfils()
 {
@@ -255,72 +272,42 @@ void DbManager::loadProfils()
             m_profils->insert(profil->getId(), profil);
         }
 
-        Inscription* inscription = new Inscription;
 
         while (query2.next())
         {
-            if (m_profils->find(query.value(1).toInt()).value()->getInscriptions() == 0)
-            {
-                QMap<unsigned int, Inscription*>* inscriptions = new QMap<unsigned int, Inscription*>;
-                m_profils->find(query.value(1).toInt()).value()->setInscriptions(inscriptions);
-            }
-
+            Inscription* inscription = new Inscription;
             inscription = m_inscriptions->find(query2.value(2).toInt()).value();
-            m_profils->find(query.value(2).toInt()).value()->getInscriptions()->insert(inscription->getId(), inscription);
+            m_profils->find(query2.value(1).toInt()).value()->addInscription(inscription);
         }
-
-        Etranger* etranger = new Etranger;
 
         while (query3.next())
         {
-            if (m_profils->find(query.value(1).toInt()).value()->getEtrangers() == 0)
-            {
-                QMap<unsigned int, Etranger*>* etrangers = new QMap<unsigned int, Etranger*>;
-                m_profils->find(query.value(1).toInt()).value()->setEtrangers(etrangers);
-            }
-
-            etranger = m_etrangers->find(query2.value(2).toInt()).value();
-            m_profils->find(query.value(2).toInt()).value()->getEtrangers()->insert(etranger->getId(), etranger);
+            Etranger* etranger = new Etranger;
+            etranger = m_etrangers->find(query3.value(2).toInt()).value();
+            m_profils->find(query3.value(1).toInt()).value()->addEtranger(etranger);
         }
 
         while (query4.next())
         {
-            if (m_profils->find(query.value(1).toInt()).value()->getPrefEtrangers() == 0)
-            {
-                QMap<unsigned int, Etranger*>* etrangers = new QMap<unsigned int, Etranger*>;
-                m_profils->find(query.value(1).toInt()).value()->setPrefEtrangers(etrangers);
-            }
-
-            etranger = m_prefEtrangers->find(query2.value(2).toInt()).value();
-            m_profils->find(query.value(2).toInt()).value()->getPrefEtrangers()->insert(etranger->getId(), etranger);
+            Etranger* prefEtranger = new Etranger;
+            prefEtranger = m_prefEtrangers->find(query4.value(2).toInt()).value();
+            m_profils->find(query4.value(1).toInt()).value()->addPrefEtranger(prefEtranger);
         }
 
-        DesirUV* desir = new DesirUV;
 
         while (query5.next())
         {
-            if (m_profils->find(query.value(1).toInt()).value()->getDesirs() == 0)
-            {
-                QMap<unsigned int, DesirUV*>* desirs = new QMap<unsigned int, DesirUV*>;
-                m_profils->find(query.value(1).toInt()).value()->setDesirs(desirs);
-            }
-
-            desir = m_desirs->find(query2.value(2).toInt()).value();
-            m_profils->find(query.value(2).toInt()).value()->getDesirs()->insert(desir->getId(), desir);
+            DesirUV* desir = new DesirUV;
+            desir = m_desirs->find(query5.value(2).toInt()).value();
+            m_profils->find(query5.value(1).toInt()).value()->addDesir(desir);
         }
 
-        BonusUV* bonus = new BonusUV;
 
         while (query6.next())
         {
-            if (m_profils->find(query.value(1).toInt()).value()->getBonus() == 0)
-            {
-                QMap<unsigned int, BonusUV*>* bonuss = new QMap<unsigned int, BonusUV*>;
-                m_profils->find(query.value(1).toInt()).value()->setBonus(bonuss);
-            }
-
-            bonus = m_bonus->find(query2.value(2).toInt()).value();
-            m_profils->find(query.value(2).toInt()).value()->getBonus()->insert(bonus->getId(), bonus);
+            BonusUV* newBonus = new BonusUV;
+            newBonus = m_bonus->find(query6.value(2).toInt()).value();
+            m_profils->find(query6.value(1).toInt()).value()->addBonus(newBonus);
         }
 }
 
@@ -886,20 +873,36 @@ int DbManager::insertItem(Etranger* etranger)
 
 int DbManager::insertItem(Inscription* inscription)
 {
+
     bool ret = false;
     int newId = -1;
     unsigned int idUV = 0, idSemestre = 0, idNote = 0, idCursus = 0, idCategorie = 0;
 
-    idUV = inscription->getUV()->getId();
-    idSemestre = inscription->getSemestre()->getId();
-    idNote = inscription->getNote()->getId();
-    idCursus = inscription->getCursus()->getId();
-    idCategorie = inscription->getCategorie()->getId();
+    if (inscription->getUV() != 0)
+    {
+        idUV = inscription->getUV()->getId();
+    }
+    if (inscription->getSemestre() != 0)
+    {
+        idSemestre = inscription->getSemestre()->getId();
+    }
+    if (inscription->getNote() != 0)
+    {
+        idNote = inscription->getNote()->getId();
+    }
+    if (inscription->getCursus() != 0)
+    {
+        idCursus = inscription->getCursus()->getId();
+    }
+    if (inscription->getCategorie() != 0)
+    {
+        idCategorie = inscription->getCategorie()->getId();
+    }
 
-    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into Inscription values(NULL,'%1','%2', '3', '4', '5')").arg(idUV).arg(idSemestre).arg(idNote).arg(idCursus).arg(idCategorie));
+        ret = query.exec(QString("INSERT into Inscription values(NULL,'%1','%2', '%3', '%4', '%5')").arg(idUV).arg(idSemestre).arg(idNote).arg(idCursus).arg(idCategorie));
         if (ret)
             newId = query.lastInsertId().toInt();
     }
@@ -1026,8 +1029,8 @@ int DbManager::insertItem(Simulation* simulation)
             newId = query.lastInsertId().toInt();
 
             QSqlQuery query2;
-            QMap<unsigned int, Inscription*> map = simulation->getInscriptions();
-            for (QMap<unsigned int, Inscription*>::Iterator it = map.begin(); it != map.end(); ++it)
+            QMap<unsigned int, Inscription*>* map = simulation->getInscriptions();
+            for (QMap<unsigned int, Inscription*>::Iterator it = map->begin(); it != map->end(); ++it)
             {
                 ret = query2.exec(QString("INSERT into SimulationInscr values(NULL,'%1','%2')").arg(newId).arg(it.key()));
             }

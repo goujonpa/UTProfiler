@@ -145,9 +145,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(mainConfigButt, SIGNAL(clicked()), this, SLOT(showConfigEdit()));
 }
 
-
-
-
 // ===== SELECT ITEMS =====================================================
 
 
@@ -232,27 +229,29 @@ void MainWindow::showProfilInfo()
         mainLayout->addWidget(label2, 6,3,1,2);
         label2->show();
 
+        stdItMod3->clear();
         stdItMod3->setColumnCount(4);
         stdItMod3->setItem(0,0, new QStandardItem("UV"));
         stdItMod3->setItem(0,1, new QStandardItem("Saison"));
         stdItMod3->setItem(0,2, new QStandardItem("Année"));
         stdItMod3->setItem(0,3, new QStandardItem("Note"));
         QMap<unsigned int, Inscription*>::Iterator it;
-        int i;
+        int i = 0;
         for (it = Db->m_user->getProfil()->getInscriptions()->begin(); it != Db->m_user->getProfil()->getInscriptions()->end(); ++it)
         {
             i++;
-            stdItMod3->setItem(i,1, new QStandardItem(it.value()->getUV()->getCode()));
+            stdItMod3->setItem(i,0, new QStandardItem(it.value()->getUV()->getCode()));
             QString saison = "Printemps";
             if (it.value()->getSemestre()->getSaison() == Automne)
-                saison = Automne;
-            stdItMod3->setItem(i,2, new QStandardItem(saison));
-            stdItMod3->setItem(i,3, new QStandardItem(it.value()->getSemestre()->getAnnee()));
-            stdItMod3->setItem(i,4, new QStandardItem(it.value()->getNote()->getCode()));
+                saison = "Automne";
+            stdItMod3->setItem(i,1, new QStandardItem(saison));
+            stdItMod3->setItem(i,2, new QStandardItem(QString::number(it.value()->getSemestre()->getAnnee())));
+            stdItMod3->setItem(i,3, new QStandardItem(it.value()->getNote()->getCode()));
         }
+        tableView2->setModel(stdItMod3);
         tableView2->horizontalHeader()->setVisible(false);
         tableView2->verticalHeader()->setVisible(false);
-        mainLayout->addWidget(tableView2, 3,3,3,2);
+        mainLayout->addWidget(tableView2, 7,3,3,2);
         tableView2->show();
     }
 
@@ -325,7 +324,7 @@ void MainWindow::showSimulationEdit()
     mainLayout->addWidget(Butt2, 2,1,1,1);
     Butt2->setText("Catalogue Bonus UV");
     Butt2->show();
-    //QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showBranchList()));
+    QObject::connect(Butt2, SIGNAL(clicked()), this, SLOT(showBonusList()));
 
     mainLayout->addWidget(Butt3, 3,0,1,1);
     Butt3->setText("Ajout Désir par Semestre");
@@ -351,6 +350,12 @@ void MainWindow::showSimulationEdit()
     Butt7->setText("Lancer la Simulation");
     Butt7->show();
     //QObject::connect(Butt7, SIGNAL(clicked()), this, SLOT(showFiliereList()));
+
+    if (Db->m_user->getProfil()->getBonus() == 0)
+    {
+        Butt1->setEnabled(false);
+        Butt2->setEnabled(false);
+    }
 }
 
 void MainWindow::showConfigEdit()
@@ -432,40 +437,21 @@ void MainWindow::showNewBonusForm()
     mainLayout->addWidget(slider1, 9,3,1,3);
     slider1->show();
 
-/*
-    label3->setText("Filiere :");
-    mainLayout->addWidget(label3, 6,3,1,1);
+    label3->setText("Pas de bonus");
+    mainLayout->addWidget(label3, 10,4,1,2);
     label3->show();
 
-    getFiliereView();
-    mainLayout->addWidget(tableView4, 7,3,2,3);
-    tableView4->show();
-
-    label4->setText("Cursus visé");
-    mainLayout->addWidget(label4, 9,3,1,1);
+    label4->setText("Signification du Bonus :");
+    mainLayout->addWidget(label4, 10,3,1,1);
     label4->show();
 
-    label5->setText("Branche :");
-    mainLayout->addWidget(label5, 10,3,1,1);
-    label5->show();
+    QObject::connect(slider1, SIGNAL(valueChanged(int)), this, SLOT(sliderBonus(int)));
 
-    getBrancheView2();
-    mainLayout->addWidget(tableView1, 11,3,2,3);
-    tableView1->show();
-
-    label6->setText("Filiere :");
-    mainLayout->addWidget(label6, 13,3,1,1);
-    label6->show();
-
-    getFiliereView2();
-    mainLayout->addWidget(tableView2, 14,3,2,3);
-    tableView2->show();
-
-    mainLayout->addWidget(valider, 16,3,1,1);
+    mainLayout->addWidget(valider, 11,3,1,3);
     valider->show();
-*/
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewBonusForm()));
+
     showSimulationEdit();
-    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideProfilForm()));
 }
 
 void MainWindow::showProfilForm()
@@ -726,9 +712,6 @@ void MainWindow::valideProfilForm()
 
     cursus = new Cursus(0, branche, filiere);
 
-    QMessageBox::information(this, "Br", cursus->getBranche()->getCode());
-    QMessageBox::information(this, "Fil", cursus->getFiliere()->getCode());
-
     QMap<unsigned int, Cursus*>::iterator it;
 
     for (it = Db->m_cursus->begin(); it != Db->m_cursus->end(); ++it)
@@ -760,10 +743,6 @@ void MainWindow::valideProfilForm()
 
 
     cursus2 = new Cursus(0, branche, filiere);
-    QMessageBox::information(this, "1", cursus2->getBranche()->getCode());
-    QMessageBox::information(this, "2", cursus2->getFiliere()->getCode());
-
-
     QMap<unsigned int, Cursus*>::iterator it2;
 
     for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
@@ -779,14 +758,8 @@ void MainWindow::valideProfilForm()
         Db->m_cursus->insert(cursus2->getId(), cursus2);
     }
 
-
-    QMessageBox::information(this, "3", QString::number(cursus->getId()));
-    QMessageBox::information(this, "4", QString::number(cursus2->getId()));
-    QMessageBox::information(this, "5", QString::number(Db->m_user->getId()));
-
     if (Db->m_user->getProfil() == 0)
     {
-        QMessageBox::information(this, "6", "if");
         profil = new Profil(0, 0, cursus, cursus2, 0, 0, 0, 0);
         id = Db->insertItem(profil);
         profil->setId(id);
@@ -795,12 +768,9 @@ void MainWindow::valideProfilForm()
     }
     else
     {
-        QMessageBox::information(this, "6", "else");
         Db->m_user->getProfil()->setActuel(cursus);
         Db->m_user->getProfil()->setVise(cursus2);
     }
-
-    QMessageBox::information(this, "7idprofil", QString::number(Db->m_user->getProfil()->getId()));
 
     clear();
     showProfilEdit();
@@ -840,12 +810,7 @@ void MainWindow::valideNewInscriptionForm()
 
     Saison saison = Printemps;
     if (combo1->currentText() == "Automne")
-    {
         saison = Automne;
-    }
-
-    if (saison == Printemps)
-        QMessageBox::information(this, "", "printemps");
 
     semestre = new Semestre(0, saison, le1->text().toInt());
 
@@ -881,12 +846,6 @@ void MainWindow::valideNewInscriptionForm()
         Db->m_cursus->insert(cursus->getId(), cursus);
     }
 
-    QMessageBox::information(this, "Semestre", QString::number(semestre->getId()));
-    QMessageBox::information(this, "IdCursus", QString::number(cursus->getId()));
-    QMessageBox::information(this, "Filiere", QString::number(filiere->getId()));
-    QMessageBox::information(this, "Branche", QString::number(branche->getId()));
-    QMessageBox::information(this, "Note", QString::number(note->getId()));
-    QMessageBox::information(this, "UV", QString::number(uv->getId()));
 
     inscription = new Inscription(0, uv, semestre, note, cursus, uv->getCategorie());
     id = Db->insertItem(inscription);
@@ -894,15 +853,33 @@ void MainWindow::valideNewInscriptionForm()
     Db->m_inscriptions->insert(inscription->getId(), inscription);
     Db->m_user->getProfil()->addInscription(inscription);
 
-    QMessageBox::information(this, "Inscription", Db->m_user->getProfil()->getInscriptions()->find(id).value()->getUV()->getCode());
-
 
     clear();
     showProfilEdit();
-
-
 }
 
+
+void MainWindow::valideNewBonusForm()
+{
+    QItemSelectionModel* selection = tableView1->selectionModel();
+    QModelIndex index1 = selection->currentIndex();
+    QModelIndex index2 = index1.sibling(index1.row(),0);
+    QVariant variant1 = sqlModel1->data(index2);
+    unsigned int id = variant1.toInt();
+    uv = Db->m_uvs->find(id).value();
+
+    unsigned int valeur = slider1->value();
+
+    BonusUV* bonus = new BonusUV(0, uv, valeur);
+    id = Db->insertItem(bonus);
+    bonus->setId(id);
+
+    Db->m_user->getProfil()->addBonus(bonus);
+    Db->m_bonus->insert(bonus->getId(), bonus);
+
+    clear();
+    showSimulationEdit();
+}
 
 void MainWindow::valideNewNoteForm()
 {
@@ -998,7 +975,50 @@ void MainWindow::valideNewUserForm()
 
 // ===== SHOW LISTS =======================================================
 
+void MainWindow::showBonusList()
+{
+    label2->setText("Vos bonus :");
+    mainLayout->addWidget(label2, 2,3,1,2);
+    label2->show();
 
+    stdItMod3->clear();
+    stdItMod3->setColumnCount(2);
+    stdItMod3->setItem(0,0, new QStandardItem("UV"));
+    stdItMod3->setItem(0,1, new QStandardItem("Bonus"));
+    QMap<unsigned int, BonusUV*>::Iterator it;
+    int i = 0;
+    for (it = Db->m_user->getProfil()->getBonus()->begin(); it != Db->m_user->getProfil()->getBonus()->end(); ++it)
+    {
+        i++;
+        stdItMod3->setItem(i,0, new QStandardItem(it.value()->getUV()->getCode()));
+        QString bonus;
+        switch (it.value()->getBonus())
+        {
+            case 0:
+                bonus = "Pas de bonus";
+                break;
+            case 1:
+                bonus = "UV désirée";
+                break;
+            case 2:
+                bonus = "UV exigée";
+                break;
+            case -1:
+                bonus = "UV non désirée";
+                break;
+            case -2:
+                bonus = "UV rejetée";
+                break;
+        }
+        stdItMod3->setItem(i,1, new QStandardItem(bonus));
+    }
+    tableView2->setModel(stdItMod3);
+    tableView2->horizontalHeader()->setVisible(false);
+    tableView2->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView2, 3,3,3,2);
+    tableView2->show();
+
+}
 
 void MainWindow::showBranchList()
 {
@@ -1157,13 +1177,14 @@ void MainWindow::affiche(QString message)
 void MainWindow::test()
 {
     //QMessageBox::information(this, "profil existe ?", QString::number(Db->m_profils->find(3).value()->getId()));
-    /*for (QMap<unsigned int, Profil*>::Iterator it = Db->m_profils->begin(); it != Db->m_profils->end(); it++)
+    for (QMap<unsigned int, Inscription*>::Iterator it = Db->m_inscriptions->begin(); it != Db->m_inscriptions->end(); it++)
     {
         QString message = QString::number(it.value()->getId());
-        QMessageBox::information(this, "Id Profil", message);
-    }*/
 
-    QMessageBox::information(this, "test", Db->m_test);
+        QMessageBox::information(this, "Id Profil", message);
+    }
+
+    //QMessageBox::information(this, "test", Db->m_test);
 
 
     //bool ret;
@@ -1282,5 +1303,30 @@ void MainWindow::clear()
 
 MainWindow::~MainWindow()
 {
+    Db->~DbManager();
     delete ui;
+}
+
+void MainWindow::sliderBonus(int val)
+{
+    if (val ==  0)
+    {
+        label3->setText("Pas de Bonus");
+    }
+    if (val == 1)
+    {
+        label3->setText("J'apprécierais cette UV");
+    }
+    if (val == 2)
+    {
+        label3->setText("Je veux absolumment cette UV");
+    }
+    if (val == -1)
+    {
+        label3->setText("J'aimerais éviter cette UV");
+    }
+    if (val == -2)
+    {
+        label3->setText("Je ne veux pas du tout cette UV");
+    }
 }

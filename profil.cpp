@@ -14,6 +14,8 @@ bool Profil::setInscriptions(QMap<unsigned int, Inscription*>* inscriptions)
 
 bool Profil::addInscription(Inscription* inscription)
 {
+    if (this->getInscriptions() == 0)
+        m_inscriptions = new QMap<unsigned int, Inscription*>;
     m_inscriptions->insert(inscription->getId(), inscription);
     return true;
 }
@@ -38,6 +40,8 @@ bool Profil::setEtrangers(QMap<unsigned int, Etranger*>* etrangers)
 
 bool Profil::addEtranger(Etranger* etranger)
 {
+    if (this->getEtrangers() == 0)
+        m_etrangers = new QMap<unsigned int, Etranger*>;
     m_etrangers->insert(etranger->getId(), etranger);
     return true;
 }
@@ -62,18 +66,24 @@ bool Profil::setBonus(QMap<unsigned int, BonusUV*>* bonus)
 
 bool Profil::addPrefEtranger(Etranger* etranger)
 {
+    if (this->getPrefEtrangers() == 0)
+        m_prefEtrangers = new QMap<unsigned int, Etranger*>;
     m_prefEtrangers->insert(etranger->getId(), etranger);
     return true;
 }
 
 bool Profil::addDesir(DesirUV* desir)
 {
+    if (this->getDesirs() == 0)
+        m_desirs = new QMap<unsigned int, DesirUV*>;
     m_desirs->insert(desir->getId(), desir);
     return true;
 }
 
 bool Profil::addBonus(BonusUV* bonus)
 {
+    if (this->getBonus() == 0)
+        m_bonus = new QMap<unsigned int, BonusUV*>;
     m_bonus->insert(bonus->getId(), bonus);
     return true;
 }

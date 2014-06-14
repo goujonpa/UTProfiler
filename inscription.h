@@ -17,11 +17,11 @@ class Inscription : public QObject
         explicit Inscription(QObject *parent = 0);
         Inscription(unsigned int id, UV* uv, Semestre* semestre, Note* note, Cursus* cursus, Categorie* categorie): m_id(id), m_uv(uv), m_semestre(semestre), m_note(note), m_cursus(cursus), m_categorie(categorie) {}
         unsigned int getId() const {return m_id;}
-        UV* getUV() const {return m_uv;}
-        Semestre* getSemestre() const {return m_semestre;}
-        Note* getNote() const {return m_note;}
-        Cursus* getCursus() const {return m_cursus;}
-        Categorie* getCategorie() const {return m_categorie;}
+        UV* getUV() const;
+        Semestre* getSemestre() const;
+        Note* getNote() const;
+        Cursus* getCursus() const;
+        Categorie* getCategorie() const;
         bool setUV(UV* uv);
         bool setSemestre(Semestre* semestre);
         bool setNote(Note* note);

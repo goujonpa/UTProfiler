@@ -173,6 +173,7 @@ class Profil : public QObject
         QMap<unsigned int, DesirUV*>* m_desirs;
         QMap<unsigned int, BonusUV*>* m_bonus;
 
+
     signals:
 
     public slots:

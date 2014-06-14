@@ -13,10 +13,11 @@ class BonusUV : public QObject
         explicit BonusUV(QObject *parent = 0);
         BonusUV(unsigned int id, UV* uv, int bonus): m_id(id), m_UV(uv), m_bonus(bonus) {}
         unsigned int getId() const {return m_id;}
-        UV* getUV() const {return m_UV;}
+        UV* getUV() const;
         int getBonus() const {return m_bonus;}
         bool setUV(UV* uv);
         bool setBonus(int bonus);
+        bool setId(unsigned int id);
 
     protected:
 
