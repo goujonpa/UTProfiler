@@ -1,3 +1,13 @@
+/*!
+ * \file mainwindow.cpp
+ * \brief Méthodes de la classe MainWindow
+ * \author Goujon & Cortyl
+ * \date 15 juin 2014
+ *
+ * Définition des méthodes de la classe MainWindow
+ *
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -6,15 +16,24 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    /*!
+      *\brief Initialisation de la fenêtre
+      */
     // ===== Init window =====
 
     ui->setupUi(this); // Init ui
     MainWindow::setWindowState(Qt::WindowMaximized); // plein écran par défaut
 
+    /*!
+      *\brief Initialisation de la BDD
+      */
     // ===== Init Db =====
 
     Db = new DbManager;
 
+    /*!
+      *\brief Initialisation des Widget
+      */
     // ===== Main Widget =====
 
     zoneCenter = new QWidget;
@@ -34,10 +53,16 @@ MainWindow::MainWindow(QWidget *parent) :
     //Db->createTables();
 
 
+    /*!
+      *\brief initialisation du XML
+      */
     // ===== Init xml =====
 
     xml = new XmlManager;
 
+    /*!
+      *\brief gère la vue principale
+      */
     // ===== Main Layout =====
 
     mainLayout = new QGridLayout;
@@ -47,7 +72,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout->addWidget(spacer, 0,0,15,6);
     spacer->hide();
 
-
+    /*!
+      *\brief gère la toolbar
+      */
     // ===== Main toolbar =====
 
     mainProfilButt = new QPushButton;
@@ -65,11 +92,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // =================================================
 
+    /*!
+      *\brief Initialisation de l'utilisateur
+      */
     // ==== Init user =====
 
     titre = new QLabel;
     mainLayout->addWidget(titre, 1,0,1,3);
 
+    /*!
+      *\brief Initialisation des boutons
+      */
     // ===== Init buttons =====
 
     Butt1 = new QPushButton;
@@ -83,17 +116,26 @@ MainWindow::MainWindow(QWidget *parent) :
     Butt9 = new QPushButton;
     Butt10 = new QPushButton;
 
+    /*!
+      *\brief Initialisation de QStandardItemModel
+      */
     // ===== Init QSIM =====
 
     stdItMod1 = new QStandardItemModel;
     stdItMod2 = new QStandardItemModel;
     stdItMod3 = new QStandardItemModel;
 
+    /*!
+      *\brief Initialisation de LineEdits
+      */
     // ===== Init LineEdits =====
 
     le1 = new QLineEdit;
     le2 = new QLineEdit;
 
+    /*!
+      *\brief Initialisation des labelles.
+      */
     // ===== Init Labels =====
 
     label1 = new QLabel;
@@ -109,6 +151,9 @@ MainWindow::MainWindow(QWidget *parent) :
     label11 = new QLabel;
     label12 = new QLabel;
 
+    /*!
+      *Initialisation du
+      */
     // ===== Init Sql MVC =====
 
     sqlModel1 = new QSqlQueryModel;
@@ -122,6 +167,9 @@ MainWindow::MainWindow(QWidget *parent) :
     utableView = new QTableView;
 
 
+    /*!
+      *\brief Divers
+      */
     // ===== Divers =====
 
     valider = new QPushButton;
@@ -248,6 +296,9 @@ MainWindow::MainWindow(QWidget *parent) :
     it10 = Db->m_uvs->begin();
 
 
+    /*!
+      *\brief Connection
+      */
     // ===== Connect =====
 
     QObject::connect(mainProfilButt, SIGNAL(clicked()), this, SLOT(clear()));
@@ -261,6 +312,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(mainConfigButt, SIGNAL(clicked()), this, SLOT(showConfigEdit()));
 }
 
+/*!
+  *\brief Selection d'un objet
+  */
 // ===== SELECT ITEMS =====================================================
 
 
@@ -284,7 +338,9 @@ void MainWindow::selectUser()
 }
 
 
-
+/*!
+  *\brief Afficher un objet
+  */
 // =====  SHOW ITEMS =====================================================
 
 
@@ -376,7 +432,9 @@ void MainWindow::showProfilInfo()
 }
 
 
-
+/*!
+  *\brief Afficher les tableaux
+  */
 // ===== SHOW TABS ======================================================
 
 
@@ -550,7 +608,9 @@ void MainWindow::showConfigEdit()
 }
 
 
-
+/*!
+  *\brief Affichage des formulaires
+  */
 // ===== SHOW FORMS =======================================================
 
 void MainWindow::showNewBonusForm()
@@ -1089,7 +1149,9 @@ void MainWindow::showAjoutCursusUVForm()
 
 
 
-
+/*!
+  *\brief Formulaires Valident
+  */
 // ===== VALIDE FORMS ==========================================================
 
 void MainWindow::valideAjoutCursusUVForm()
@@ -2396,7 +2458,9 @@ void MainWindow::valideNewUserForm()
 }
 
 
-
+/*!
+  *\brief Affichage des listes
+  */
 // ===== SHOW LISTS =======================================================
 
 void MainWindow::showBonusList()
@@ -2638,7 +2702,9 @@ void MainWindow::showUserList()
 }
 
 
-
+/*!
+  *\brief Récupérer des vues
+  */
 // ===== GET VIEWS =======================================================
 
 
@@ -2693,7 +2759,9 @@ QTableView* MainWindow::getFiliereView2()
 
 
 
-
+/*!
+  *\brief Divers
+  */
 // ===== DIVERS ========================================================
 
 

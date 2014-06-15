@@ -1,8 +1,26 @@
+/*!
+ * \file dbmanager.cpp
+ * \brief Méthodes de la classe DbManager
+ * \author Goujon & Cortyl
+ * \date 15 juin 2014
+ *
+ * Définition des méthodes de la classe DbManager
+ *
+ */
+
 #include "dbmanager.h"
 
+/*!
+ * \brief constructeur par défaut DbManager::DbManager
+ * \param parent : pointeur vers l'objet parent
+ */
 DbManager::DbManager(QObject *parent) :
     QObject(parent)
 {
+    /*!
+      * \brief allocation de tous les attributs
+      */
+
     m_users = new QMap<unsigned int, User*>;
     m_uvs = new QMap<unsigned int, UV*>;
     m_branches = new QMap<unsigned int, Branche*>;
@@ -25,6 +43,9 @@ DbManager::DbManager(QObject *parent) :
 
 
 }
+/*!
+  *\brief Initialisation
+  */
 // ===== Init ===========================================================
 
 
@@ -64,6 +85,9 @@ void DbManager::load()
     loadUsers();
 }
 
+/*!
+  *\brief Destructeur avec sauvegarde
+  */
 // ===== DESTRUCTEUR ==========================================================
 
 
@@ -154,7 +178,11 @@ void DbManager::save()
     }
 }
 
-
+/*!
+ * \brief méthode DbManager::remove
+ * Permeet de retirer de l'affichage
+ * \return
+ */
 bool DbManager::remove()
 {
     QSqlQuery query;
@@ -204,6 +232,9 @@ bool DbManager::remove()
     return ret;
 }
 
+/*!
+  *\brief Chargement
+  */
 bool DbManager::removeUVs()
 {
     bool ret;
@@ -211,7 +242,6 @@ bool DbManager::removeUVs()
     ret = query.exec("DELETE FROM UV");
     return ret;
 }
-
 
 // ===== LOAD ===========================================================
 
@@ -553,7 +583,9 @@ void DbManager::loadCursus()
 
 
 
-
+/*!
+  *\brief Gestion des erreurs
+  */
 // =====
 
 

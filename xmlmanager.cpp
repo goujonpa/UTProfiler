@@ -1,5 +1,19 @@
+/*!
+ * \file xmlmanager.cpp
+ * \brief Méthodes de la classe XmlManager
+ * \author Goujon & Cortyl
+ * \date 15 juin 2014
+ *
+ * Définition des méthodes de la XmlManager
+ *
+ */
+
 #include "xmlmanager.h"
 
+/*!
+ * \brief XmlManager::XmlManager
+ * \param parent
+ */
 XmlManager::XmlManager(QObject *parent) :
     QObject(parent)
 {
@@ -7,7 +21,12 @@ XmlManager::XmlManager(QObject *parent) :
 
 
 
-
+/*!
+ * \brief méthode XmlManager::load
+ * Permet de compléter une BDD à partir d'un XML
+ * \param filename : fichier XML source
+ * \param db : pointeur vers la BDD
+ */
 void XmlManager::load(QString filename, DbManager* db)
 {
     QFile* file = new QFile(filename);
