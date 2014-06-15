@@ -16,10 +16,11 @@
 #include <iostream>
 
 /*!
- * \brief main
+ * \brief fonction main
+ * Coeur du programme
  * \param argc
  * \param argv
- * \return
+ * \return ouverture
  */
 int main(int argc, char *argv[])
 {
