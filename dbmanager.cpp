@@ -235,6 +235,14 @@ bool DbManager::remove()
 /*!
   *\brief Chargement
   */
+bool DbManager::removeUVs()
+{
+    bool ret;
+    QSqlQuery query;
+    ret = query.exec("DELETE FROM UV");
+    return ret;
+}
+
 // ===== LOAD ===========================================================
 
 void DbManager::update()

@@ -181,6 +181,9 @@ class DbManager : public QObject
          * \return pointeur vers conteneur de catégories
          */
         QMap<unsigned int, Categorie*>* getDbCat() const {return m_categories;}
+        QMap<unsigned int, Branche*>* getDbBranches() const {return m_branches;}
+        Filiere* getSansFiliere() const {return m_filieres->find(0).value();}
+        QMap<unsigned int, Cursus*>* getDbCursus() const {return m_cursus;}
 
 
         /*!
@@ -334,6 +337,7 @@ class DbManager : public QObject
 
         void save();
         bool remove();
+        bool removeUVs();
 
         /*!
           * \brief Récupère les listes des différents objet

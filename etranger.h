@@ -96,6 +96,8 @@ class Etranger : public QObject
         Semestre* m_semestre;
 
 
+
+
     signals:
 
     public slots:
