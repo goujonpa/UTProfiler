@@ -132,6 +132,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     le1 = new QLineEdit;
     le2 = new QLineEdit;
+    le3 = new QLineEdit;
+    le4 = new QLineEdit;
+    le5 = new QLineEdit;
+    le6 = new QLineEdit;
 
     /*!
       *\brief Initialisation des labelles.
@@ -366,7 +370,7 @@ void MainWindow::showUser()
     utableView->setModel(stdItMod1);
     utableView->horizontalHeader()->setVisible(false);
     utableView->verticalHeader()->setVisible(false);
-    mainLayout->addWidget(utableView, 6,0,4,2);
+    mainLayout->addWidget(utableView, 8,0,4,2);
     utableView->show();
     if (Db->m_user != NULL)
         mainSimuButt->setEnabled(true);
@@ -943,8 +947,30 @@ void MainWindow::showNewEtrangerForm()
     mainLayout->addWidget(le1, 5,4,1,2);
     le1->show();
 
+    label2->setText("Crédits CS prévus :");
+    label3->setText("Crédits TM prévus :");
+    label4->setText("Crédits TSH prévus :");
+    label5->setText("Crédits filière prévus :");
+    mainLayout->addWidget(label2, 6,3,1,1);
+    mainLayout->addWidget(label3, 7,3,1,1);
+    mainLayout->addWidget(label4, 8,3,1,1);
+    mainLayout->addWidget(label5, 9,3,1,1);
+    label2->show();
+    label3->show();
+    label4->show();
+    label5->show();
+    mainLayout->addWidget(le3, 6,4,1,2);
+    mainLayout->addWidget(le4, 7,4,1,2);
+    mainLayout->addWidget(le5, 8,4,1,2);
+    mainLayout->addWidget(le6, 9,4,1,2);
+    le3->show();
+    le4->show();
+    le5->show();
+    le6->show();
+
+
     valider->setText("Valider");
-    mainLayout->addWidget(valider, 6,3,1,3);
+    mainLayout->addWidget(valider, 10,3,1,3);
     valider->show();
 
     showProfilEdit();
@@ -977,8 +1003,29 @@ void MainWindow::showNewPrefEtrangerForm()
     mainLayout->addWidget(le1, 5,4,1,2);
     le1->show();
 
+    label2->setText("Crédits CS prévus :");
+    label3->setText("Crédits TM prévus :");
+    label4->setText("Crédits TSH prévus :");
+    label5->setText("Crédits filière prévus :");
+    mainLayout->addWidget(label2, 6,3,1,1);
+    mainLayout->addWidget(label3, 7,3,1,1);
+    mainLayout->addWidget(label4, 8,3,1,1);
+    mainLayout->addWidget(label5, 9,3,1,1);
+    label2->show();
+    label3->show();
+    label4->show();
+    label5->show();
+    mainLayout->addWidget(le3, 6,4,1,2);
+    mainLayout->addWidget(le4, 7,4,1,2);
+    mainLayout->addWidget(le5, 8,4,1,2);
+    mainLayout->addWidget(le6, 9,4,1,2);
+    le3->show();
+    le4->show();
+    le5->show();
+    le6->show();
+
     valider->setText("Valider");
-    mainLayout->addWidget(valider, 6,3,1,3);
+    mainLayout->addWidget(valider, 10,3,1,3);
     valider->show();
 
     showSimulationEdit();
@@ -2042,21 +2089,6 @@ void MainWindow::valideAjoutCursusUVForm()
 
         uv->addCursus(cursus);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
@@ -2087,7 +2119,7 @@ void MainWindow::valideNewEtrangerForm()
 
     QString titre = le2->text();
 
-    Etranger* etranger = new Etranger(0, titre, semestre);
+    Etranger* etranger = new Etranger(0, titre, semestre, le3->text().toInt(), le4->text().toInt(), le5->text().toInt(), le6->text().toInt());
     id = Db->insertItem(etranger);
     etranger->setId(id);
     Db->m_user->getProfil()->addEtranger(etranger);
@@ -2124,7 +2156,7 @@ void MainWindow::valideNewPrefEtrangerForm()
 
     QString titre = le2->text();
 
-    Etranger* etranger = new Etranger(0, titre, semestre);
+    Etranger* etranger = new Etranger(0, titre, semestre, le3->text().toInt(), le4->text().toInt(), le5->text().toInt(), le6->text().toInt());
     id = Db->insertItem(etranger);
     etranger->setId(id);
     Db->m_user->getProfil()->addPrefEtranger(etranger);
@@ -2764,7 +2796,411 @@ QTableView* MainWindow::getFiliereView2()
   */
 // ===== DIVERS ========================================================
 
+void MainWindow::showSimulationInterface()
+{
+    clear();
+    label1->setText("Entrez le semestre de départ (Les inscriptions et semestres à l'étranger du profil seront comptés comme ayant été validés AVANT ce semestre de départ");
+    mainLayout->addWidget(label1, 2,3,2,3);
+    label1->show();
 
+    combo1->addItem("Printemps");
+    combo1->addItem("Automne");
+    mainLayout->addWidget(combo1, 4,3,1,3);
+    combo1->show();
+
+    label2->setText("Année :");
+    mainLayout->addWidget(label2, 5,3,1,1);
+    label2->show();
+
+    mainLayout->addWidget(le1, 5,4,2,2);
+    le1->show();
+
+    Butt10->setText("LAUNCH");
+    mainLayout->addWidget(valider, 10,3,2,3);
+    valider->show();
+    //QObject::connect(valider, SIGNAL(clicked()), this, SLOT(launchSimulation()));
+}
+
+/*
+void MainWindow::launchSimulation()
+{
+
+    // ===== CLASSE INCOMPLETE PAR MANQUE DE TEMPS =====
+
+    unsigned int id;
+    Saison saison = Printemps;
+    if (combo1->currentText() == "Automne")
+        saison = Automne;
+
+    semestre = new Semestre(0, saison, le1->text().toInt());
+
+    QMap<unsigned int, Semestre*>::iterator it;
+
+    for (it = Db->m_semestres->begin(); it != Db->m_semestres->end(); ++it)
+    {
+        if ((it.value()->getSaison() == semestre->getSaison()) && (it.value()->getAnnee() == semestre->getAnnee()))
+            semestre = it.value();
+    }
+
+    if (semestre->getId() == 0)
+    {
+        id = Db->insertItem(semestre);
+        semestre->setId(id);
+        Db->m_semestres->insert(semestre->getId(), semestre);
+    }
+
+    Branche* brancheVisee = Db->m_user->getProfil()->getVise()->getBranche();
+    Filiere* filiereVisee = Db->m_user->getProfil()->getVise()->getFiliere();
+
+    QVector<UV*>* csTcDispo = new QVector<UV*>;
+    QVector<UV*>* tmTcDispo = new QVector<UV*>;
+    QVector<UV*>* tshDispo = new QVector<UV*>;
+    QVector<UV*>* csBrDispo = new QVector<UV*>;
+    QVector<UV*>* tmBrDispo = new QVector<UV*>;
+    QVector<UV*>* csFiliereDispo = new QVector<UV*>;
+    QVector<UV*>* tmFiliereDispo = new QVector<UV*>;
+
+    QMap<unsigned int, UV*>::Iterator it7;
+    QMap<unsigned int, Categorie*>::Iterator it2;
+    QMap<unsigned int, Branche*>::Iterator it3;
+    QMap<unsigned int, Inscription*>::Iterator it4;
+    QMap<unsigned int, Cursus*>::Iterator it5;
+
+    // ===== Récupération des UVs qui nous intéressent =====
+
+
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it) // Recup CS TC
+    {
+        if (it.value()->getCategorie()->getCode() == "CS")
+        {
+            bool isTC = false;
+            for (it5 = it.value()->getCursus()->begin(); it5 != it.value()->getCursus()->end(); ++it5)
+            {
+                if (it5.value()->getBranche()->getCode == "TC")
+                    isTC = true;
+            }
+            if (isTC)
+            {
+                bool alreadydone = false;
+                for (it4 = Db->m_user->getProfil()->getInscriptions()->begin(); it4 != Db->m_user->getProfil()->getInscriptions()->end(); ++it4)
+                {
+                    if (it4.value()->getUV() == it.value())
+                        alreadydone = true;
+                }
+                if (!alreadydone)
+                    csTcDispo->push_back(it.value());
+            }
+
+        }
+    }
+
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it) // Recup TM TC
+    {
+        if (it.value()->getCategorie()->getCode == "TM")
+        {
+            bool isTC = false;
+            for (it5 = it.value()->getCursus()->begin(); it5 != it.value()->getCursus()->end(); ++it5)
+            {
+                if (it5.value()->getBranche()->getCode == "TC")
+                    isTC = true;
+            }
+            if (isTC)
+            {
+                bool alreadydone = false;
+                for (it4 = Db->m_user->getProfil()->getInscriptions()->begin(); it4 != Db->m_user->getProfil()->getInscriptions()->end(); ++it4)
+                {
+                    if (it4.value()->getUV() == it.value())
+                        alreadydone = true;
+                }
+                if (!alreadydone)
+                    tmTcDispo->push_back(it.value());
+            }
+
+        }
+    }
+
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it) // Recup TSH
+    {
+        if (it.value()->getCategorie()->getCode() == "TSH")
+        {
+            bool alreadydone = false;
+            for (it4 = Db->m_user->getProfil()->getInscriptions()->begin(); it4 != Db->m_user->getProfil()->getInscriptions()->end(); ++it4)
+            {
+                if (it4.value()->getUV() == it.value())
+                    alreadydone = true;
+            }
+            if (!alreadydone)
+                tshDispo->push_back(it.value());
+        }
+    }
+
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it) // Recup CS BR
+    {
+        if (it.value()->getCategorie()->getCode() == "CS")
+        {
+            bool isBr = false;
+            for (it5 = it.value()->getCursus()->begin(); it5 != it.value()->getCursus()->end(); ++it5)
+            {
+                if (it5.value()->getBranche() == brancheVisee)
+                    isBr = true;
+            }
+            if (isBr)
+            {
+                bool alreadydone = false;
+                for (it4 = Db->m_user->getProfil()->getInscriptions()->begin(); it4 != Db->m_user->getProfil()->getInscriptions()->end(); ++it4)
+                {
+                    if (it4.value()->getUV() == it.value())
+                        alreadydone = true;
+                }
+                if (!alreadydone)
+                    csBrDispo->push_back(it.value());
+            }
+
+        }
+    }
+
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it) // Recup TM BR
+    {
+        if (it.value()->getCategorie()->getCode() == "TM")
+        {
+            bool isBr = false;
+            for (it5 = it.value()->getCursus()->begin(); it5 != it.value()->getCursus()->end(); ++it5)
+            {
+                if (it5.value()->getBranche() == brancheVisee)
+                    isBr = true;
+            }
+            if (isBr)
+            {
+                bool alreadydone = false;
+                for (it4 = Db->m_user->getProfil()->getInscriptions()->begin(); it4 != Db->m_user->getProfil()->getInscriptions()->end(); ++it4)
+                {
+                    if (it4.value()->getUV() == it.value())
+                        alreadydone = true;
+                }
+                if (!alreadydone)
+                    tmBrDispo->push_back(it.value());
+            }
+
+        }
+    }
+
+
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it) // Recup cs Filiere
+    {
+        if (it.value()->getCategorie()->getCode() == "CS")
+        {
+            bool isBr = false;
+            for (it5 = it.value()->getCursus()->begin(); it5 != it.value()->getCursus()->end(); ++it5)
+            {
+                if (it5.value()->getBranche() == brancheVisee)
+                    isBr = true;
+            }
+            if (isBr)
+            {
+                bool isFil = false;
+                for (it5 = it.value()->getCursus()->begin(); it5 != it.value()->getCursus()->end(); ++it5)
+                {
+                    if (it5.value()->getFiliere == filiereVisee)
+                        isFil = true;
+                }
+                if (isFil)
+                {
+                    bool alreadydone = false;
+                    for (it4 = Db->m_user->getProfil()->getInscriptions()->begin(); it4 != Db->m_user->getProfil()->getInscriptions()->end(); ++it4)
+                    {
+                        if (it4.value()->getUV() == it.value())
+                            alreadydone = true;
+                    }
+                    if (!alreadydone)
+                        csFiliereDispo->push_back(it.value());
+                }
+            }
+
+        }
+    }
+
+    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it) // Recup TM Filiere
+    {
+        if (it.value()->getCategorie()->getCode() == "TM")
+        {
+            bool isBr = false;
+            for (it5 = it.value()->getCursus()->begin(); it5 != it.value()->getCursus()->end(); ++it5)
+            {
+                if (it5.value()->getBranche() == brancheVisee)
+                    isBr = true;
+            }
+            if (isBr)
+            {
+                bool isFil = false;
+                for (it5 = it.value()->getCursus()->begin(); it5 != it.value()->getCursus()->end(); ++it5)
+                {
+                    if (it5.value()->getFiliere == filiereVisee)
+                        isFil = true;
+                }
+                if (isFil)
+                {
+                    bool alreadydone = false;
+                    for (it4 = Db->m_user->getProfil()->getInscriptions()->begin(); it4 != Db->m_user->getProfil()->getInscriptions()->end(); ++it4)
+                    {
+                        if (it4.value()->getUV() == it.value())
+                            alreadydone = true;
+                    }
+                    if (!alreadydone)
+                        tmFiliereDispo->push_back(it.value());
+                }
+            }
+
+        }
+    }
+
+    unsigned int csTCActuel = 0, tmTCActuel = 0, csBrActuel = 0, tmBrActuel = 0, tshActuel = 0, filiereActuel = 0;
+
+    // ===== Recupération des crédits actuels =====
+
+    for (it4 = Db->m_user->getProfil()->getInscriptions()->begin(); it4 != Db->m_user->getProfil()->getInscriptions()->end(); ++it4)
+    {
+        if (it4.value()->getUV->getCategorie == "CS")
+        {
+            if (it4.value()->getCursus()->getBranche() == "TC")
+                csTCActuel++;
+            if (it4.value()->getCursus()->getBranche() == brancheVisee)
+                csBrActuel++;
+            if (it4.value()->getCursus()->getFiliere() == filiereVisee)
+                filiereActuel++;
+
+        }
+        if (it4.value()->getUV->getCategorie == "TM")
+        {
+            if (it4.value()->getCursus()->getBranche() == "TC")
+                tmTCActuel++;
+            if (it4.value()->getCursus()->getBranche() == brancheVisee)
+                tmBrActuel++;
+            if (it4.value()->getCursus()->getFiliere() == filiereVisee)
+                filiereActuel++;
+        }
+        if (it4.value()->getUV->getCategorie == "TSH")
+            tshActuel++;
+    }
+
+    // ===== Inscription à des UVs, par semestre. =====
+
+
+    QMap<unsigned int, Note*>::Iterator it6;
+    Note* noteEnCours = new Note;
+    for (it6 = Db->m_notes->begin(); it6 != Db->m_notes->end(); ++it6)
+    {
+        if (it6.value()->getCode == "EC")
+            noteEnCours = it6.value();
+    }
+
+
+    while (!testOkCredits(csTCActuel, tmTCActuel, csBrActuel, tmBrActuel, tshActuel, filiereActuel))
+    {
+        Inscription* inscription1 = new Inscription;
+        Inscription* inscription2 = new Inscription;
+        Inscription* inscription3 = new Inscription;
+        Inscription* inscription4 = new Inscription;
+        Inscription* inscription5 = new Inscription;
+        Inscription* inscription6 = new Inscription;
+        if (!testOkTC(csTCActuel, tmTCActuel))
+        {
+            inscription1->setUV(csTcDispo->front());
+            csTcDispo->pop_front();
+            csTCActuel += inscription1->getUV()->getCredits();
+
+
+            inscription2->setUV(csTcDispo->front());
+            csTcDispo->pop_front();
+            csTCActuel += inscription2->getUV()->getCredits();
+
+            inscription3->setUV(tmTcDispo->front());
+            tmTcDispo->pop_front();
+            tmTCActuel += inscription3->getUV()->getCredits();
+
+            inscription4->setUV(tmTcDispo->front());
+            tmTcDispo->pop_front();
+            tmTCActuel += inscription4->getUV()->getCredits();
+
+            inscription5->setUV(tshDispo->front());
+            tshDispo->pop_front();
+            tshActuel += inscription5->getUV()->getCredits();
+
+            inscription6->setUV(tshDispo->front());
+            tshDispo->pop_front();
+            tshActuel += inscription6->getUV()->getCredits();
+
+            inscription1->setSemestre(semestre);
+            inscription2->setSemestre(semestre);
+            inscription3->setSemestre(semestre);
+            inscription4->setSemestre(semestre);
+            inscription5->setSemestre(semestre);
+            inscription6->setSemestre(semestre);
+
+            unsigned int id;
+            id = Db->insertItem(inscription1);
+            inscription1->setId(id);
+            id = Db->insertItem(inscription2);
+            inscription2->setId(id);
+            id = Db->insertItem(inscription3);
+            inscription3->setId(id);
+            id = Db->insertItem(inscription4);
+            inscription4->setId(id);
+            id = Db->insertItem(inscription5);
+            inscription5->setId(id);
+            id = Db->insertItem(inscription6);
+            inscription6->setId(id);
+
+
+        }
+        else if (!testOkBr(csBrActuel, tmBrActuel))
+        {
+            inscription1->setUV(csBrDispo->front());
+            csBrDispo->pop_front();
+            csBrActuel += inscription1->getUV()->getCredits();
+
+            inscription2->setUV(csBrDispo->front());
+            csBrDispo->pop_front();
+            csBrActuel += inscription2->getUV()->getCredits();
+
+            inscription3->setUV(tmBrDispo->front());
+            tmBrDispo>pop_front();
+            tmBrActuel += inscription3->getUV()->getCredits();
+
+            inscription4->setUV(tmBrDispo->front());
+            tmBrDispo->pop_front();
+            tmBrActuel += inscription4->getUV()->getCredits();
+
+            inscription5->setUV(tshDispo->front());
+            tshDispo->pop_front();
+            tshActuel += inscription5->getUV()->getCredits();
+
+            inscription6->setUV(tshDispo->front());
+            tshDispo->pop_front();
+            tshActuel += inscription6->getUV()->getCredits();
+
+
+
+        }
+        else if (!testOkFil(filiereActuel, tshActuel))
+
+    }
+
+
+}*/
+
+bool MainWindow::testOkCredits(unsigned int csTCActuel, unsigned int tmTCActuel, unsigned int csBrActuel, unsigned int tmBrActuel, unsigned int tshActuel, unsigned int filiereActuel)
+{
+    if (csTCActuel >= 48 && tmTCActuel >= 24 && tshActuel >= 52 && csBrActuel >= 30 && tmBrActuel >= 30 && filiereActuel >= 20)
+        return true;
+    return false;
+}
+
+bool MainWindow::testOkTC(unsigned int csTCActuel, unsigned int tmTCActuel)
+{
+    if (csTCActuel >= 48 && tmTCActuel >= 24)
+        return true;
+    return false;
+}
 
 void MainWindow::affiche(QString message)
 {
@@ -2839,6 +3275,10 @@ void MainWindow::clear()
 
     stop(le1);
     stop(le2);
+    stop(le3);
+    stop(le4);
+    stop(le5);
+    stop(le6);
 
     stop(tableView1);
     stop(tableView2);

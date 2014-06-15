@@ -53,3 +53,27 @@ Semestre* Etranger::getSemestre() const
         return 0;
     return m_semestre;
 }
+
+bool Etranger::setCs(unsigned int cs)
+{
+    m_cs = cs;
+    return true;
+}
+
+bool Etranger::setTm(unsigned int tm)
+{
+    m_tm = tm;
+    return true;
+}
+
+bool Etranger::setTsh(unsigned int tsh)
+{
+    m_tsh = tsh;
+    return true;
+}
+
+bool Etranger::setFiliere(unsigned int filiere)
+{
+    m_filiere = filiere;
+    return true;
+}

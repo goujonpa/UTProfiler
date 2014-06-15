@@ -20,18 +20,6 @@ Simulation::Simulation(QObject *parent) :
 }
 
 /*!
- * \brief méthode Simulation::setProfil
- * \param profil : pointeur vers le profil qui demande une simulation
- * \return true si l'ajout s'est correctement réalisé
- */
-bool Simulation::setProfil(Profil* profil)
-{
-    m_profil = profil;
-    return true;
-}
-
-
-/*!
  * \brief méthode Simulation::setInscriptions
  * \param inscr : conteneur d'inscription
  * \return true si l'ajout s'est correctement réalisé
@@ -39,17 +27,6 @@ bool Simulation::setProfil(Profil* profil)
 bool Simulation::setInscriptions(QMap<unsigned int, Inscription*>* inscriptions)
 {
     m_inscriptions = inscriptions;
-    return true;
-}
-
-/*!
- * \brief méthode Simulation::setCursus
- * \param cursus : pointeur vers le cursus
- * \return true si l'ajout s'est correctement réalisé
- */
-bool Simulation::setCursus(Cursus *cursus)
-{
-    m_cursus = cursus;
     return true;
 }
 
@@ -69,4 +46,23 @@ QMap<unsigned int, Inscription*>* Simulation::getInscriptions() const
     if (m_inscriptions == NULL || m_inscriptions == 0)
         return 0;
     return m_inscriptions;
+}
+
+bool Simulation::setId(unsigned int id)
+{
+    m_id = id;
+    return true;
+}
+
+bool Simulation::setSemestre(Semestre *semestre)
+{
+    m_semestre = semestre;
+    return true;
+}
+
+Semestre* Simulation::getSemestre() const
+{
+    if (m_semestre == 0 || m_semestre == NULL)
+        return 0;
+    return m_semestre;
 }

@@ -83,11 +83,15 @@ class MainWindow : public QMainWindow
         QTableView* getFiliereView();
         QTableView* getBrancheView2();
         QTableView* getFiliereView2();
+        bool testOkCredits(unsigned int csTCActuel, unsigned int tmTCActuel, unsigned int csBrActuel, unsigned int tmBrActuel, unsigned int tshActuel, unsigned int filiereActuel);
+        bool testOkTC(unsigned int csTCActuel, unsigned int tmTCActuel);
 
-/*!
-  *\brief Tous les attributs
-  */
-    private:
+
+    /*!
+      *\brief Tous les attributs
+      */
+    protected:
+
         Ui::MainWindow *ui;
         QWidget* zoneCenter;
         QGridLayout* mainLayout;
@@ -108,6 +112,10 @@ class MainWindow : public QMainWindow
         QPushButton* mainConfigButt;
         QLineEdit* le1;
         QLineEdit* le2;
+        QLineEdit* le3;
+        QLineEdit* le4;
+        QLineEdit* le5;
+        QLineEdit* le6;
         QPushButton* valider;
         QLabel* label1;
         QLabel* label2;
@@ -330,6 +338,12 @@ class MainWindow : public QMainWindow
         void exportDb();
         void importDb();
         void sliderBonus(int);
+
+        // ===== Simulation =====
+
+        void showSimulationInterface();
+        //void launchSimulation();
+
 
 
 

@@ -40,7 +40,7 @@ class Simulation : public QObject
          * \param inscription : conteneur contenant les pointeurs vers toutes les inscriptions que contient la simulation
          * \param cursus : pointeur vers objet cursus
          */
-        Simulation(unsigned int id, Profil* profil, QMap<unsigned int, Inscription*>* inscriptions, Cursus* cursus): m_id(id), m_profil(profil), m_inscriptions(inscriptions), m_cursus(cursus) {}
+        Simulation(unsigned int id, QMap<unsigned int, Inscription*>* inscriptions, Semestre* semestre): m_id(id), m_inscriptions(inscriptions), m_semestre(semestre) {}
 
         /*!
          * \brief méthode getId
@@ -50,32 +50,11 @@ class Simulation : public QObject
         unsigned int getId() const {return m_id;}
 
         /*!
-         * \brief méthode getPreference
-         * Récupère le pointeur de la preference
-         * \return pointeur vers preference
-         */
-        Profil* getProfil() const {return m_profil;}
-
-        /*!
          * \brief méthode getInscriptions
          * Récupère le conteneur des inscriptions
          * \return conteneur des inscriptions
          */
         QMap<unsigned int, Inscription*>* getInscriptions() const;
-
-        /*!
-         * \brief méthode getCursus
-         * \return
-         */
-        Cursus* getCursus() const {return m_cursus;}
-
-        /*!
-         * \brief méthode setPreference
-         * Modifie preference
-         * \param pref : pointeur vers Preference
-         * \return true si l'ajout s'est bien réalisé
-         */
-        bool setProfil(Profil* profil);
 
         /*!
          * \brief méthode setInscriptions
@@ -85,13 +64,6 @@ class Simulation : public QObject
          */
         bool setInscriptions(QMap<unsigned int, Inscription*>* inscriptions);
 
-        /*!
-         * \brief méthode setCursus
-         * Modifie le cursus
-         * \param cursus : pointeur vers cursus
-         * \return true si l'ajout s'est bien réalisé
-         */
-        bool setCursus(Cursus* cursus);
 
         /*!
          * \brief méthode addInscription
@@ -100,6 +72,12 @@ class Simulation : public QObject
          * \return true si l'ajout s'est bien réalisé
          */
         bool addInscription(Inscription* inscription);
+
+        bool setId(unsigned int id);
+
+        bool setSemestre(Semestre* semestre);
+
+        Semestre* getSemestre() const;
 
 
     protected:
@@ -110,19 +88,11 @@ class Simulation : public QObject
         unsigned int m_id;
 
         /*!
-         * \brief m_preference : pointeur vers preference
-         */
-        Profil* m_profil;
-
-        /*!
          * \brief m_inscriptions : conteneur des inscriptions
          */
         QMap<unsigned int, Inscription*>* m_inscriptions;
 
-        /*!
-         * \brief m_cursus : pointeur vers le cursus visé
-         */
-        Cursus* m_cursus; // cursus visé.
+        Semestre* m_semestre;
 
     signals:
 

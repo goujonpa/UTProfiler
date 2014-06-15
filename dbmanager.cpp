@@ -39,6 +39,7 @@ DbManager::DbManager(QObject *parent) :
 
 
     openDb();
+    createTables();
     load();
 
 
@@ -296,7 +297,12 @@ void DbManager::loadEtrangers()
         etranger->setId(query.value(0).toInt());
         etranger->setTitre(query.value(1).toString());
         etranger->setSemestre(m_semestres->find(query.value(2).toInt()).value());
+        etranger->setCs(query.value(3).toInt());
+        etranger->setTm(query.value(4).toInt());
+        etranger->setTsh(query.value(5).toInt());
+        etranger->setFiliere(query.value(6).toInt());
         m_etrangers->insert(etranger->getId(), etranger);
+
     }
 }
 
@@ -679,7 +685,7 @@ bool DbManager::createEtrangerTable()
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec("CREATE TABLE Etranger (id INTEGER PRIMARY KEY, titre VARCHAR(100), semestre INTEGER)");
+        ret = query.exec("CREATE TABLE Etranger (id INTEGER PRIMARY KEY, titre VARCHAR(100), semestre INTEGER, cs INTEGER, tm INTEGER, tsh INTEGER, filiere INTEGER)");
     }
     return ret;
 }
@@ -757,7 +763,7 @@ bool DbManager::createSimulationTable()
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec("CREATE TABLE Simulation (id INTEGER PRIMARY KEY, profil INTEGER, cursus INTEGER)");
+        ret = query.exec("CREATE TABLE Simulation (id INTEGER PRIMARY KEY, semestre INTEGER)");
         if (ret == true)
             ret = query.exec("CREATE TABLE SimulationInscr (id INTEGER PRIMARY KEY, idSimu INTEGER, inscription INTEGER)");
 
@@ -930,7 +936,7 @@ int DbManager::insertItem(Etranger* etranger)
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into Etranger values(NULL,'%1','%2')").arg(etranger->getTitre()).arg(etranger->getSemestre()->getId()));
+        ret = query.exec(QString("INSERT into Etranger values(NULL,'%1','%2', '%3', '%4', '%5', '%6')").arg(etranger->getTitre()).arg(etranger->getSemestre()->getId()).arg(etranger->getCs()).arg(etranger->getTm()).arg(etranger->getTsh()).arg(etranger->getFiliere()));
         if (ret)
             newId = query.lastInsertId().toInt();
     }
@@ -1086,10 +1092,13 @@ int DbManager::insertItem(Simulation* simulation)
 {
     bool ret = false;
     int newId = -1;
+    unsigned int idSemestre = 0;
+    if (simulation->getSemestre() != 0)
+        idSemestre = simulation->getSemestre()->getId();
     if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into Simulation values(NULL,'%1', '%2')").arg(simulation->getProfil()->getId()).arg(simulation->getCursus()->getId()));
+        ret = query.exec(QString("INSERT into Simulation values(NULL,'%1')").arg(idSemestre));
         if (ret)
         {
             newId = query.lastInsertId().toInt();
