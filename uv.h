@@ -80,6 +80,12 @@ class UV : public QObject
          */
         QMap<unsigned int, Cursus*>* getCursus() const;
 
+        /*!
+         * \brief méthode setId
+         * Modifie l'identificateur de l'UV
+         * \param id : identificateur de l'UV
+         * \return true si la modification c'est correctement déroulée
+         */
         bool setId(unsigned int id);
 
 
@@ -136,19 +142,20 @@ class UV : public QObject
         QString m_code;
 
         /*!
-         * \brief m_credits : nombre de crédits de l'UV
+         * \brief m_credits : pointeur vers nombre de crédits de l'UV
          */
         unsigned int m_credits;
 
         /*!
-         * \brief m_categorie : catégorie de l'UV
+         * \brief m_categorie : pointeur vers catégorie de l'UV
          */
         Categorie* m_categorie;
 
         /*!
-         * \brief m_cursus : cursus associé à l'UV
+         * \brief m_cursus : pointeur vers cursus associé à l'UV
          */
         QMap<unsigned int, Cursus*>* m_cursus;
+
 
     signals:
 

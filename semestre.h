@@ -79,6 +79,12 @@ class Semestre : public QObject
          */
         bool setAnnee(unsigned int annee);
 
+        /*!
+         * \brief méthode setId
+         * Modifie l'identificateur
+         * \param id : identificateur du semestre
+         * \return true si l'ajout s'est déroulé correctement
+         */
         bool setId(unsigned int id);
 
     protected:
