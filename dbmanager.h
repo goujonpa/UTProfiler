@@ -109,6 +109,9 @@ class DbManager : public QObject
         void loadProfils();
         void loadInscriptions();
         void loadBonus();
+        void loadDesirs();
+        void loadEtrangers();
+
 
         // ===== Update =====
 

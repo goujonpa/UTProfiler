@@ -14,7 +14,6 @@ DbManager::DbManager(QObject *parent) :
     m_inscriptions = new QMap<unsigned int, Inscription*>;
     m_profils = new QMap<unsigned int, Profil*>;
     m_etrangers = new QMap<unsigned int, Etranger*>;
-    m_prefEtrangers = new QMap<unsigned int, Etranger*>;
     m_desirs = new QMap<unsigned int, DesirUV*>;
     m_bonus = new QMap<unsigned int, BonusUV*>;
     m_simulations = new QMap<unsigned int, Simulation*>;
@@ -58,6 +57,8 @@ void DbManager::load()
     loadCursus();
     loadUvs();
     loadBonus();
+    loadDesirs();
+    loadEtrangers();
     loadInscriptions();
     loadProfils();
     loadUsers();
@@ -120,12 +121,6 @@ void DbManager::save()
     for(it10 = m_etrangers->begin(); it10 != m_etrangers->end(); ++it10)
     {
         insertItem(it10.value());
-    }
-
-    QMap<unsigned int, Etranger*>::Iterator it11;
-    for(it11 = m_prefEtrangers->begin(); it11 != m_prefEtrangers->end(); ++it11)
-    {
-        insertItem(it11.value());
     }
 
     QMap<unsigned int, Profil*>::Iterator it12;
@@ -235,6 +230,37 @@ void DbManager::loadBonus()
     }
 }
 
+void DbManager::loadDesirs()
+{
+    m_desirs->clear();
+
+    QSqlQuery query("SELECT * FROM Desir");
+
+    while (query.next())
+    {
+        DesirUV* desir = new DesirUV;
+        desir->setId(query.value(0).toInt());
+        desir->setUV(m_uvs->find(query.value(1).toInt()).value());
+        desir->setSemestre(m_semestres->find(query.value(2).toInt()).value());
+        m_desirs->insert(desir->getId(), desir);
+    }
+}
+
+void DbManager::loadEtrangers()
+{
+    m_etrangers->clear();
+
+    QSqlQuery query("SELECT * FROM Etranger");
+
+    while (query.next())
+    {
+        Etranger* etranger = new Etranger;
+        etranger->setId(query.value(0).toInt());
+        etranger->setTitre(query.value(1).toString());
+        etranger->setSemestre(m_semestres->find(query.value(2).toInt()).value());
+        m_etrangers->insert(etranger->getId(), etranger);
+    }
+}
 
 void DbManager::loadProfils()
 {
@@ -290,7 +316,7 @@ void DbManager::loadProfils()
         while (query4.next())
         {
             Etranger* prefEtranger = new Etranger;
-            prefEtranger = m_prefEtrangers->find(query4.value(2).toInt()).value();
+            prefEtranger = m_etrangers->find(query4.value(2).toInt()).value();
             m_profils->find(query4.value(1).toInt()).value()->addPrefEtranger(prefEtranger);
         }
 
@@ -861,10 +887,10 @@ int DbManager::insertItem(Etranger* etranger)
 {
     bool ret = false;
     int newId = -1;
-    if (db.isOpen()) // A AJOUTER : Condition de test, pour le cas ou profil etc sont = 0 => faire en fonction par la suite.
+    if (db.isOpen())
     {
         QSqlQuery query;
-        ret = query.exec(QString("INSERT into Desir values(NULL,'%1','%2')").arg(etranger->getTitre()).arg(etranger->getSemestre()->getId()));
+        ret = query.exec(QString("INSERT into Etranger values(NULL,'%1','%2')").arg(etranger->getTitre()).arg(etranger->getSemestre()->getId()));
         if (ret)
             newId = query.lastInsertId().toInt();
     }

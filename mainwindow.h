@@ -143,6 +143,9 @@ class MainWindow : public QMainWindow
         void showUVList();
         void showNoteList();
         void showBonusList();
+        void showDesirsList();
+        void showEtrangerList();
+        void showPrefEtrangersList();
 
         // ===== Forms =====
 
@@ -155,6 +158,10 @@ class MainWindow : public QMainWindow
         void showNewInscriptionForm();
         void showProfilForm();
         void showNewBonusForm();
+        void showNewDesirForm();
+        void showNewEtrangerForm();
+        void showNewPrefEtrangerForm();
+
 
         // ===== Validation forms =====
 
@@ -167,7 +174,9 @@ class MainWindow : public QMainWindow
         void valideNewInscriptionForm();
         void valideProfilForm();
         void valideNewBonusForm();
-
+        void valideNewDesirForm();
+        void valideNewEtrangerForm();
+        void valideNewPrefEtrangerForm();
 
         // ===== show items =====
 

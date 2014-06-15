@@ -14,10 +14,11 @@ class DesirUV : public QObject
         explicit DesirUV(QObject *parent = 0);
         DesirUV(unsigned int id, UV* uv, Semestre* semestre): m_id(id), m_UV(uv), m_semestre(semestre) {}
         unsigned int getId() const {return m_id;}
-        UV* getUV() const {return m_UV;}
-        Semestre* getSemestre() const {return m_semestre;}
+        UV* getUV() const;
+        Semestre* getSemestre() const;
         bool setUV(UV* uv);
         bool setSemestre(Semestre* semestre);
+        bool setId(unsigned int id);
 
     protected:
 

@@ -138,6 +138,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(mainProfilButt, SIGNAL(clicked()), this, SLOT(clear()));
     QObject::connect(mainProfilButt, SIGNAL(clicked()), this, SLOT(showProfilEdit()));
 
+    mainSimuButt->setEnabled(false);
     QObject::connect(mainSimuButt, SIGNAL(clicked()), this, SLOT(clear()));
     QObject::connect(mainSimuButt, SIGNAL(clicked()), this, SLOT(showSimulationEdit()));
 
@@ -196,6 +197,8 @@ void MainWindow::showUser()
     utableView->verticalHeader()->setVisible(false);
     mainLayout->addWidget(utableView, 6,0,4,2);
     utableView->show();
+    if (Db->m_user != NULL)
+        mainSimuButt->setEnabled(true);
 
 }
 
@@ -292,16 +295,25 @@ void MainWindow::showProfilEdit()
     mainLayout->addWidget(Butt5, 4,0,1,2);
     QObject::connect(Butt5, SIGNAL(clicked()), this, SLOT(showNewInscriptionForm()));
 
+    mainLayout->addWidget(Butt6, 5,0,1,1);
+    Butt6->setText("Ajout Semestre à l'étranger");
+    Butt6->show();
+    QObject::connect(Butt6, SIGNAL(clicked()), this, SLOT(showNewEtrangerForm()));
+
+    Butt7->setText("Catalogue Semestres à l'étranger");
+    Butt7->show();
+    mainLayout->addWidget(Butt7, 5,1,1,1);
+    QObject::connect(Butt7, SIGNAL(clicked()), this, SLOT(showEtrangerList()));
+
     if (Db->m_user != NULL)
     {
         showUser();
-        Butt3->setEnabled(true);
-        Butt4->setEnabled(true);
-        Butt5->setEnabled(true);
         if (Db->m_user->getProfil() == 0)
         {
             Butt4->setEnabled(false);
             Butt5->setEnabled(false);
+            Butt6->setEnabled(false);
+            Butt7->setEnabled(false);
         }
     }
     else
@@ -309,6 +321,8 @@ void MainWindow::showProfilEdit()
         Butt3->setEnabled(false);
         Butt4->setEnabled(false);
         Butt5->setEnabled(false);
+        Butt6->setEnabled(false);
+        Butt7->setEnabled(false);
     }
 }
 
@@ -329,22 +343,22 @@ void MainWindow::showSimulationEdit()
     mainLayout->addWidget(Butt3, 3,0,1,1);
     Butt3->setText("Ajout Désir par Semestre");
     Butt3->show();
-    //QObject::connect(Butt3, SIGNAL(clicked()), this, SLOT(test()));
+    QObject::connect(Butt3, SIGNAL(clicked()), this, SLOT(showNewDesirForm()));
 
     mainLayout->addWidget(Butt4, 3,1,1,1);
     Butt4->setText("Catalogue Désirs par Semestre");
     Butt4->show();
-    //QObject::connect(Butt4, SIGNAL(clicked()), this, SLOT(showNewCatForm()));
+    QObject::connect(Butt4, SIGNAL(clicked()), this, SLOT(showDesirsList()));
 
     mainLayout->addWidget(Butt5, 4,0,1,1);
     Butt5->setText("Ajout Semestre à l'étranger");
     Butt5->show();
-    //QObject::connect(Butt5, SIGNAL(clicked()), this, SLOT(showCatList()));
+    QObject::connect(Butt5, SIGNAL(clicked()), this, SLOT(showNewPrefEtrangerForm()));
 
     mainLayout->addWidget(Butt6, 4,1,1,1);
     Butt6->setText("Catalogue Semestres à l'étranger");
     Butt6->show();
-    //QObject::connect(Butt6, SIGNAL(clicked()), this, SLOT(showNewFiliereForm()));
+    QObject::connect(Butt6, SIGNAL(clicked()), this, SLOT(showPrefEtrangersList()));
 
     mainLayout->addWidget(Butt7, 6,0,1,2);
     Butt7->setText("Lancer la Simulation");
@@ -352,10 +366,11 @@ void MainWindow::showSimulationEdit()
     //QObject::connect(Butt7, SIGNAL(clicked()), this, SLOT(showFiliereList()));
 
     if (Db->m_user->getProfil()->getBonus() == 0)
-    {
-        Butt1->setEnabled(false);
         Butt2->setEnabled(false);
-    }
+    if (Db->m_user->getProfil()->getDesirs() == 0)
+        Butt4->setEnabled(false);
+    if (Db->m_user->getProfil()->getPrefEtrangers() == 0)
+        Butt6->setEnabled(false);
 }
 
 void MainWindow::showConfigEdit()
@@ -633,8 +648,41 @@ void MainWindow::showNewUserForm()
     QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewUserForm()));
 }
 
+void MainWindow::showNewDesirForm()
+{
+    clear();
+    label10->setText("Ajout de désir par semestre :");
+    mainLayout->addWidget(label10, 2,3,1,1);
+    label10->show();
+
+    getUvView();
+    mainLayout->addWidget(tableView1, 3,3,3,3);
+    tableView1->show();
+
+    combo1->addItem("Printemps");
+    combo1->addItem("Automne");
+    mainLayout->addWidget(combo1, 6,3,1,3);
+    combo1->show();
+
+    label1->setText("Année :");
+    mainLayout->addWidget(label1, 7,3,1,1);
+    label1->show();
+
+    mainLayout->addWidget(le1, 7,4,1,2);
+    le1->show();
+
+    mainLayout->addWidget(valider, 8,3,1,3);
+    valider->show();
+
+    showSimulationEdit();
+
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewDesirForm()));
+}
+
+
 void MainWindow::showNewInscriptionForm()
 {
+    clear();
     label10->setText("Ajout d'Inscriptions :");
     mainLayout->addWidget(label10, 2,3,1,1);
     label10->show();
@@ -688,10 +736,156 @@ void MainWindow::showNewInscriptionForm()
     QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewInscriptionForm()));
 }
 
+void MainWindow::showNewEtrangerForm()
+{
+    clear();
+    label10->setText("Ajout de semestres à l'étranger :");
+    mainLayout->addWidget(label10, 2,3,1,1);
+    label10->show();
+
+    label11->setText("Titre :");
+    mainLayout->addWidget(label11, 3,3,1,1);
+    label11->show();
+
+    mainLayout->addWidget(le2, 3,4,1,2);
+    le2->show();
+
+
+    combo1->addItem("Printemps");
+    combo1->addItem("Automne");
+    mainLayout->addWidget(combo1, 4,3,1,3);
+    combo1->show();
+
+    label1->setText("Année :");
+    mainLayout->addWidget(label1, 5,3,1,1);
+    label1->show();
+
+    mainLayout->addWidget(le1, 5,4,1,2);
+    le1->show();
+
+    valider->setText("Valider");
+    mainLayout->addWidget(valider, 6,3,1,3);
+    valider->show();
+
+    showProfilEdit();
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewEtrangerForm()));
+}
+
+void MainWindow::showNewPrefEtrangerForm()
+{
+    clear();
+    label10->setText("Ajout de semestres à l'étranger :");
+    mainLayout->addWidget(label10, 2,3,1,1);
+    label10->show();
+
+    label11->setText("Titre :");
+    mainLayout->addWidget(label11, 3,3,1,1);
+    label11->show();
+
+    mainLayout->addWidget(le2, 3,4,1,2);
+    le2->show();
+
+
+    combo1->addItem("Printemps");
+    combo1->addItem("Automne");
+    mainLayout->addWidget(combo1, 4,3,1,3);
+    combo1->show();
+
+    label1->setText("Année :");
+    mainLayout->addWidget(label1, 5,3,1,1);
+    label1->show();
+
+    mainLayout->addWidget(le1, 5,4,1,2);
+    le1->show();
+
+    valider->setText("Valider");
+    mainLayout->addWidget(valider, 6,3,1,3);
+    valider->show();
+
+    showSimulationEdit();
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewPrefEtrangerForm()));
+}
+
+
+
+
 
 // ===== VALIDE FORMS ==========================================================
 
 
+void MainWindow::valideNewEtrangerForm()
+{
+    unsigned int id;
+
+    Saison saison = Printemps;
+    if (combo1->currentText() == "Automne")
+        saison = Automne;
+
+    semestre = new Semestre(0, saison, le1->text().toInt());
+
+    QMap<unsigned int, Semestre*>::iterator it;
+
+    for (it = Db->m_semestres->begin(); it != Db->m_semestres->end(); ++it)
+    {
+        if ((it.value()->getSaison() == semestre->getSaison()) && (it.value()->getAnnee() == semestre->getAnnee()))
+            semestre = it.value();
+    }
+
+    if (semestre->getId() == 0)
+    {
+        id = Db->insertItem(semestre);
+        semestre->setId(id);
+        Db->m_semestres->insert(semestre->getId(), semestre);
+    }
+
+    QString titre = le2->text();
+
+    Etranger* etranger = new Etranger(0, titre, semestre);
+    id = Db->insertItem(etranger);
+    etranger->setId(id);
+    Db->m_user->getProfil()->addEtranger(etranger);
+    Db->m_etrangers->insert(etranger->getId(), etranger);
+
+    clear();
+    showProfilEdit();
+}
+
+void MainWindow::valideNewPrefEtrangerForm()
+{
+    unsigned int id;
+
+    Saison saison = Printemps;
+    if (combo1->currentText() == "Automne")
+        saison = Automne;
+
+    semestre = new Semestre(0, saison, le1->text().toInt());
+
+    QMap<unsigned int, Semestre*>::iterator it;
+
+    for (it = Db->m_semestres->begin(); it != Db->m_semestres->end(); ++it)
+    {
+        if ((it.value()->getSaison() == semestre->getSaison()) && (it.value()->getAnnee() == semestre->getAnnee()))
+            semestre = it.value();
+    }
+
+    if (semestre->getId() == 0)
+    {
+        id = Db->insertItem(semestre);
+        semestre->setId(id);
+        Db->m_semestres->insert(semestre->getId(), semestre);
+    }
+
+    QString titre = le2->text();
+
+    Etranger* etranger = new Etranger(0, titre, semestre);
+    id = Db->insertItem(etranger);
+    etranger->setId(id);
+    Db->m_user->getProfil()->addPrefEtranger(etranger);
+    Db->m_etrangers->insert(etranger->getId(), etranger);
+
+    clear();
+    showSimulationEdit();
+}
 
 void MainWindow::valideProfilForm()
 {
@@ -776,6 +970,46 @@ void MainWindow::valideProfilForm()
     showProfilEdit();
 }
 
+void MainWindow::valideNewDesirForm()
+{
+
+    QItemSelectionModel* selection = tableView1->selectionModel();
+    QModelIndex index1 = selection->currentIndex();
+    QModelIndex index2 = index1.sibling(index1.row(),0);
+    QVariant variant1 = sqlModel1->data(index2);
+    unsigned int id = variant1.toInt();
+    uv = Db->m_uvs->find(id).value();
+
+    Saison saison = Printemps;
+    if (combo1->currentText() == "Automne")
+        saison = Automne;
+
+    semestre = new Semestre(0, saison, le1->text().toInt());
+
+    QMap<unsigned int, Semestre*>::iterator it;
+
+    for (it = Db->m_semestres->begin(); it != Db->m_semestres->end(); ++it)
+    {
+        if ((it.value()->getSaison() == semestre->getSaison()) && (it.value()->getAnnee() == semestre->getAnnee()))
+            semestre = it.value();
+    }
+
+    if (semestre->getId() == 0)
+    {
+        id = Db->insertItem(semestre);
+        semestre->setId(id);
+        Db->m_semestres->insert(semestre->getId(), semestre);
+    }
+
+    DesirUV* desir = new DesirUV(0, uv, semestre);
+    id = Db->insertItem(desir);
+    desir->setId(id);
+    Db->m_user->getProfil()->addDesir(desir);
+    Db->m_desirs->insert(desir->getId(), desir);
+
+    clear();
+    showSimulationEdit();
+}
 
 void MainWindow::valideNewInscriptionForm()
 {
@@ -977,6 +1211,7 @@ void MainWindow::valideNewUserForm()
 
 void MainWindow::showBonusList()
 {
+    clear();
     label2->setText("Vos bonus :");
     mainLayout->addWidget(label2, 2,3,1,2);
     label2->show();
@@ -1017,8 +1252,112 @@ void MainWindow::showBonusList()
     tableView2->verticalHeader()->setVisible(false);
     mainLayout->addWidget(tableView2, 3,3,3,2);
     tableView2->show();
+    showSimulationEdit();
+}
+
+
+void MainWindow::showDesirsList()
+{
+    clear();
+    label2->setText("Vos désirs :");
+    mainLayout->addWidget(label2, 2,3,1,2);
+    label2->show();
+
+    stdItMod3->clear();
+    stdItMod3->setColumnCount(3);
+    stdItMod3->setItem(0,0, new QStandardItem("UV"));
+    stdItMod3->setItem(0,1, new QStandardItem("Saison"));
+    stdItMod3->setItem(0,2, new QStandardItem("Année"));
+    QMap<unsigned int, DesirUV*>::Iterator it;
+    int i = 0;
+    for (it = Db->m_user->getProfil()->getDesirs()->begin(); it != Db->m_user->getProfil()->getDesirs()->end(); ++it)
+    {
+        i++;
+        stdItMod3->setItem(i,0, new QStandardItem(it.value()->getUV()->getCode()));
+        QString saison = "Printemps";
+        if (it.value()->getSemestre()->getSaison() == Automne)
+            saison = "Automne";
+        stdItMod3->setItem(i,1, new QStandardItem(saison));
+        stdItMod3->setItem(i,2, new QStandardItem(QString::number(it.value()->getSemestre()->getAnnee())));
+    }
+    tableView2->setModel(stdItMod3);
+    tableView2->horizontalHeader()->setVisible(false);
+    tableView2->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView2, 3,3,3,2);
+    tableView2->show();
+    showSimulationEdit();
 
 }
+
+void MainWindow::showEtrangerList()
+{
+    clear();
+    label2->setText("Vos semestres à l'étranger :");
+    mainLayout->addWidget(label2, 2,3,1,2);
+    label2->show();
+
+    stdItMod3->clear();
+    stdItMod3->setColumnCount(3);
+    stdItMod3->setItem(0,0, new QStandardItem("Titre"));
+    stdItMod3->setItem(0,1, new QStandardItem("Saison"));
+    stdItMod3->setItem(0,2, new QStandardItem("Année"));
+    QMap<unsigned int, Etranger*>::Iterator it;
+    int i = 0;
+    for (it = Db->m_user->getProfil()->getEtrangers()->begin(); it != Db->m_user->getProfil()->getEtrangers()->end(); ++it)
+    {
+        i++;
+        stdItMod3->setItem(i,0, new QStandardItem(it.value()->getTitre()));
+        QString saison = "Printemps";
+        if (it.value()->getSemestre()->getSaison() == Automne)
+            saison = "Automne";
+        stdItMod3->setItem(i,1, new QStandardItem(saison));
+        stdItMod3->setItem(i,2, new QStandardItem(QString::number(it.value()->getSemestre()->getAnnee())));
+    }
+    tableView2->setModel(stdItMod3);
+    tableView2->horizontalHeader()->setVisible(false);
+    tableView2->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView2, 3,3,3,2);
+    tableView2->show();
+    showProfilEdit();
+
+}
+
+
+void MainWindow::showPrefEtrangersList()
+{
+    clear();
+    label2->setText("Semestres à l'étranger désirés :");
+    mainLayout->addWidget(label2, 2,3,1,2);
+    label2->show();
+
+    stdItMod3->clear();
+    stdItMod3->setColumnCount(3);
+    stdItMod3->setItem(0,0, new QStandardItem("Titre"));
+    stdItMod3->setItem(0,1, new QStandardItem("Saison"));
+    stdItMod3->setItem(0,2, new QStandardItem("Année"));
+    QMap<unsigned int, Etranger*>::Iterator it;
+    int i = 0;
+    for (it = Db->m_user->getProfil()->getPrefEtrangers()->begin(); it != Db->m_user->getProfil()->getPrefEtrangers()->end(); ++it)
+    {
+        i++;
+        stdItMod3->setItem(i,0, new QStandardItem(it.value()->getTitre()));
+        QString saison = "Printemps";
+        if (it.value()->getSemestre()->getSaison() == Automne)
+            saison = "Automne";
+        stdItMod3->setItem(i,1, new QStandardItem(saison));
+        stdItMod3->setItem(i,2, new QStandardItem(QString::number(it.value()->getSemestre()->getAnnee())));
+    }
+    tableView2->setModel(stdItMod3);
+    tableView2->horizontalHeader()->setVisible(false);
+    tableView2->verticalHeader()->setVisible(false);
+    mainLayout->addWidget(tableView2, 3,3,3,2);
+    tableView2->show();
+    showSimulationEdit();
+
+}
+
+
+
 
 void MainWindow::showBranchList()
 {
