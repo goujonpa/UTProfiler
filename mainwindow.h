@@ -83,7 +83,9 @@ class MainWindow : public QMainWindow
         QTableView* getBrancheView2();
         QTableView* getFiliereView2();
 
-
+/*!
+  *\brief Tous les attributs
+  */
     private:
         Ui::MainWindow *ui;
         QWidget* zoneCenter;
@@ -155,6 +157,9 @@ class MainWindow : public QMainWindow
 
         void clear();
 
+        /*!
+          *\brief affiche tableau
+          */
         // ===== Tabs =====
 
         void showProfilEdit();
@@ -162,6 +167,9 @@ class MainWindow : public QMainWindow
         void showSimulationEdit();
 
 
+        /*!
+          *\brief affiche les listes
+          */
         // ===== Lists =====
 
         void showUserList();
@@ -175,6 +183,9 @@ class MainWindow : public QMainWindow
         void showEtrangerList();
         void showPrefEtrangersList();
 
+        /*!
+          *\brief Complétés par l'utilisateur
+          */
         // ===== Forms =====
 
         void showNewBranchForm();
@@ -191,6 +202,9 @@ class MainWindow : public QMainWindow
         void showNewPrefEtrangerForm();
 
 
+        /*!
+          *\brief Validation des modifications
+          */
         // ===== Validation forms =====
 
         void valideNewUserForm();
@@ -206,15 +220,24 @@ class MainWindow : public QMainWindow
         void valideNewEtrangerForm();
         void valideNewPrefEtrangerForm();
 
+        /*!
+          *\brief affiche résultat
+          */
         // ===== show items =====
 
         void showProfilInfo();
         void showUser();
 
+        /*!
+          *\brief Selection
+          */
         // ===== Selects =====
 
         void selectUser();
 
+        /*!
+          *\brief Divers
+          */
         // ===== Divers =====
 
         void test();
