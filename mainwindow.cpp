@@ -182,7 +182,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     /*!
-      *\brief Connection
+      *\brief Connection des boutons avec les signaux (Slot/Signal)
       */
     // ===== Connect =====
 
