@@ -131,6 +131,121 @@ MainWindow::MainWindow(QWidget *parent) :
     dialog1 = new QDialog(this);
     progress1 = new QProgressBar;
     slider1 = new QSlider(Qt::Horizontal);
+    layout1 = new QGridLayout;
+
+    // ===== Ajout Cursus Form =====
+
+    // ===== Branches ===========
+
+    c1 = new QCheckBox;
+    c2 = new QCheckBox;
+    c3 = new QCheckBox;
+    c4 = new QCheckBox;
+    c5 = new QCheckBox;
+    c6 = new QCheckBox;
+    c7 = new QCheckBox;
+    c8 = new QCheckBox;
+
+    // ===== Filieres ============
+
+    c9 = new QCheckBox;
+    c10 = new QCheckBox;
+    c11 = new QCheckBox;
+    c12 = new QCheckBox;
+    c13 = new QCheckBox;
+    c14 = new QCheckBox;
+    c15 = new QCheckBox;
+    c16 = new QCheckBox;
+    c17 = new QCheckBox;
+    c18 = new QCheckBox;
+    c19 = new QCheckBox;
+    c20 = new QCheckBox;
+    c21 = new QCheckBox;
+    c22 = new QCheckBox;
+    c23 = new QCheckBox;
+    c24 = new QCheckBox;
+    c25 = new QCheckBox;
+    c26 = new QCheckBox;
+    c27 = new QCheckBox;
+    c28 = new QCheckBox;
+    c29 = new QCheckBox;
+    c30 = new QCheckBox;
+    c31 = new QCheckBox;
+    c32 = new QCheckBox;
+    c33 = new QCheckBox;
+    c34 = new QCheckBox;
+
+    l1 = new QLabel;
+    l1->setText("TC");
+    l2 = new QLabel;
+    l2->setText("HUTECH");
+    l3 = new QLabel;
+    l3->setText("GI");
+    l4 = new QLabel;
+    l4->setText("GM");
+    l5 = new QLabel;
+    l5->setText("GSM");
+    l6 = new QLabel;
+    l6->setText("GP");
+    l7 = new QLabel;
+    l7->setText("GSU");
+    l8 = new QLabel;
+    l8->setText("GB");
+
+    l9 = new QLabel;
+    l9->setText("SF");
+    l10 = new QLabel;
+    l10->setText("AI");
+    l11 = new QLabel;
+    l11->setText("MPI");
+    l12 = new QLabel;
+    l12->setText("SRI");
+    l13 = new QLabel;
+    l13->setText("FDD");
+    l14 = new QLabel;
+    l14->setText("ICSI");
+    l15 = new QLabel;
+    l15->setText("ADEL");
+    l16 = new QLabel;
+    l16->setText("STRIE");
+    l17 = new QLabel;
+    l17->setText("QSE");
+    l18 = new QLabel;
+    l18->setText("TE");
+    l19 = new QLabel;
+    l19->setText("CPI");
+    l20 = new QLabel;
+    l20->setText("STI");
+    l21 = new QLabel;
+    l21->setText("SR");
+    l22 = new QLabel;
+    l22->setText("AIE");
+    l23 = new QLabel;
+    l23->setText("AVI");
+    l24 = new QLabel;
+    l24->setText("FQI");
+    l25 = new QLabel;
+    l25->setText("MARS");
+    l26 = new QLabel;
+    l26->setText("MIT");
+    l27 = new QLabel;
+    l27->setText("IDI");
+    l28 = new QLabel;
+    l28->setText("CMI");
+    l29 = new QLabel;
+    l29->setText("MOPS");
+    l30 = new QLabel;
+    l30->setText("PIL");
+    l31 = new QLabel;
+    l31->setText("BB");
+    l32 = new QLabel;
+    l32->setText("B");
+    l33 = new QLabel;
+    l33->setText("IAA");
+    l34 = new QLabel;
+    l34->setText("ICIB");
+
+    it10 = Db->m_uvs->begin();
 
 
     // ===== Connect =====
@@ -315,6 +430,11 @@ void MainWindow::showProfilEdit()
             Butt6->setEnabled(false);
             Butt7->setEnabled(false);
         }
+        else
+        {
+            if (Db->m_user->getProfil()->getEtrangers() == 0)
+                Butt7->setEnabled(false);
+        }
     }
     else
     {
@@ -472,7 +592,7 @@ void MainWindow::showNewBonusForm()
 void MainWindow::showProfilForm()
 {
     clear();
-    label1->setText("Choix UV :");
+    label1->setText("CURSUS ACTUEL :");
     mainLayout->addWidget(label1, 2,3,1,1);
     label1->show();
 
@@ -492,7 +612,7 @@ void MainWindow::showProfilForm()
     mainLayout->addWidget(tableView4, 7,3,2,3);
     tableView4->show();
 
-    label4->setText("Cursus visé");
+    label4->setText("CURSUS VISE");
     mainLayout->addWidget(label4, 9,3,1,1);
     label4->show();
 
@@ -785,7 +905,6 @@ void MainWindow::showNewPrefEtrangerForm()
     mainLayout->addWidget(le2, 3,4,1,2);
     le2->show();
 
-
     combo1->addItem("Printemps");
     combo1->addItem("Automne");
     mainLayout->addWidget(combo1, 4,3,1,3);
@@ -806,11 +925,1077 @@ void MainWindow::showNewPrefEtrangerForm()
     QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideNewPrefEtrangerForm()));
 }
 
+void MainWindow::showAjoutCursusUVForm()
+{
+    dialog1->setLayout(layout1);
+    label1->setText(uv->getCode());
+    label1->show();
+    dialog1->show();
+    layout1->addWidget(label1, 0,0,1,1);
+
+
+    l1->show();
+    l2->show();
+    l3->show();
+    l4->show();
+    l5->show();
+    l6->show();
+    l7->show();
+    l8->show();
+    l9->show();
+    l10->show();
+    l11->show();
+    l12->show();
+    l13->show();
+    l14->show();
+    l15->show();
+    l16->show();
+    l17->show();
+    l18->show();
+    l19->show();
+    l20->show();
+    l21->show();
+    l22->show();
+    l23->show();
+    l24->show();
+    l25->show();
+    l26->show();
+    l27->show();
+    l28->show();
+    l29->show();
+    l30->show();
+    l31->show();
+    l32->show();
+    l33->show();
+    l34->show();
+
+    c1->show();
+    c2->show();
+    c3->show();
+    c4->show();
+    c5->show();
+    c6->show();
+    c7->show();
+    c8->show();
+    c9->show();
+    c10->show();
+    c11->show();
+    c12->show();
+    c13->show();
+    c14->show();
+    c15->show();
+    c16->show();
+    c17->show();
+    c18->show();
+    c19->show();
+    c20->show();
+    c21->show();
+    c22->show();
+    c23->show();
+    c24->show();
+    c25->show();
+    c26->show();
+    c27->show();
+    c28->show();
+    c29->show();
+    c30->show();
+    c31->show();
+    c32->show();
+    c33->show();
+    c34->show();
+
+    layout1->addWidget(c1, 1,0,1,1);
+    layout1->addWidget(c2, 2,0,1,1);
+    layout1->addWidget(c3, 3,0,1,1);
+    layout1->addWidget(c4, 4,0,1,1);
+    layout1->addWidget(c5, 5,0,1,1);
+    layout1->addWidget(c6, 6,0,1,1);
+    layout1->addWidget(c7, 7,0,1,1);
+    layout1->addWidget(c8, 8,0,1,1);
+
+    layout1->addWidget(l1, 1,1,1,1);
+    layout1->addWidget(l2, 2,1,1,1);
+    layout1->addWidget(l3, 3,1,1,1);
+    layout1->addWidget(l4, 4,1,1,1);
+    layout1->addWidget(l5, 5,1,1,1);
+    layout1->addWidget(l6, 6,1,1,1);
+    layout1->addWidget(l7, 7,1,1,1);
+    layout1->addWidget(l8, 8,1,1,1);
+
+    layout1->addWidget(c9, 1,2,1,1);
+    layout1->addWidget(c10, 2,2,1,1);
+    layout1->addWidget(c11, 3,2,1,1);
+    layout1->addWidget(c12, 4,2,1,1);
+    layout1->addWidget(c13, 5,2,1,1);
+    layout1->addWidget(c14, 6,2,1,1);
+    layout1->addWidget(c15, 7,2,1,1);
+    layout1->addWidget(c16, 8,2,1,1);
+    layout1->addWidget(c17, 9,2,1,1);
+    layout1->addWidget(c18, 10,2,1,1);
+    layout1->addWidget(c19, 11,2,1,1);
+    layout1->addWidget(c20, 12,2,1,1);
+    layout1->addWidget(c21, 13,2,1,1);
+
+    layout1->addWidget(l9, 1,3,1,1);
+    layout1->addWidget(l10, 2,3,1,1);
+    layout1->addWidget(l11, 3,3,1,1);
+    layout1->addWidget(l12, 4,3,1,1);
+    layout1->addWidget(l13, 5,3,1,1);
+    layout1->addWidget(l14, 6,3,1,1);
+    layout1->addWidget(l15, 7,3,1,1);
+    layout1->addWidget(l16, 8,3,1,1);
+    layout1->addWidget(l17, 9,3,1,1);
+    layout1->addWidget(l18, 10,3,1,1);
+    layout1->addWidget(l19, 11,3,1,1);
+    layout1->addWidget(l20, 12,3,1,1);
+    layout1->addWidget(l21, 13,3,1,1);
+
+    layout1->addWidget(c22, 1,4,1,1);
+    layout1->addWidget(c23, 2,4,1,1);
+    layout1->addWidget(c24, 3,4,1,1);
+    layout1->addWidget(c25, 4,4,1,1);
+    layout1->addWidget(c26, 5,4,1,1);
+    layout1->addWidget(c27, 6,4,1,1);
+    layout1->addWidget(c28, 7,4,1,1);
+    layout1->addWidget(c29, 8,4,1,1);
+    layout1->addWidget(c30, 9,4,1,1);
+    layout1->addWidget(c31, 10,4,1,1);
+    layout1->addWidget(c32, 11,4,1,1);
+    layout1->addWidget(c33, 12,4,1,1);
+    layout1->addWidget(c34, 13,4,1,1);
+
+    layout1->addWidget(l22, 1,5,1,1);
+    layout1->addWidget(l23, 2,5,1,1);
+    layout1->addWidget(l24, 3,5,1,1);
+    layout1->addWidget(l25, 4,5,1,1);
+    layout1->addWidget(l26, 5,5,1,1);
+    layout1->addWidget(l27, 6,5,1,1);
+    layout1->addWidget(l28, 7,5,1,1);
+    layout1->addWidget(l29, 8,5,1,1);
+    layout1->addWidget(l30, 9,5,1,1);
+    layout1->addWidget(l31, 10,5,1,1);
+    layout1->addWidget(l32, 11,5,1,1);
+    layout1->addWidget(l33, 12,5,1,1);
+    layout1->addWidget(l34, 13,5,1,1);
+
+    layout1->addWidget(valider, 14,0,1,6);
+    valider->show();
+
+    QObject::connect(valider, SIGNAL(clicked()), this, SLOT(valideAjoutCursusUVForm()));
+    QObject::connect(valider, SIGNAL(clicked()), dialog1, SLOT(close()));
+
+}
+
 
 
 
 
 // ===== VALIDE FORMS ==========================================================
+
+void MainWindow::valideAjoutCursusUVForm()
+{
+    unsigned int id;
+    if (c1->isChecked())
+    {
+        branche = Db->m_branches->find(1).value();
+        filiere = Db->m_filieres->find(1).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c2->isChecked())
+    {
+        branche = Db->m_branches->find(2).value();
+        filiere = Db->m_filieres->find(1).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+    if (c3->isChecked())
+    {
+        branche = Db->m_branches->find(3).value();
+        filiere = Db->m_filieres->find(1).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+    if (c4->isChecked())
+    {
+        branche = Db->m_branches->find(4).value();
+        filiere = Db->m_filieres->find(1).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+    if (c5->isChecked())
+    {
+        branche = Db->m_branches->find(5).value();
+        filiere = Db->m_filieres->find(1).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+    if (c6->isChecked())
+    {
+        branche = Db->m_branches->find(6).value();
+        filiere = Db->m_filieres->find(1).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+    if (c7->isChecked())
+    {
+        branche = Db->m_branches->find(7).value();
+        filiere = Db->m_filieres->find(1).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+    if (c8->isChecked())
+    {
+        branche = Db->m_branches->find(8).value();
+        filiere = Db->m_filieres->find(1).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c9->isChecked())
+    {
+    }
+
+    if (c10->isChecked())
+    {
+        branche = Db->m_branches->find(7).value();
+        filiere = Db->m_filieres->find(2).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c11->isChecked())
+    {
+        branche = Db->m_branches->find(3).value();
+        filiere = Db->m_filieres->find(3).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+
+        branche = Db->m_branches->find(4).value();
+        filiere = Db->m_filieres->find(3).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+
+        branche = Db->m_branches->find(5).value();
+        filiere = Db->m_filieres->find(3).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+
+        branche = Db->m_branches->find(6).value();
+        filiere = Db->m_filieres->find(3).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+
+        branche = Db->m_branches->find(7).value();
+        filiere = Db->m_filieres->find(3).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+
+
+        branche = Db->m_branches->find(8).value();
+        filiere = Db->m_filieres->find(3).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c12->isChecked())
+    {
+        branche = Db->m_branches->find(3).value();
+        filiere = Db->m_filieres->find(4).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c13->isChecked())
+    {
+        branche = Db->m_branches->find(3).value();
+        filiere = Db->m_filieres->find(5).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c14->isChecked())
+    {
+        branche = Db->m_branches->find(3).value();
+        filiere = Db->m_filieres->find(6).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c15->isChecked())
+    {
+        branche = Db->m_branches->find(3).value();
+        filiere = Db->m_filieres->find(7).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c16->isChecked())
+    {
+        branche = Db->m_branches->find(3).value();
+        filiere = Db->m_filieres->find(8).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c17->isChecked())
+    {
+        branche = Db->m_branches->find(8).value();
+        filiere = Db->m_filieres->find(9).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c18->isChecked())
+    {
+        branche = Db->m_branches->find(6).value();
+        filiere = Db->m_filieres->find(10).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c19->isChecked())
+    {
+        branche = Db->m_branches->find(6).value();
+        filiere = Db->m_filieres->find(11).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c20->isChecked())
+    {
+        branche = Db->m_branches->find(7).value();
+        filiere = Db->m_filieres->find(12).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c21->isChecked())
+    {
+        branche = Db->m_branches->find(7).value();
+        filiere = Db->m_filieres->find(13).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c22->isChecked())
+    {
+        branche = Db->m_branches->find(7).value();
+        filiere = Db->m_filieres->find(14).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c23->isChecked())
+    {
+        branche = Db->m_branches->find(4).value();
+        filiere = Db->m_filieres->find(15).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c24->isChecked())
+    {
+        branche = Db->m_branches->find(4).value();
+        filiere = Db->m_filieres->find(16).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c25->isChecked())
+    {
+        branche = Db->m_branches->find(4).value();
+        filiere = Db->m_filieres->find(17).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c26->isChecked())
+    {
+        branche = Db->m_branches->find(4).value();
+        filiere = Db->m_filieres->find(18).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c27->isChecked())
+    {
+        branche = Db->m_branches->find(4).value();
+        filiere = Db->m_filieres->find(19).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c28->isChecked())
+    {
+        branche = Db->m_branches->find(5).value();
+        filiere = Db->m_filieres->find(20).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c29->isChecked())
+    {
+        branche = Db->m_branches->find(5).value();
+        filiere = Db->m_filieres->find(21).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c30->isChecked())
+    {
+        branche = Db->m_branches->find(5).value();
+        filiere = Db->m_filieres->find(22).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c31->isChecked())
+    {
+        branche = Db->m_branches->find(8).value();
+        filiere = Db->m_filieres->find(23).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c32->isChecked())
+    {
+        branche = Db->m_branches->find(8).value();
+        filiere = Db->m_filieres->find(24).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c33->isChecked())
+    {
+        branche = Db->m_branches->find(8).value();
+        filiere = Db->m_filieres->find(25).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+    if (c34->isChecked())
+    {
+        branche = Db->m_branches->find(8).value();
+        filiere = Db->m_filieres->find(26).value();
+        cursus = new Cursus(0, branche, filiere);
+
+        QMap<unsigned int, Cursus*>::iterator it2;
+
+        for (it2 = Db->m_cursus->begin(); it2 != Db->m_cursus->end(); ++it2)
+        {
+            if ((it2.value()->getBranche() == branche) && (it2.value()->getFiliere() == filiere))
+                cursus = it2.value();
+        }
+
+        if (cursus->getId() == 0)
+        {
+            id = Db->insertItem(cursus);
+            cursus->setId(id);
+            Db->m_cursus->insert(cursus->getId(), cursus);
+        }
+
+        uv->addCursus(cursus);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
 
 
 void MainWindow::valideNewEtrangerForm()
@@ -1107,7 +2292,6 @@ void MainWindow::valideNewBonusForm()
     BonusUV* bonus = new BonusUV(0, uv, valeur);
     id = Db->insertItem(bonus);
     bonus->setId(id);
-
     Db->m_user->getProfil()->addBonus(bonus);
     Db->m_bonus->insert(bonus->getId(), bonus);
 
@@ -1120,6 +2304,7 @@ void MainWindow::valideNewNoteForm()
     note = new Note(0, le1->text());
     int id = Db->insertItem(note);
     note->setId(id);
+    Db->m_notes->insert(note->getId(), note);
     if (id > 0)
         affiche("Nouvelle note créée.");
     if (id == -1)
@@ -1155,6 +2340,7 @@ void MainWindow::valideNewBranchForm()
     branche = new Branche(0, le1->text(), le2->text());
     int id = Db->insertItem(branche);
     branche->setId(id);
+    Db->m_branches->insert(branche->getId(), branche);
     if (id > 0)
         affiche("Nouvelle branche créée.");
     if (id == -1)
@@ -1168,6 +2354,8 @@ void MainWindow::valideNewFiliereForm()
     filiere = new Filiere(0, le1->text(), le2->text());
     int id = Db->insertItem(filiere);
     filiere->setId(id);
+    Db->m_filieres->insert(filiere->getId(), filiere);
+
     if (id > 0)
         affiche("Nouvelle filière créée.");
     if (id == -1)
@@ -1181,6 +2369,7 @@ void MainWindow::valideNewCatForm()
     categorie = new Categorie(0, le1->text(), le2->text());
     int id = Db->insertItem(categorie);
     categorie->setId(id);
+    Db->m_categories->insert(categorie->getId(), categorie);
     if (id > 0)
         affiche("Nouvelle catégorie créée.");
     if (id == -1)
@@ -1194,6 +2383,7 @@ void MainWindow::valideNewUserForm()
     user = new User(0, le2->text(), le1->text(), 0, 0);
     int idUser = Db->insertItem(user);
     user->setId(idUser);
+    Db->m_users->insert(user->getId(), user);
     if (idUser > 0)
     {
         affiche("Nouvel Utilisateur créé.");
@@ -1515,55 +2705,12 @@ void MainWindow::affiche(QString message)
 
 void MainWindow::test()
 {
-    //QMessageBox::information(this, "profil existe ?", QString::number(Db->m_profils->find(3).value()->getId()));
-    for (QMap<unsigned int, Inscription*>::Iterator it = Db->m_inscriptions->begin(); it != Db->m_inscriptions->end(); it++)
+    if (it10 != Db->m_uvs->end())
     {
-        QString message = QString::number(it.value()->getId());
-
-        QMessageBox::information(this, "Id Profil", message);
+        uv = it10.value();
+        showAjoutCursusUVForm();
+        ++it10;
     }
-
-    //QMessageBox::information(this, "test", Db->m_test);
-
-
-    //bool ret;
-    //QString message;
-    //message = Db->m_user->getProfil()->getActuel()->getBranche()->getCode();
-    //QMessageBox::information(this, "Branche Actuelle", message);
-    //message = Db->m_user->getProfil()->getVise()->getFiliere()->getCode();
-    //QMessageBox::information(this, "Filiere visée", message);
-
-    //QSqlError err = Db->lastError();
-    //affiche(err.text());
-    //QString filename("uvs.xml");
-    //xml->load(filename, Db);
-    //Db->remove();
-    //Db->save();
-    //Db->deleteDb();
-    //ret = Db->createTables();
-    //if (ret)
-        //QMessageBox::information(this, "tables", "ok");
-    //xml->load(filename, Db);
-    //Db->save();
-
-    /*
-    QMap<unsigned int, UV*>::Iterator it;
-    for (it = Db->m_uvs->begin(); it != Db->m_uvs->end(); ++it)
-    {
-        if (it.value()->getId() < 15)
-        {
-            QString message;
-            message += it.value()->getCode();
-            message += QString::number(it.value()->getCredits());
-            message += it.value()->getCategorie()->getCode();
-            if (it.value()->getCursus() == 0)
-                message += "oui";
-            QMessageBox::information(this, "", message);
-        }
-
-
-    }
-    */
 }
 
 

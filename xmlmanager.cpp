@@ -15,13 +15,17 @@ void XmlManager::load(QString filename, DbManager* db)
     QString code;
     QString nom;
     QString input;
-    int credits, idUV, i = 0;
+    int credits, idUV, i = 0, idCursus;
     Categorie* newCategorie;
     QMap<unsigned int, Categorie*>* dbCat = db->getDbCat();
     QString categorie;
     QString branche;
     QVector<QString> branches;
     QMap<unsigned int, Categorie*>::Iterator it;
+    QVector<QString>::Iterator it2;
+    QMap<unsigned int, Branche*>::Iterator it3;
+    QMap<unsigned int, Cursus*>::Iterator it4;
+
 
     if (!file->open(QFile::ReadOnly | QFile::Text))
         m_test = "NOK";
@@ -57,10 +61,36 @@ void XmlManager::load(QString filename, DbManager* db)
             } while(!(reader.isEndElement() && (reader.name() == "uv")));
 
 
-            //QMap<unsigned int, Cursus*>* newCursus;
-            //Categorie* newCategorie = new Categorie(0, categorie, "");
-            //idCategorie = db->find(newCategorie); // bug
-            //newCategorie->setId(idCategorie);
+            QMap<unsigned int, Cursus*>* newCursus = new QMap<unsigned int, Cursus*>;
+            for (it2 = branches.begin(); it2 != branches.end(); ++it2)
+            {
+                Branche* newBranche = new Branche;
+                for (it3 = db->getDbBranches()->begin(); it3 != db->getDbBranches()->end(); ++it3)
+                {
+                    if (it3.value()->getCode() == it2->data()->decomposition())
+                    {
+                        newBranche = it3.value();
+                    }
+                }
+                Cursus* cursus = new Cursus(0, newBranche, db->getSansFiliere());
+                for (it4 = db->getDbCursus()->begin(); it4 != db->getDbCursus()->end(); ++it4)
+                {
+                    if (cursus->getBranche() == it4.value()->getBranche() && cursus->getFiliere() == it4.value()->getFiliere())
+                    {
+                        cursus = it4.value();
+                    }
+
+                    if (cursus->getId() == 0)
+                    {
+                        idCursus = db->insertItem(cursus);
+                        cursus->setId(idCursus);
+                    }
+                }
+                newCursus->insert(cursus->getId(), cursus);
+
+
+            }
+
 
             for (it = dbCat->begin(); it != dbCat->end(); ++it)
             {
@@ -75,7 +105,7 @@ void XmlManager::load(QString filename, DbManager* db)
             newUV->setCode(code);
             newUV->setCredits(credits);
             newUV->setCategorie(newCategorie);
-            newUV->setCursus(0);
+            newUV->setCursus(newCursus);
             idUV = db->insertItem(newUV);
             newUV->setId(idUV);
             i++;

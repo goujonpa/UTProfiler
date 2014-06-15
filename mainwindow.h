@@ -15,6 +15,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QFormLayout>
+#include <QCheckBox>
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QString>
@@ -88,6 +89,7 @@ class MainWindow : public QMainWindow
         Ui::MainWindow *ui;
         QWidget* zoneCenter;
         QGridLayout* mainLayout;
+        QGridLayout* layout1;
         QLabel* titre;
         QPushButton* Butt1;
         QPushButton* Butt2;
@@ -148,6 +150,88 @@ class MainWindow : public QMainWindow
         QSlider* slider1;
 
 
+        // ===== Ajout Cursus Form =====
+
+        // ===== Branches ===========
+
+        QCheckBox* c1;
+        QCheckBox* c2;
+        QCheckBox* c3;
+        QCheckBox* c4;
+        QCheckBox* c5;
+        QCheckBox* c6;
+        QCheckBox* c7;
+        QCheckBox* c8;
+
+        // ===== Filieres ============
+
+        QCheckBox* c9;
+        QCheckBox* c10;
+        QCheckBox* c11;
+        QCheckBox* c12;
+        QCheckBox* c13;
+        QCheckBox* c14;
+        QCheckBox* c15;
+        QCheckBox* c16;
+        QCheckBox* c17;
+        QCheckBox* c18;
+        QCheckBox* c19;
+        QCheckBox* c20;
+        QCheckBox* c21;
+        QCheckBox* c22;
+        QCheckBox* c23;
+        QCheckBox* c24;
+        QCheckBox* c25;
+        QCheckBox* c26;
+        QCheckBox* c27;
+        QCheckBox* c28;
+        QCheckBox* c29;
+        QCheckBox* c30;
+        QCheckBox* c31;
+        QCheckBox* c32;
+        QCheckBox* c33;
+        QCheckBox* c34;
+
+        QLabel* l1;
+        QLabel* l2;
+        QLabel* l3;
+        QLabel* l4;
+        QLabel* l5;
+        QLabel* l6;
+        QLabel* l7;
+        QLabel* l8;
+
+        QLabel* l9;
+        QLabel* l10;
+        QLabel* l11;
+        QLabel* l12;
+        QLabel* l13;
+        QLabel* l14;
+        QLabel* l15;
+        QLabel* l16;
+        QLabel* l17;
+        QLabel* l18;
+        QLabel* l19;
+        QLabel* l20;
+        QLabel* l21;
+        QLabel* l22;
+        QLabel* l23;
+        QLabel* l24;
+        QLabel* l25;
+        QLabel* l26;
+        QLabel* l27;
+        QLabel* l28;
+        QLabel* l29;
+        QLabel* l30;
+        QLabel* l31;
+        QLabel* l32;
+        QLabel* l33;
+        QLabel* l34;
+
+        QMap<unsigned int, UV*>::Iterator it10;
+
+
+
 
     public slots:
 
@@ -189,6 +273,7 @@ class MainWindow : public QMainWindow
         void showNewDesirForm();
         void showNewEtrangerForm();
         void showNewPrefEtrangerForm();
+        void showAjoutCursusUVForm();
 
 
         // ===== Validation forms =====
@@ -205,6 +290,7 @@ class MainWindow : public QMainWindow
         void valideNewDesirForm();
         void valideNewEtrangerForm();
         void valideNewPrefEtrangerForm();
+        void valideAjoutCursusUVForm();
 
         // ===== show items =====
 

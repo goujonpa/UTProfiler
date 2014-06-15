@@ -58,6 +58,9 @@ class DbManager : public QObject
         explicit DbManager(QObject *parent = 0);
         ~DbManager();
         QMap<unsigned int, Categorie*>* getDbCat() const {return m_categories;}
+        QMap<unsigned int, Branche*>* getDbBranches() const {return m_branches;}
+        Filiere* getSansFiliere() const {return m_filieres->find(0).value();}
+        QMap<unsigned int, Cursus*>* getDbCursus() const {return m_cursus;}
 
 
         // ===== create tables =====
@@ -121,6 +124,7 @@ class DbManager : public QObject
 
         void save();
         bool remove();
+        bool removeUVs();
 
         // ===== getLists =====
 
