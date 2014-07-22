@@ -514,6 +514,7 @@ void DbManager::loadUvs()
     Categorie* categorie;
 
     QSqlQuery query("SELECT * FROM UV");
+    QSqlQuery query2("SELECT * FROM UVCursus");
 
     while (query.next())
     {
@@ -530,6 +531,15 @@ void DbManager::loadUvs()
         uv->setCursus(0);
         m_uvs->insert(uv->getId(), uv);
     }
+
+    while (query2.next())
+    {
+        Cursus* newCursus = new Cursus;
+        newCursus = m_cursus->find(query2.value(2).toInt()).value();
+        m_uvs->find(query2.value(1).toInt()).value()->addCursus(newCursus);
+    }
+
+
 }
 
 void DbManager::loadFilieres()
