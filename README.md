@@ -1,9 +1,8 @@
-UTProfiler
-==========
+# UTProfiler
 
-UTProfiler is a C++ project which was developped in the context of an object oriented course of the UTC (University of Technologie of Compiègne, France).
+Courses-choosing helper, object oriented project.
 
-The aim of that application was to help students choosing the courses they will attend to complete their cursus.
-As this project was a learning tool, it isn't really optimized, lots of changes should have been done (we've improved a lot between the beginning and the end of our project, and realized that our architecture isn't really good).
+## Context
 
-Developped by Alexandre CORTYL & Paul GOUJON
+Project realised for the "introduction to object oriented programming" course of the UTC.
+/!\ That was our first steps in the world of the OOP... **The code is awful !!**
